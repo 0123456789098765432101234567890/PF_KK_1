@@ -16,6 +16,6 @@ public class UserInfo {
 	@Column(name = "login_id")
 	private String loginid;
 	
-	private String password;
+	private String pass;
 
 }
