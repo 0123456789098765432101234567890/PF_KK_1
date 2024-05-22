@@ -52,7 +52,7 @@ public class LoginController {
 	@GetMapping(value = UrlConst.LOGIN, params = "error")
 	public String viewWithError(Model model, LoginForm form) {
 		var errorInfo = (Exception) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-		model.addAttribute("ermsg",errorInfo.getMessage());
+		model.addAttribute("errorMsg",errorInfo.getMessage());
 /*		model.addAttribute(ModelKey.MESSAGE, errorInfo.getMessage());
 		model.addAttribute(ModelKey.IS_ERROR, true); */
 
@@ -74,7 +74,7 @@ public class LoginController {
 			return "redirect:/menu";
 		}else {
 			var errorMsg = AppUtil.getMessage(messageSource, MessageConst.LOGIN_WRONG_INPUT);
-			model.addAttribute("ermsg",errorMsg);
+			model.addAttribute("errorMsg",errorMsg);
 			return UrlConst.LOGIN;
 		}
 	}
