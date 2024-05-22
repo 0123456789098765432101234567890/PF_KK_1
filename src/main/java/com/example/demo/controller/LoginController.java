@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.constant.MessageConst;
+import com.example.demo.constant.UrlConst;
 import com.example.demo.form.LoginForm;
 import com.example.demo.service.LoginService;
 import com.example.demo.util.AppUtil;
@@ -30,14 +31,14 @@ public class LoginController {
 	/* メッセージソース */
 	private final MessageSource messageSource;
 	
-	@GetMapping({"/","/login"})
+	@GetMapping({"/",UrlConst.LOGIN})
 	public String view(Model model,LoginForm form) {
 		
-		return"login";
+		return UrlConst.LOGIN;
 	}
 	
 	
-	@PostMapping("/login")
+	@PostMapping(UrlConst.LOGIN)
 	public String login(Model model,LoginForm form) {
 		var userInfo = service.searchUserById(form.getLoginId());
 		var encodedPassword = passwordEncoder.encode(form.getPass());
@@ -52,7 +53,7 @@ public class LoginController {
 		}else {
 			var errorMsg = AppUtil.getMessage(messageSource, MessageConst.LOGIN_WRONG_INPUT);
 			model.addAttribute("ermsg",errorMsg);
-			return "login";
+			return UrlConst.LOGIN;
 		}
 	}
 
