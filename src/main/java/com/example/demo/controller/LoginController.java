@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.form.LoginForm;
 import com.example.demo.service.LoginService;
+import com.example.demo.util.AppUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +24,9 @@ public class LoginController {
 	
 	/* passwordEncoder */
 	private final PasswordEncoder passwordEncoder;
+	
+	/* メッセージソース */
+	private final MessageSource messageSource;
 	
 	@GetMapping({"/","/login"})
 	public String view(Model model,LoginForm form) {
@@ -43,7 +48,8 @@ public class LoginController {
 		if(isCorrectUserAuth) {
 			return "redirect:/menu";
 		}else {
-			model.addAttribute("ermsg","eroor");
+			var errorMsg = AppUtil.getMessage(messageSource, "login.wrongInput");
+			model.addAttribute("ermsg",errorMsg);
 			return "login";
 		}
 	}
