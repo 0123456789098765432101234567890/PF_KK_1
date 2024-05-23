@@ -8,11 +8,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
 @Table(name = "user_info")
 @Data
+@AllArgsConstructor
 public class UserInfo {
     
     @Id
@@ -31,4 +33,12 @@ public class UserInfo {
     @Email(message = "Email should be valid")
     @Size(max = 255, message = "Email should be at most 255 characters")
     private String email;
+    
+	/**
+	 * デフォルトコンストラクタ
+	 */
+	public UserInfo() {
+	}
 }
+
+
