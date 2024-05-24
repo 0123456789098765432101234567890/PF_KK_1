@@ -19,20 +19,20 @@ public class SettingController {
 
     private final SettingService settingService;
 
-    @GetMapping("/settings")
-    public String showSettingsForm(Model model) {
+    @GetMapping("/setting")
+    public String showSetting(Model model) {
         UserInfo currentUser = settingService.getCurrentUserInfo();
         model.addAttribute("userInfo", currentUser);
         return "setting"; // ビュー名を "setting" に変更
     }
 
-    @PostMapping("/settings")
-    public String updateSettings(@Valid @ModelAttribute("userInfo") UserInfo userInfo, BindingResult result, Model model) {
+    @PostMapping("/setting")
+    public String updateSetting(@Valid @ModelAttribute("userInfo") UserInfo userInfo, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "setting"; // エラーがある場合は再度フォームを表示
         }
         settingService.updateUserInfo(userInfo);
         model.addAttribute("successMessage", "Settings updated successfully");
-        return "redirect:/settings"; // 更新後に再び設定画面にリダイレクト
+        return "redirect:/setting"; // 更新後に再び設定画面にリダイレクト
     }
 }
