@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.constant.MessageConst;
+import com.example.demo.constant.ModelKey;
 import com.example.demo.constant.UrlConst;
 import com.example.demo.constant.ViewNameConst;
 import com.example.demo.form.LoginForm;
@@ -53,8 +54,8 @@ public class LoginController {
 	public String viewWithError(Model model, LoginForm form) {
 		var errorInfo = (Exception) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		model.addAttribute("errorMsg",errorInfo.getMessage());
-/*		model.addAttribute(ModelKey.MESSAGE, errorInfo.getMessage());
-		model.addAttribute(ModelKey.IS_ERROR, true); */
+		model.addAttribute(ModelKey.MESSAGE, errorInfo.getMessage());
+		model.addAttribute(ModelKey.IS_ERROR, true); 
 
 		return ViewNameConst.LOGIN;
 	}

@@ -54,7 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 /*		if (!userInfo.isSignupCompleted()) {
 			throw new UsernameNotFoundException(username);
-		}
+		} 
 
 		var accountLockedTime = userInfo.getAccountLockedTime();
 		var isAccountLocked = accountLockedTime != null
@@ -62,10 +62,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return User.withUsername(userInfo.getLoginid())
 				.password(userInfo.getPass())
-/*				.authorities(userInfo.getAuthorityKind().getCode())
-				.disabled(userInfo.getUserStatusKind().isDisabled())
+				.authorities(userInfo.getAuthorityKind().getCode())
+/*				.disabled(userInfo.getUserStatusKind().isDisabled())
 				.accountLocked(isAccountLocked) */
-				.roles("USER")
+//				.roles("USER")
 				.build();
 	}
 

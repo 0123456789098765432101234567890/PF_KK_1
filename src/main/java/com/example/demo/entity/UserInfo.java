@@ -1,6 +1,10 @@
 package com.example.demo.entity;
 
+import com.example.demo.constant.db.AuthorityKind;
+import com.example.demo.entity.converter.UserAuthorityConverter;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -33,6 +37,11 @@ public class UserInfo {
     @Email(message = "Email should be valid")
     @Size(max = 255, message = "Email should be at most 255 characters")
     private String email;
+    
+	/** ユーザー権限種別、後で消す */
+	@Column(name = "authority")
+	@Convert(converter = UserAuthorityConverter.class)
+	private AuthorityKind authorityKind;
     
 	/**
 	 * デフォルトコンストラクタ
