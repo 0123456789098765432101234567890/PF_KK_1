@@ -16,7 +16,7 @@
         <div>
             <label for="pass">Password:</label>
             <input type="password" id="pass" th:field="*{pass}" />
-            <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">Password Error</div>
+            <div th:if="${#fields.hasErrors('pass')}" th:errors="*{password}">Password Error</div>
         </div>
         
         <div>

@@ -5,8 +5,8 @@
 <title>ログイン画面</title>
 </head>
 <body class="d-flex justify-content-center align-items-center min-vh-100">
-	<div th:insert="common/sourceList :: sourceList"></div>
-	<div th:replace="common/messageIcon :: messageIcon"></div>
+	<div th:insert="~{common/sourceList :: sourceList}"></div>
+	<div th:replace="~{common/messageIcon :: messageIcon}"></div>
 	<div class="container text-center">
 	    <h2>ログイン画面</h2>
 	    <div class="alert alert-danger d-flex align-items-center" role="alert" th:if="${errorMsg} != null">
