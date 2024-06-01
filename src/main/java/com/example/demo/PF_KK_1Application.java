@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PfTe1Application {
+public class PF_KK_1Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PfTe1Application.class, args);
+		SpringApplication.run(PF_KK_1Application.class, args);
 	}
 
 }
