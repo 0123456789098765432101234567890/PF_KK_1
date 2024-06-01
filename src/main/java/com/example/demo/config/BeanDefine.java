@@ -25,7 +25,7 @@ public class BeanDefine {
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}  
+	}
 
 	/**
 	 * マッピングフレームワークのBean定義を行います。
@@ -35,6 +35,6 @@ public class BeanDefine {
 	@Bean
 	Mapper mapper() {
 		return DozerBeanMapperBuilder.buildDefault();
-	} 
+	}
 
 }

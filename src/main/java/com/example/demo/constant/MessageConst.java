@@ -1,3 +1,4 @@
+
 package com.example.demo.constant;
 
 /**
@@ -7,9 +8,6 @@ package com.example.demo.constant;
  *
  */
 public class MessageConst {
-	
-	/* ログインエラー */
-	public static String LOGIN_WRONG_INPUT = "login.wrongInput";
 
 	/** 共通：入力内容誤り */
 	public static final String FORM_ERROR = "common.formError";
