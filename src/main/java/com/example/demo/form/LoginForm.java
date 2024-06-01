@@ -15,5 +15,5 @@ public class LoginForm {
 	private String loginId;
 
 	/** パスワード */
-	private String password;
+	private String pass;
 }

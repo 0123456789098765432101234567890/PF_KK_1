@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>PF_KK_1</artifactId>
+	<artifactId>SampleWeb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PF_KK_1</name>
+	<name>SampleWeb</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -63,9 +63,9 @@
 		</dependency>
 		 <!-- Dozer Mapper -->
 		<dependency>
-			<groupId>com.github.dozermapper</groupId>
-			<artifactId>dozer-core</artifactId>
-			<version>6.4.0</version>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<version>5.5.1</version>
 		</dependency>
 		 <!-- JQuery -->
 		<dependency>
@@ -84,7 +84,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-		  <!-- Spring Security -->
+		 <!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -94,18 +94,6 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
-		<!-- Spring Boot Starter AOP -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-			<version>3.0.5</version>
-		</dependency>
-		<!-- Spring Boot Starter MAIL -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
