@@ -8,6 +8,7 @@
 <body>
     <h1>Update User Information</h1>
     <form th:action="@{/update}" th:object="${updateForm}" method="post">
+		<span th:text="${updateError}"></span>
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" th:field="*{email}" />

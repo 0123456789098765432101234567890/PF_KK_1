@@ -33,6 +33,9 @@ public class SettingController {
         if (result.hasErrors()) {
             return "updateForm";
         }
+        
+        System.out.println(form.toString());
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loginId = authentication.getName(); // ログインIDを取得
 
