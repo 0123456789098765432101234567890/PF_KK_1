@@ -31,7 +31,7 @@ public class LoginController {
 	 * @param form 入力情報
 	 * @return 表示画面
 	 */
-	@GetMapping(UrlConst.LOGIN)
+	@GetMapping({"/", UrlConst.LOGIN})
 	public String view(Model model, LoginForm form) {
 		return "login";
 	}
