@@ -22,21 +22,18 @@ public class UserInfo {
 
 	/** ログインID */
 	@Id
-    @Column(name = "login_id")
-//    @NotEmpty(message = "ろぐいんあいでぃーはひっすです" /*"Login ID is required" */)
+    @Column(name = "login_id")    
     private String loginId;
     
     @Column(name = "pass")
-//    @NotEmpty(message = "ぱすわあどはひっすです" /* "Password is required" */)
-//    @Size(min = 3, max = 32, message = "Password must be between 3 and 32 characters")
-//    @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Password can only contain alphanumeric characters, dashes, and underscores")
     private String pass;
     
     @Column(name = "email")
-//    @NotEmpty(message = "めいるあどれすはひっすです" /* "Email is required" */)
     @Email(message = "Email should be valid")
-//    @Size(max = 255, message = "Email should be at most 255 characters")
     private String email;
+    
+    @Column(name = "user_name")
+    private String user_name;
 	
 
 	/** ログイン失敗回数 */

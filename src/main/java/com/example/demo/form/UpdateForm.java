@@ -1,20 +1,22 @@
 package com.example.demo.form;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class UpdateForm {
-    @NotBlank
+    @NotEmpty(message = "めいるあどれすはひっすです" /* "Email is required" */)
     @Email
-    @Size(max = 255)
+    @Size(max = 255, message = "255もじいかでたのむ")
     private String email;
 
-    @NotBlank
-    @Size(min = 3, max = 32)
+	@NotEmpty(message = "ぱすわあどはひっすです" /* "Password is required" */)
+    @Size(min = 3, max = 32, message = "3から32もじでたのむ")
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Password can only contain alphanumeric characters, dashes, and underscores")
     private String pass;
+	
+	
 }

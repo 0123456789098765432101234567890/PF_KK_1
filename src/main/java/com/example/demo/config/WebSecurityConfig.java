@@ -68,7 +68,8 @@ public class WebSecurityConfig {
 								.usernameParameter(USERNAME_PARAMETER)
 								.passwordParameter(PASSWORD_PARAMETER)// ユーザ名パラメータのname属性
 								.defaultSuccessUrl(UrlConst.MENU) // ログイン成功後のリダイレクトURL
-/*								.failureUrl(UrlConst.LOGIN + "?error=true")  */);// ログイン成功後にバグったので追加した
+//								.failureUrl(UrlConst.LOGIN + "?error=true") ログイン成功後にバグったので追加した
+								);
 
 		return http.build();
 	}
