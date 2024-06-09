@@ -3,7 +3,7 @@
 <body>
 <nav class="navbar bg-info navbar-dark" th:fragment="header">
 	<div class="container-fluid">
-    	<a class="navbar-brand" th:href="@{/menu}">商品管理システム</a>
+    	<a class="navbar-brand" th:href="@{/menu}">自己紹介評価システム</a>
     	<form th:action="@{/logout}" method="post">
     		<span class="text-light" th:text="|ログインID：${#authentication.principal.username}|"></span>
 			<input type="submit" class="btn btn-light" value="ログアウト" />

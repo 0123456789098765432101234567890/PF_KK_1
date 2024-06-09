@@ -34,4 +34,12 @@ public class SettingService {
         userInfo.setPass(passwordEncoder.encode(newPassword));
         userInfoRepository.save(userInfo);
     }
+    
+    @Transactional
+    public void updateUser_name(String loginId, String newUser_name) {
+        UserInfo userInfo = userInfoRepository.findById(loginId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        userInfo.setUser_name(newUser_name);
+        userInfoRepository.save(userInfo);
+    }
+
 }

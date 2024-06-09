@@ -40,12 +40,14 @@ public class SettingController {
         String loginId = authentication.getName(); // ログインIDを取得
 
         try {
-            log.debug("Updating user info for loginId: {}", loginId);
+//            log.debug("Updating user info for loginId: {}", loginId);
             // Emailの更新処理
             settingService.updateEmail(loginId, form.getEmail());
             // Passwordの更新処理
             settingService.updatePassword(loginId, form.getPass());
-            log.debug("Update successful for loginId: {}", loginId);
+            // User_nameの更新処理
+            settingService.updateUser_name(loginId, form.getUser_name());
+//            log.debug("Update successful for loginId: {}", loginId);
         } catch (ConstraintViolationException e) {
             log.error("Validation failed for loginId: {}", loginId, e);
             model.addAttribute("updateError", "パスワードの形式が正しくありません。");
