@@ -18,7 +18,7 @@ public class UpdateForm {
     @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Password can only contain alphanumeric characters, dashes, and underscores")
     private String pass;
 	
-	@NotEmpty(message = "おなまえはひっすです")
+/*	@NotEmpty(message = "おなまえはひっすです")
 	@Size(max = 255, message = "255もじいかでたのむ")
-	private String user_name;
+	private String user_name; */
 }

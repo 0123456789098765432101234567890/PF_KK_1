@@ -32,8 +32,8 @@ public class UserInfo {
     @Email(message = "Email should be valid")
     private String email;
     
-    @Column(name = "user_name")
-    private String user_name;
+/*    @Column(name = "user_name")
+    private String user_name; */
 	
 
 	/** ログイン失敗回数 */
