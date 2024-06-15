@@ -67,6 +67,12 @@
 			<artifactId>dozer</artifactId>
 			<version>5.5.1</version>
 		</dependency>
+		<!-- Dozer Mapper -->
+		<dependency>
+			<groupId>com.github.dozermapper</groupId>
+			<artifactId>dozer-core</artifactId>
+			<version>6.4.0</version>
+		</dependency>
 		 <!-- JQuery -->
 		<dependency>
 			<groupId>org.webjars</groupId>
