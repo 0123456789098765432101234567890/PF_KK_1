@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>User List</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${userPage.content}">
+                    <td th:text="${user.user_name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <span th:text="${user.status}" th:attr="data-id=${user.loginId}">Status</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary toggle-status-btn" th:attr="data-id=${user.loginId}" th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
+                        <form th:action="@{/userlist/delete/{loginId}(loginId=${user.loginId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
+                    <a th:href="@{/userlist(page=${userPage.number - 1})}">&laquo;</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
+                    <a th:href="@{/userlist(page=${i - 1})}" th:text="${i}">1</a>
+                </li>
+                <li th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
+                    <a th:href="@{/userlist(page=${userPage.number + 1})}">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('.toggle-status-btn').click(function() {
+                var button = $(this);
+                var userId = button.attr('data-id');
+                $.post('/userlist/toggle/' + userId, function(response) {
+                    var statusSpan = button.closest('td').siblings('td').find('span[data-id=' + userId + ']');
+                    var currentStatus = statusSpan.text();
+                    var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
+                    statusSpan.text(newStatus);
+                    button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow');
+                }).fail(function() {
+                    alert('Error updating status');
+                });
+            });
+
+            $('form[th\\:action*="delete"]').submit(function(event) {
+                event.preventDefault();
+                var form = $(this);
+                $.post(form.attr('action'), function(response) {
+                    form.closest('tr').remove();
+                }).fail(function() {
+                    alert('Error deleting user');
+                });
+            });
+        });
+    </script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
