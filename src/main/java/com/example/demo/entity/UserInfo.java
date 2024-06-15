@@ -33,7 +33,13 @@ public class UserInfo {
     private String email;
     
     @Column(name = "user_name")
-    private String user_name; 
+    private String user_name;
+    
+    @Column(name = "status")
+    private String status; // "ALLOWED" or "DENIED"
+    
+    @Column(name = "deleted")
+    private boolean deleted; // logical delete flag
 	
 
 	/** ログイン失敗回数 */
