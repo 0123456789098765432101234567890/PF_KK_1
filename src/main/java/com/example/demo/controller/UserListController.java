@@ -47,7 +47,6 @@ public class UserListController {
     }
 
     @PostMapping("/userlist/delete")
-    @ResponseBody
     public String deleteUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
             log.error("Validation errors: {}", result.getAllErrors());
@@ -55,7 +54,7 @@ public class UserListController {
         }
         try {
             userListService.deleteUser(form.getLoginId());
-            return "success";
+            return "deleteResult"; // deleteResult.htmlに対応するビュー名を返す
         } catch (Exception e) {
             log.error("Error deleting user for loginId: {}", form.getLoginId(), e);
             return "error";
