@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>User List</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <script th:src="@{/js/jquery.min.js}"></script>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
@@ -25,11 +23,16 @@
                     <td th:text="${user.user_name}"></td>
                     <td th:text="${user.email}"></td>
                     <td>
-                        <span th:text="${user.status}" th:attr="data-id=${user.loginId}">Status</span>
+                        <span th:text="${user.status}" data-id="${user.loginId}"></span>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary toggle-status-btn" th:attr="data-id=${user.loginId}" th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
-                        <form th:action="@{/userlist/delete/{loginId}(loginId=${user.loginId})}" method="post" style="display:inline;">
+                        <form th:action="@{/userlist/toggle}" method="post">
+                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                            <input type="hidden" name="status" th:value="${user.status}" />
+                            <button type="submit" class="btn btn-primary toggle-status-btn" th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
+                        </form>
+                        <form th:action="@{/userlist/delete}" method="post">
+                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
@@ -50,33 +53,23 @@
             </ul>
         </nav>
     </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.toggle-status-btn').click(function() {
-                var button = $(this);
-                var userId = button.attr('data-id');
-                $.post('/userlist/toggle/' + userId, function(response) {
-                    var statusSpan = button.closest('td').siblings('td').find('span[data-id=' + userId + ']');
-                    var currentStatus = statusSpan.text();
-                    var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
-                    statusSpan.text(newStatus);
-                    button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow');
-                }).fail(function() {
-                    alert('Error updating status');
-                });
-            });
-
-            $('form[th\\:action*="delete"]').submit(function(event) {
+            $('.toggle-status-btn').click(function(event) {
                 event.preventDefault();
-                var form = $(this);
-                $.post(form.attr('action'), function(response) {
-                    form.closest('tr').remove();
-                }).fail(function() {
-                    alert('Error deleting user');
-                });
-            });
-        });
-    </script>
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-</body>
-</html>
+                var form = $(this).closest('form');
+                var formData = form.serialize();
+                $.post(form.attr('action'), formData, function(response) {
+                    if (response === 'success') {
+                        var button = form.find('.toggle-status-btn');
+                        var currentStatus = button.text();
+                        var newStatus = currentStatus === 'Allow' ? 'Deny' : 'Allow';
+                        var statusSpan = button.closest('td').siblings('td').find('span[data-id]');
+                        statusSpan.text(newStatus === 'Allow' ? 'ALLOWED' : 'DENIED');
+                        button.text(newStatus);
+                    } else {
+                        alert('Error updating status');
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrow
