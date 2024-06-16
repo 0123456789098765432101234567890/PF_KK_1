@@ -16,19 +16,21 @@ public class UserListService {
     private final UserInfoRepository userInfoRepository;
 
     public Page<UserInfo> getAllUsers(Pageable pageable) {
-        return userInfoRepository.findAll(pageable);
+        return userInfoRepository.findByDeletedFalse(pageable);
     }
 
     @Transactional
     public void toggleUserStatus(String loginId) {
-        UserInfo user = userInfoRepository.findById(loginId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserInfo user = userInfoRepository.findById(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setStatus(user.getStatus().equals("ALLOWED") ? "DENIED" : "ALLOWED");
         userInfoRepository.save(user);
     }
 
     @Transactional
     public void deleteUser(String loginId) {
-        UserInfo user = userInfoRepository.findById(loginId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserInfo user = userInfoRepository.findById(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setDeleted(true);
         userInfoRepository.save(user);
     }

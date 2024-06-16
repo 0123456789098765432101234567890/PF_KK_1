@@ -18,6 +18,6 @@ public class SignupForm {
 	private String loginId;
 
 	/** パスワード */
-	@Length(min = 4, max = 20)
+	@Length(min = 3, max = 20)
 	private String password;
 }

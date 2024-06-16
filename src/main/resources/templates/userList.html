@@ -3,6 +3,15 @@
 <head>
     <title>User List</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .pagination .page-item {
+            margin: 0 2px; /* ボタンの間隔を調整 */
+        }
+        .pagination .page-link {
+            min-width: 40px; /* ボタンの最小幅を設定 */
+            text-align: center; /* テキストを中央に */
+        }
+    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
@@ -39,16 +48,16 @@
                 </tr>
             </tbody>
         </table>
-        <nav>
-            <ul class="pagination">
-                <li th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
-                    <a th:href="@{/userlist(page=${userPage.number - 1})}">&laquo;</a>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number - 1})}" aria-label="Previous">&laquo;</a>
                 </li>
-                <li th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
-                    <a th:href="@{/userlist(page=${i - 1})}" th:text="${i}">1</a>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/userlist(page=${i - 1})}" th:text="${i}"></a>
                 </li>
-                <li th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
-                    <a th:href="@{/userlist(page=${userPage.number + 1})}">&raquo;</a>
+                <li class="page-item" th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number + 1})}" aria-label="Next">&raquo;</a>
                 </li>
             </ul>
         </nav>
@@ -59,17 +68,35 @@
         $(document).ready(function() {
             $('.toggle-status-btn').click(function(event) {
                 event.preventDefault();
-                var form = $(this).closest('form');
+
+                var button = $(this);
+                var form = button.closest('form');
+                var loginId = form.find('input[name="loginId"]').val();
+                var currentStatus = form.find('input[name="status"]').val();
+                var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
+
+                // Update the form's status field
+                form.find('input[name="status"]').val(newStatus);
+
                 var formData = form.serialize();
+
                 $.post(form.attr('action'), formData, function(response) {
                     if (response === 'success') {
-                        var button = form.find('.toggle-status-btn');
-                        var currentStatus = button.text();
-                        var newStatus = currentStatus === 'Allow' ? 'Deny' : 'Allow';
-                        var statusSpan = button.closest('td').siblings('td').find('span[data-id]');
-                        statusSpan.text(newStatus === 'Allow' ? 'ALLOWED' : 'DENIED');
-                        button.text(newStatus);
+                        var statusSpan = button.closest('tr').find('span[data-id]');
+                        statusSpan.text(newStatus); // 更新されたステータスを反映
+                        button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow'); // ボタンのテキストを更新
                     } else {
                         alert('Error updating status');
+                        // Revert the form's status field on error
+                        form.find('input[name="status"]').val(currentStatus);
                     }
-                }).fail(function(jqXHR, textStatus, errorThrow
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    alert('Error updating status');
+                    // Revert the form's status field on error
+                    form.find('input[name="status"]').val(currentStatus);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

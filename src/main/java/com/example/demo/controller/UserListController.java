@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,13 +26,13 @@ public class UserListController {
     @GetMapping("/userlist")
     public String getUserList(Model model, @RequestParam(defaultValue = "0") int page) {
         model.addAttribute("userPage", userListService.getAllUsers(PageRequest.of(page, 5)));
-        model.addAttribute("userListForm", new UserListForm()); // ここでフォームオブジェクトを追加
+        model.addAttribute("userListForm", new UserListForm());
         return "userlist";
     }
 
     @PostMapping("/userlist/toggle")
     @ResponseBody
-    public String toggleUserStatus(@Valid UserListForm form, BindingResult result) {
+    public String toggleUserStatus(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
             log.error("Validation errors: {}", result.getAllErrors());
             return "error";
@@ -47,7 +48,7 @@ public class UserListController {
 
     @PostMapping("/userlist/delete")
     @ResponseBody
-    public String deleteUser(@Valid UserListForm form, BindingResult result) {
+    public String deleteUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
             log.error("Validation errors: {}", result.getAllErrors());
             return "error";
@@ -60,5 +61,4 @@ public class UserListController {
             return "error";
         }
     }
-
 }
