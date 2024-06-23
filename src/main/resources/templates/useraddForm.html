@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-    <title>Add User</title>
+    <meta charset="UTF-8">
+    <title>ユーザー追加</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .hidden {
@@ -14,55 +14,55 @@
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>Add User</h1>
+        <h1>ユーザー追加</h1>
         <form th:action="@{/useradd}" th:object="${userAddForm}" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="roles">Role:</label>
+                <label for="roles">権限:</label>
                 <div>
-                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userAddForm.roles == 'ADMIN'}" />
-                    <label for="admin">Admin</label>
+                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userAddForm.roles == null || userAddForm.roles == 'ADMIN'}" />
+                    <label for="admin">管理者</label>
                     <input type="radio" id="user" name="roles" value="USER" th:checked="${userAddForm.roles == 'USER'}" />
-                    <label for="user">User</label>
+                    <label for="user">一般</label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="user_name">Name:</label>
+                <label for="user_name">名前:</label>
                 <input type="text" id="user_name" th:field="*{user_name}" class="form-control" />
                 <div th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}" class="text-danger"></div>
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email">メールアドレス:</label>
                 <input type="email" id="email" th:field="*{email}" class="form-control" />
                 <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
             </div>
             <div class="form-group">
-                <label for="pass">Password:</label>
+                <label for="pass">パスワード:</label>
                 <input type="password" id="pass" th:field="*{pass}" class="form-control" />
                 <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="text-danger"></div>
             </div>
             <div class="form-group">
-                <label for="status">Status:</label>
+                <label for="status">ステータス:</label>
                 <select id="status" th:field="*{status}" class="form-control">
-                    <option value="ALLOWED" th:selected="${userAddForm.status == 'ALLOWED'}">ALLOWED</option>
-                    <option value="DENIED" th:selected="${userAddForm.status == 'DENIED'}">DENIED</option>
+                    <option value="ALLOWED" th:selected="${userAddForm.status == 'ALLOWED'}">許可</option>
+                    <option value="DENIED" th:selected="${userAddForm.status == 'DENIED'}">禁止</option>
                 </select>
                 <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></div>
             </div>
 
             <div id="userFields" class="hidden">
                 <div class="form-group">
-                    <label for="prof_img">Profile Image:</label>
+                    <label for="prof_img">プロフィール画像:</label>
                     <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
                     <div th:if="${#fields.hasErrors('prof_img')}" th:errors="*{prof_img}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
-                    <label for="user_name_kana">Username Kana:</label>
+                    <label for="user_name_kana">名前（ふりがな）:</label>
                     <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
                     <div th:if="${#fields.hasErrors('user_name_kana')}" th:errors="*{user_name_kana}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
-                    <label for="gender">Gender:</label>
+                    <label for="gender">性別:</label>
                     <select id="gender" th:field="*{gender}" class="form-control">
                         <option value="男性">男性</option>
                         <option value="女性">女性</option>
@@ -71,18 +71,18 @@
                     <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
-                    <label for="age">Age:</label>
+                    <label for="age">年齢:</label>
                     <input type="number" id="age" th:field="*{age}" class="form-control" />
                     <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
                 </div>
                 <div class="form-group">
-                    <label for="self_intro">Self Introduction:</label>
+                    <label for="self_intro">自己紹介:</label>
                     <textarea id="self_intro" th:field="*{self_intro}" class="form-control"></textarea>
                     <div th:if="${#fields.hasErrors('self_intro')}" th:errors="*{self_intro}" class="text-danger"></div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Confirm</button>
+            <button type="submit" class="btn btn-primary">確認</button>
         </form>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
