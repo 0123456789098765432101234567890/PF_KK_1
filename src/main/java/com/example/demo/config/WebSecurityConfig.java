@@ -57,22 +57,25 @@ public class WebSecurityConfig {
 	 * @throws Exception 予期せぬ例外が発生した場合
 	 */
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http
-				.authorizeHttpRequests(
-						authorize -> authorize.requestMatchers(UrlConst.NO_AUTHENTICATION).permitAll()
-								.anyRequest().authenticated()) 
-				.formLogin(
-						login -> login.loginPage(UrlConst.LOGIN) // 自作ログイン画面(Controller)を使うための設定
-								.usernameParameter(USERNAME_PARAMETER)
-								.passwordParameter(PASSWORD_PARAMETER)// ユーザ名パラメータのname属性
-								.defaultSuccessUrl(UrlConst.MENU) // ログイン成功後のリダイレクトURL
-//								.failureUrl(UrlConst.LOGIN + "?error=true") ログイン成功後にバグったので追加した
-								);
+        http
+                .authorizeHttpRequests(
+                        authorize -> authorize
+                                .requestMatchers(UrlConst.NO_AUTHENTICATION).permitAll()
+                                .requestMatchers("/useradd", "/useradd/confirm", "/useradd/success").authenticated()
+                                .anyRequest().authenticated()) 
+                .formLogin(
+                        login -> login
+                                .loginPage(UrlConst.LOGIN) // 自作ログイン画面(Controller)を使うための設定
+                                .usernameParameter(USERNAME_PARAMETER)
+                                .passwordParameter(PASSWORD_PARAMETER) // ユーザ名パラメータのname属性
+                                .defaultSuccessUrl(UrlConst.MENU) // ログイン成功後のリダイレクトURL
+//                                .failureUrl(UrlConst.LOGIN + "?error=true") // ログイン成功後にバグったので追加した
+                        );
 
-		return http.build();
-	}
+        return http.build();
+    }
 
 	/**
 	 * Providerのカスタマイズを行い、独自Providerを返却します。
@@ -95,4 +98,6 @@ public class WebSecurityConfig {
 
 		return provider;
 	}  
+	
+	
 }

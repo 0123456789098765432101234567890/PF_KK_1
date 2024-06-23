@@ -4,7 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -28,8 +29,6 @@ public class UserInfo {
     @Column(name = "pass")
     private String pass;
     
-    @Column(name = "email")
-    @Email(message = "Email should be valid")
     private String email;
     
     @Column(name = "user_name")
@@ -41,6 +40,26 @@ public class UserInfo {
     @Column(name = "deleted")
     private boolean deleted; // logical delete flag
 	
+    @Column(name = "roles")
+    private String roles; // "ADMIN" or "USER"
+    
+    @Column(name = "prof_img", columnDefinition = "MEDIUMBLOB")
+    private byte[] profImg;
+
+    @Column(name = "user_name_kana")
+    @Size(max = 255, message = "Username kana must be at most 255 characters")
+    @Pattern(regexp = "^[ぁ-ゔ]+$", message = "Username kana must be in hiragana")
+    private String userNameKana;
+
+    @Column(name = "gender")
+    private String gender; // "男性", "女性", "その他"
+
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "self_intro")
+    @Size(max = 1500, message = "Self introduction must be at most 1500 characters")
+    private String selfIntro;
 
 	/** ログイン失敗回数 */
 /*	@Column(name = "login_failure_count")

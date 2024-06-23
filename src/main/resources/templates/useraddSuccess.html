@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Add Success</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>User Added Successfully</h1>
+        <p>The user has been successfully added to the system.</p>
+        <a href="/userlist" class="btn btn-primary">Back to User List</a>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
