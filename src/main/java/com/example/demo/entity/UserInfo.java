@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,8 +46,6 @@ public class UserInfo {
     private byte[] profImg;
 
     @Column(name = "user_name_kana")
-    @Size(max = 255, message = "Username kana must be at most 255 characters")
-    @Pattern(regexp = "^[ぁ-ゔ]+$", message = "Username kana must be in hiragana")
     private String userNameKana;
 
     @Column(name = "gender")

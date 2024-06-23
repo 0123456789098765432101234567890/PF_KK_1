@@ -29,9 +29,8 @@ public class UserAddForm {
     private String status; // "ALLOWED" or "DENIED"
 
     private MultipartFile prof_img; // プロフィール画像
-
+    
     @Size(max = 255, message = "Username kana must be at most 255 characters")
-    @Pattern(regexp = "^[ぁ-ゔ]+$", message = "Username kana must be in hiragana")
     private String user_name_kana;
 
     private String gender; // "男性", "女性", "その他"

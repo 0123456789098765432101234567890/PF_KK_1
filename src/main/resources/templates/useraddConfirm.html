@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8">
     <title>User Add Confirmation</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
@@ -9,35 +10,52 @@
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>Confirm User Add</h1>
-        <form th:action="@{/useradd/confirm}" th:object="${userAddForm}" method="post">
+        <form th:action="@{/useradd/register}" th:object="${userAddForm}" method="post">
             <div class="form-group">
                 <label for="user_name">Name:</label>
                 <p th:text="${userAddForm.user_name}"></p>
+                <input type="hidden" th:field="*{user_name}" />
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <p th:text="${userAddForm.email}"></p>
+                <input type="hidden" th:field="*{email}" />
+            </div>
+            <div class="form-group">
+                <label for="pass">Password:</label>
+                <p th:text="${userAddForm.pass}"></p>
+                <input type="hidden" th:field="*{pass}" />
             </div>
             <div class="form-group">
                 <label for="status">Status:</label>
                 <p th:text="${userAddForm.status}"></p>
+                <input type="hidden" th:field="*{status}" />
+            </div>
+            <div class="form-group">
+                <label for="roles">Role:</label>
+                <p th:text="${userAddForm.roles}"></p>
+                <input type="hidden" th:field="*{roles}" />
             </div>
             <div th:if="${userAddForm.roles == 'USER'}">
                 <div class="form-group">
                     <label for="user_name_kana">Username Kana:</label>
                     <p th:text="${userAddForm.user_name_kana}"></p>
+                    <input type="hidden" th:field="*{user_name_kana}" />
                 </div>
                 <div class="form-group">
                     <label for="gender">Gender:</label>
                     <p th:text="${userAddForm.gender}"></p>
+                    <input type="hidden" th:field="*{gender}" />
                 </div>
                 <div class="form-group">
                     <label for="age">Age:</label>
                     <p th:text="${userAddForm.age}"></p>
+                    <input type="hidden" th:field="*{age}" />
                 </div>
                 <div class="form-group">
                     <label for="self_intro">Self Introduction:</label>
                     <p th:text="${userAddForm.self_intro}"></p>
+                    <input type="hidden" th:field="*{self_intro}" />
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>

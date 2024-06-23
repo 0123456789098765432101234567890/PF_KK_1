@@ -19,7 +19,7 @@ public class UserAddService {
     @Transactional
     public void addUser(UserAddForm form) {
         UserInfo user = new UserInfo();
-        user.setLoginId(form.getEmail()); // Assuming loginId is the email
+        user.setLoginId(form.getUser_name()); // login_idにuser_nameをセットする
         user.setUser_name(form.getUser_name());
         user.setEmail(form.getEmail());
         user.setPass(passwordEncoder.encode(form.getPass()));
