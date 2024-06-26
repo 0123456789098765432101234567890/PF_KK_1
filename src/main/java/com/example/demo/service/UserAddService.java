@@ -44,7 +44,7 @@ public class UserAddService {
             user.setSelfIntro(form.getSelf_intro());
         }
 
-        log.debug("Saving user: {}", user);
+//        log.debug("Saving user: {}", user);
         userInfoRepository.save(user);
     }
 }

@@ -81,7 +81,8 @@
                     <div th:if="${#fields.hasErrors('self_intro')}" th:errors="*{self_intro}" class="text-danger"></div>
                 </div>
             </div>
-
+			
+			<input type="hidden" th:field="*{profImgBytes}" />
             <button type="submit" class="btn btn-primary">確認</button>
         </form>
     </div>
