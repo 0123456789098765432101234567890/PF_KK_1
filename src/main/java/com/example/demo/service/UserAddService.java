@@ -9,9 +9,11 @@ import com.example.demo.form.UserAddForm;
 import com.example.demo.repository.UserInfoRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserAddService {
     private final UserInfoRepository userInfoRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,16 +28,15 @@ public class UserAddService {
         user.setStatus(form.getStatus());
         user.setRoles(form.getRoles());
 
-        // Handle profile image if present
-        if (form.getProf_img() != null && !form.getProf_img().isEmpty()) {
-            try {
-                user.setProfImg(form.getProf_img().getBytes());
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to store profile image", e);
-            }
+        // プロファイル画像をバイト配列から設定
+        if (form.getProfImgBytes() != null) {
+            user.setProfImg(form.getProfImgBytes());
+            log.debug("Profile image size: {} bytes", form.getProfImgBytes().length);
+        } else {
+            log.debug("No profile image to store");
         }
 
-        // Additional fields for "USER" role
+        // "USER" ロールの場合の追加フィールド
         if (form.getRoles().equals("USER")) {
             user.setUserNameKana(form.getUser_name_kana());
             user.setGender(form.getGender());
@@ -43,6 +44,7 @@ public class UserAddService {
             user.setSelfIntro(form.getSelf_intro());
         }
 
+        log.debug("Saving user: {}", user);
         userInfoRepository.save(user);
     }
 }

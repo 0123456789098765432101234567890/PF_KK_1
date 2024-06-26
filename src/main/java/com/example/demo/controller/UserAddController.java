@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.form.UserAddForm;
 import com.example.demo.service.UserAddService;
@@ -34,6 +35,19 @@ public class UserAddController {
             log.debug("Validation errors: {}", result.getAllErrors());
             model.addAttribute("userAddForm", form);
             return "useraddForm";
+        }
+
+        // プロファイル画像をバイト配列に変換
+        MultipartFile profImg = form.getProf_img();
+        if (profImg != null && !profImg.isEmpty()) {
+            try {
+                form.setProfImgBytes(profImg.getBytes());
+                log.debug("Converted profile image to byte array (size: {} bytes)", form.getProfImgBytes().length);
+            } catch (Exception e) {
+                log.error("Failed to convert profile image to byte array", e);
+            }
+        } else {
+            log.debug("No profile image received");
         }
 
         model.addAttribute("userAddForm", form);

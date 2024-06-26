@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 public class UserAddForm {
-	@NotEmpty(message = "Username is required")
+    @NotEmpty(message = "Username is required")
     @Size(max = 255, message = "Username must be at most 255 characters")
     private String user_name;
 
@@ -29,7 +29,8 @@ public class UserAddForm {
     private String status; // "ALLOWED" or "DENIED"
 
     private MultipartFile prof_img; // プロフィール画像
-    
+    private byte[] profImgBytes; // プロフィール画像のバイト配列
+
     @Size(max = 255, message = "Username kana must be at most 255 characters")
     private String user_name_kana;
 
