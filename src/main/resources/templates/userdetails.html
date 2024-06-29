@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ユーザー詳細情報</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー詳細情報</h1>
+        <div>
+            <label>ユーザー名:</label>
+            <span th:text="${user.user_name}"></span>
+        </div>
+        <div>
+            <label>メールアドレス:</label>
+            <span th:text="${user.email}"></span>
+        </div>
+        <div>
+            <label>ステータス:</label>
+            <span th:text="${user.status}"></span>
+        </div>
+        <div>
+            <label>ロール:</label>
+            <span th:text="${user.roles}"></span>
+        </div>
+        <div>
+            <label>性別:</label>
+            <span th:text="${user.gender}"></span>
+        </div>
+        <div>
+            <label>年齢:</label>
+            <span th:text="${user.age}"></span>
+        </div>
+        <div>
+            <label>自己紹介:</label>
+            <span th:text="${user.selfIntro}"></span>
+        </div>
+        <div>
+            <label>プロフィール画像:</label>
+            <img th:src="'data:image/jpeg;base64,' + ${user.profImg}" alt="プロフィール画像" />
+        </div>
+        <a th:href="@{/userlist}" class="btn btn-secondary">一覧に戻る</a>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

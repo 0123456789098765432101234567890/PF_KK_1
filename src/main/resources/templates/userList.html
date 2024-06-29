@@ -1,113 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<title>User List</title>
-	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-	<style>
-		.pagination .page-item {
-			margin: 0 2px;
-			/* ボタンの間隔を調整 */
-		}
+    <title>User List</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .pagination .page-item {
+            margin: 0 2px;
+        }
 
-		.pagination .page-link {
-			min-width: 40px;
-			/* ボタンの最小幅を設定 */
-			text-align: center;
-			/* テキストを中央に */
-		}
-	</style>
+        .pagination .page-link {
+            min-width: 40px;
+            text-align: center;
+        }
+    </style>
 </head>
-
 <body>
-	<div th:insert="~{common/sourceList :: sourceList}"></div>
-	<div th:replace="~{common/header :: header}"></div>
-	<div class="container">
-		<h1>User List</h1>
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Username</th>
-					<th>Email</th>
-					<th>Status</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="user : ${userPage.content}">
-					<td th:text="${user.user_name}"></td>
-					<td th:text="${user.email}"></td>
-					<td>
-						<span th:text="${user.status}" data-id="${user.loginId}"></span>
-					</td>
-					<td>
-						<form th:action="@{/userlist/toggle}" method="post">
-							<input type="hidden" name="loginId" th:value="${user.loginId}" />
-							<input type="hidden" name="status" th:value="${user.status}" />
-							<button type="submit" class="btn btn-primary toggle-status-btn"
-								th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
-						</form>
-						<form th:action="@{/userlist/delete}" method="post">
-							<input type="hidden" name="loginId" th:value="${user.loginId}" />
-							<button type="submit" class="btn btn-danger">Delete</button>
-						</form>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<nav aria-label="Page navigation">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
-					<a class="page-link" th:href="@{/userlist(page=${userPage.number - 1})}"
-						aria-label="Previous">&laquo;</a>
-				</li>
-				<li class="page-item" th:each="i : ${#numbers.sequence(1, userPage.totalPages)}"
-					th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
-					<a class="page-link" th:href="@{/userlist(page=${i - 1})}" th:text="${i}"></a>
-				</li>
-				<li class="page-item" th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
-					<a class="page-link" th:href="@{/userlist(page=${userPage.number + 1})}"
-						aria-label="Next">&raquo;</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			$('.toggle-status-btn').click(function (event) {
-				event.preventDefault();
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>User List</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${userPage.content}">
+                    <td th:text="${user.user_name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <span th:text="${user.status}" data-id="${user.loginId}"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{/userlist/toggle}" method="post">
+                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                            <input type="hidden" name="status" th:value="${user.status}" />
+                            <button type="submit" class="btn btn-primary toggle-status-btn"
+                                th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
+                        </form>
+                        <form th:action="@{/userlist/delete}" method="post">
+                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <a th:href="@{/userlist/{loginId}(loginId=${user.loginId})}" class="btn btn-info">Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number - 1})}" aria-label="Previous">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/userlist(page=${i - 1})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number + 1})}" aria-label="Next">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.toggle-status-btn').click(function (event) {
+                event.preventDefault();
 
-				var button = $(this);
-				var form = button.closest('form');
-				var loginId = form.find('input[name="loginId"]').val();
-				var currentStatus = form.find('input[name="status"]').val();
-				var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
+                var button = $(this);
+                var form = button.closest('form');
+                var loginId = form.find('input[name="loginId"]').val();
+                var currentStatus = form.find('input[name="status"]').val();
+                var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
 
-				// Update the form's status field
-				form.find('input[name="status"]').val(newStatus);
+                form.find('input[name="status"]').val(newStatus);
 
-				var formData = form.serialize();
+                var formData = form.serialize();
 
-				$.post(form.attr('action'), formData, function (response) {
-					if (response === 'success') {
-						var statusSpan = button.closest('tr').find('span[data-id]');
-						statusSpan.text(newStatus); // 更新されたステータスを反映
-						button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow'); // ボタンのテキストを更新
-					} else {
-						alert('Error updating status');
-						// Revert the form's status field on error
-						form.find('input[name="status"]').val(currentStatus);
-					}
-				}).fail(function (jqXHR, textStatus, errorThrown) {
-					alert('Error updating status');
-					// Revert the form's status field on error
-					form.find('input[name="status"]').val(currentStatus);
-				});
-			});
-		});
-	</script>
+                $.post(form.attr('action'), formData, function (response) {
+                    if (response === 'success') {
+                        var statusSpan = button.closest('tr').find('span[data-id]');
+                        statusSpan.text(newStatus);
+                        button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow');
+                    } else {
+                        alert('Error updating status');
+                        form.find('input[name="status"]').val(currentStatus);
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert('Error updating status');
+                    form.find('input[name="status"]').val(currentStatus);
+                });
+            });
+        });
+    </script>
 </body>
-
 </html>

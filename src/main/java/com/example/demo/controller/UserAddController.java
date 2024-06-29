@@ -51,7 +51,8 @@ public class UserAddController {
         }
 
         model.addAttribute("userAddForm", form);
-        log.debug("Redirecting to confirmation page with form: {}", form);
+//        log.debug("Redirecting to confirmation page with form: {}", form); ←コンソールがバグる
+          log.debug("Redirecting to confirmation page with form: {}", form.getUser_name()); // 必要な情報のみ出力
         return "useraddConfirm";
     }
 
