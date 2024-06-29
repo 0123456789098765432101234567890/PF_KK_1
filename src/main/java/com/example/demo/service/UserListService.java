@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,22 +18,29 @@ public class UserListService {
     private final UserInfoRepository userInfoRepository;
 
     public Page<UserInfo> getAllUsers(Pageable pageable) {
-        return userInfoRepository.findByDeletedFalse(pageable);
+        return userInfoRepository.findAll(pageable);
     }
 
     @Transactional
     public void toggleUserStatus(String loginId) {
-        UserInfo user = userInfoRepository.findById(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setStatus(user.getStatus().equals("ALLOWED") ? "DENIED" : "ALLOWED");
-        userInfoRepository.save(user);
+        Optional<UserInfo> userOptional = userInfoRepository.findById(loginId);
+        if (userOptional.isPresent()) {
+            UserInfo user = userOptional.get();
+            if ("ALLOWED".equals(user.getStatus())) {
+                user.setStatus("DENIED");
+            } else {
+                user.setStatus("ALLOWED");
+            }
+            userInfoRepository.save(user);
+        }
     }
 
     @Transactional
     public void deleteUser(String loginId) {
-        UserInfo user = userInfoRepository.findById(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setDeleted(true);
-        userInfoRepository.save(user);
+        userInfoRepository.deleteById(loginId);
+    }
+
+    public UserInfo getUserByLoginId(String loginId) {
+        return userInfoRepository.findById(loginId).orElse(null);
     }
 }

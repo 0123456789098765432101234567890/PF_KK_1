@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Base64;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,14 +40,14 @@ public class UserListController {
     @ResponseBody
     public String toggleUserStatus(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
-            log.error("バリデーションエラー: {}", result.getAllErrors());
+            log.error("Validation errors: {}", result.getAllErrors());
             return "error";
         }
         try {
             userListService.toggleUserStatus(form.getLoginId());
             return "success";
         } catch (Exception e) {
-            log.error("ログインID {} のステータスを切り替える際のエラー: {}", form.getLoginId(), e);
+            log.error("Error toggling user status for loginId: {}", form.getLoginId(), e);
             return "error";
         }
     }
@@ -53,14 +55,14 @@ public class UserListController {
     @PostMapping("/userlist/delete")
     public String deleteUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
-            log.error("バリデーションエラー: {}", result.getAllErrors());
+            log.error("Validation errors: {}", result.getAllErrors());
             return "error";
         }
         try {
             userListService.deleteUser(form.getLoginId());
             return "deleteResult"; // deleteResult.htmlに対応するビュー名を返す
         } catch (Exception e) {
-            log.error("ログインID {} のユーザー削除時のエラー: {}", form.getLoginId(), e);
+            log.error("Error deleting user for loginId: {}", form.getLoginId(), e);
             return "error";
         }
     }
@@ -69,10 +71,14 @@ public class UserListController {
     public String viewUser(@PathVariable String loginId, Model model) {
         UserInfo user = userInfoService.findByLoginId(loginId);
         if (user == null) {
-            log.error("ログインID {} のユーザーが見つかりません", loginId);
+            log.error("User with loginId: {} not found", loginId);
             return "error"; // エラービューにリダイレクト
         }
         model.addAttribute("user", user);
+        if (user.getProfImg() != null) {
+            String profImgBase64 = Base64.getEncoder().encodeToString(user.getProfImg());
+            model.addAttribute("profImgBase64", profImgBase64);
+        }
         return "userdetail";
     }
 }

@@ -39,7 +39,7 @@
         </div>
         <div>
             <label>プロフィール画像:</label>
-            <img th:src="'data:image/jpeg;base64,' + ${user.profImg}" alt="プロフィール画像" />
+            <img th:src="'data:image/jpeg;base64,' + ${profImgBase64}" alt="プロフィール画像" />
         </div>
         <a th:href="@{/userlist}" class="btn btn-secondary">一覧に戻る</a>
     </div>
