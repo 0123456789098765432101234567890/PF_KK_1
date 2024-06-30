@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User List</title>
+    <title>ユーザー一覧</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .pagination .page-item {
@@ -18,14 +18,14 @@
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>User List</h1>
+        <h1>ユーザー一覧</h1>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>ユーザー名</th>
+                    <th>メールアドレス</th>
+                    <th>ステータス</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,31 +36,38 @@
                         <span th:text="${user.status}" data-id="${user.loginId}"></span>
                     </td>
                     <td>
-                        <form th:action="@{/userlist/toggle}" method="post">
-                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
-                            <input type="hidden" name="status" th:value="${user.status}" />
-                            <button type="submit" class="btn btn-primary toggle-status-btn"
-                                th:text="${user.status == 'ALLOWED' ? 'Deny' : 'Allow'}"></button>
-                        </form>
-                        <form th:action="@{/userlist/delete}" method="post">
-                            <input type="hidden" name="loginId" th:value="${user.loginId}" />
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                        <a th:href="@{/userlist/{loginId}(loginId=${user.loginId})}" class="btn btn-info">Details</a>
+                        <div>
+                            <form th:action="@{/userlist/toggle}" method="post" style="display: inline-block;">
+                                <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                                <input type="hidden" name="status" th:value="${user.status}" />
+                                <button type="submit" class="btn btn-primary toggle-status-btn"
+                                    th:text="${user.status == 'ALLOWED' ? 'アクセス禁止' : 'アクセス許可'}"></button>
+                            </form>
+                        </div>
+                        <div>
+                            <a th:href="@{/userlist/{loginId}(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
+                            <a th:href="@{/useredit/{loginId}(loginId=${user.loginId})}" class="btn btn-warning">編集</a>
+                        </div>
+                        <div>
+                            <form th:action="@{/userlist/delete}" method="post" style="display: inline-block;">
+                                <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                                <button type="submit" class="btn btn-danger">削除</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="Page navigation">
+        <nav aria-label="ページナビゲーション">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/userlist(page=${userPage.number - 1})}" aria-label="Previous">&laquo;</a>
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number - 1})}" aria-label="前へ">&laquo;</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
                     <a class="page-link" th:href="@{/userlist(page=${i - 1})}" th:text="${i}"></a>
                 </li>
                 <li class="page-item" th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/userlist(page=${userPage.number + 1})}" aria-label="Next">&raquo;</a>
+                    <a class="page-link" th:href="@{/userlist(page=${userPage.number + 1})}" aria-label="次へ">&raquo;</a>
                 </li>
             </ul>
         </nav>
@@ -86,13 +93,13 @@
                     if (response === 'success') {
                         var statusSpan = button.closest('tr').find('span[data-id]');
                         statusSpan.text(newStatus);
-                        button.text(newStatus === 'ALLOWED' ? 'Deny' : 'Allow');
+                        button.text(newStatus === 'ALLOWED' ? 'アクセス禁止' : 'アクセス許可');
                     } else {
-                        alert('Error updating status');
+                        alert('ステータス更新エラー');
                         form.find('input[name="status"]').val(currentStatus);
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert('Error updating status');
+                    alert('ステータス更新エラー');
                     form.find('input[name="status"]').val(currentStatus);
                 });
             });

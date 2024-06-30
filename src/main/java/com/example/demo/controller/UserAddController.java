@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Base64;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +44,8 @@ public class UserAddController {
         if (profImg != null && !profImg.isEmpty()) {
             try {
                 form.setProfImgBytes(profImg.getBytes());
+                String base64Image = Base64.getEncoder().encodeToString(profImg.getBytes());
+                model.addAttribute("base64Image", base64Image);
                 log.debug("Converted profile image to byte array (size: {} bytes)", form.getProfImgBytes().length);
             } catch (Exception e) {
                 log.error("Failed to convert profile image to byte array", e);
@@ -51,8 +55,7 @@ public class UserAddController {
         }
 
         model.addAttribute("userAddForm", form);
-//        log.debug("Redirecting to confirmation page with form: {}", form); ←コンソールがバグる
-          log.debug("Redirecting to confirmation page with form: {}", form.getUser_name()); // 必要な情報のみ出力
+        log.debug("Redirecting to confirmation page with form: {}", form.getUser_name());
         return "useraddConfirm";
     }
 

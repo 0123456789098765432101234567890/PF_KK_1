@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー編集確認</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー編集確認</h1>
+        <form th:action="@{/useredit/submit}" th:object="${userEditForm}" method="post">
+            <div class="form-group">
+                <label>権限:</label>
+                <span th:text="${userEditForm.roles}"></span>
+                <input type="hidden" th:field="*{roles}" />
+            </div>
+            <div class="form-group">
+                <label>名前:</label>
+                <span th:text="${userEditForm.user_name}"></span>
+                <input type="hidden" th:field="*{user_name}" />
+            </div>
+            <div class="form-group">
+                <label>メールアドレス:</label>
+                <span th:text="${userEditForm.email}"></span>
+                <input type="hidden" th:field="*{email}" />
+            </div>
+            <div class="form-group">
+                <label>パスワード:</label>
+                <span th:text="${userEditForm.pass}"></span>
+                <input type="hidden" th:field="*{pass}" />
+            </div>
+            <div class="form-group">
+                <label>ステータス:</label>
+                <span th:text="${userEditForm.status}"></span>
+                <input type="hidden" th:field="*{status}" />
+            </div>
+            <div th:if="${userEditForm.roles == 'USER'}">
+                <div class="form-group">
+                    <label>プロフィール画像:</label>
+                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" />
+                    <input type="hidden" th:field="*{profImgBytes}" />
+                </div>
+                <div class="form-group">
+                    <label>名前（ふりがな）:</label>
+                    <span th:text="${userEditForm.user_name_kana}"></span>
+                    <input type="hidden" th:field="*{user_name_kana}" />
+                </div>
+                <div class="form-group">
+                    <label>性別:</label>
+                    <span th:text="${userEditForm.gender}"></span>
+                    <input type="hidden" th:field="*{gender}" />
+                </div>
+                <div class="form-group">
+                    <label>年齢:</label>
+                    <span th:text="${userEditForm.age}"></span>
+                    <input type="hidden" th:field="*{age}" />
+                </div>
+                <div class="form-group">
+                    <label>自己紹介:</label>
+                    <span th:text="${userEditForm.self_intro}"></span>
+                    <input type="hidden" th:field="*{self_intro}" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
+        </form>
+        <a th:href="@{/useredit/{loginId}(loginId=${userEditForm.loginId})}" class="btn btn-secondary">戻る</a>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -76,8 +76,8 @@ public class UserListController {
         }
         model.addAttribute("user", user);
         if (user.getProfImg() != null) {
-            String profImgBase64 = Base64.getEncoder().encodeToString(user.getProfImg());
-            model.addAttribute("profImgBase64", profImgBase64);
+            String base64Image = Base64.getEncoder().encodeToString(user.getProfImg());
+            model.addAttribute("base64Image", base64Image);
         }
         return "userdetail";
     }

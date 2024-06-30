@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー編集</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー編集</h1>
+        <form th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="roles">権限:</label>
+                <div>
+                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userEditForm.roles == 'ADMIN'}" />
+                    <label for="admin">管理者</label>
+                    <input type="radio" id="user" name="roles" value="USER" th:checked="${userEditForm.roles == 'USER'}" />
+                    <label for="user">一般</label>
+                </div>
+                <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="user_name">名前:</label>
+                <input type="text" id="user_name" th:field="*{user_name}" class="form-control" />
+                <div th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">メールアドレス:</label>
+                <input type="email" id="email" th:field="*{email}" class="form-control" />
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="pass">パスワード:</label>
+                <input type="password" id="pass" th:field="*{pass}" class="form-control" />
+                <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="status">ステータス:</label>
+                <select id="status" th:field="*{status}" class="form-control">
+                    <option value="ALLOWED" th:selected="${userEditForm.status == 'ALLOWED'}">許可</option>
+                    <option value="DENIED" th:selected="${userEditForm.status == 'DENIED'}">禁止</option>
+                </select>
+                <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></div>
+            </div>
+            <div id="userFields" th:classappend="${userEditForm.roles == 'USER' ? '' : 'hidden'}">
+                <div class="form-group">
+                    <label for="prof_img">プロフィール画像:</label>
+                    <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                    <div th:if="${#fields.hasErrors('prof_img')}" th:errors="*{prof_img}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="user_name_kana">名前（ふりがな）:</label>
+                    <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
+                    <div th:if="${#fields.hasErrors('user_name_kana')}" th:errors="*{user_name_kana}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="gender">性別:</label>
+                    <select id="gender" th:field="*{gender}" class="form-control">
+                        <option value="男性">男性</option>
+                        <option value="女性">女性</option>
+                        <option value="その他">その他</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="age">年齢:</label>
+                    <input type="number" id="age" th:field="*{age}" class="form-control" />
+                    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
+                </div>
+                <div class="form-group">
+                    <label for="self_intro">自己紹介:</label>
+                    <textarea id="self_intro" th:field="*{self_intro}" class="form-control"></textarea>
+                    <div th:if="${#fields.hasErrors('self_intro')}" th:errors="*{self_intro}" class="text-danger"></div>
+                </div>
+            </div>
+            <input type="hidden" th:field="*{profImgBytes}" />
+            <button type="submit" class="btn btn-primary">編集内容確認</button>
+        </form>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function toggleUserFields() {
+                if ($('#user').is(':checked')) {
+                    $('#userFields').removeClass('hidden');
+                } else {
+                    $('#userFields').addClass('hidden');
+                }
+            }
+            $('input[name="roles"]').change(toggleUserFields);
+            toggleUserFields(); // 初期表示
+        });
+    </script>
+</body>
+</html>

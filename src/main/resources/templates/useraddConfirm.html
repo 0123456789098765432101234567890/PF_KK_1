@@ -58,6 +58,10 @@
                     <input type="hidden" th:field="*{self_intro}" />
                 </div>
             </div>
+            <div class="form-group">
+                <label for="prof_img">プロフィール画像:</label>
+                <img th:if="${base64Image}" th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" />
+            </div>
             <input type="hidden" th:field="*{profImgBytes}" />
             <button type="submit" class="btn btn-primary">登録</button>
         </form>
