@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>削除ユーザー一覧</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .pagination .page-item {
+            margin: 0 2px;
+        }
+
+        .pagination .page-link {
+            min-width: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>削除ユーザー一覧</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ユーザー名</th>
+                    <th>メールアドレス</th>
+                    <th>ステータス</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${userPage.content}">
+                    <td th:text="${user.user_name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <span th:text="${user.status}" data-id="${user.loginId}"></span>
+                    </td>
+                    <td>
+                        <div>
+                            <form th:action="@{/userdelete/restore}" method="post" style="display: inline-block;">
+                                <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                                <button type="submit" class="btn btn-success">復元</button>
+                            </form>
+                        </div>
+                        <div>
+                            <form th:action="@{/userdelete/permanentDelete}" method="post" style="display: inline-block;">
+                                <input type="hidden" name="loginId" th:value="${user.loginId}" />
+                                <button type="button" class="btn btn-danger" onclick="confirmPermanentDelete(this)">完全に削除</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:if="${userPage.totalPages > 0}">
+            <nav aria-label="ページナビゲーション">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${userPage.hasPrevious() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/userdelete(page=${userPage.number - 1})}" aria-label="前へ">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, userPage.totalPages)}" th:classappend="${userPage.number + 1 == i ? 'active' : ''}">
+                        <a class="page-link" th:href="@{/userdelete(page=${i - 1})}" th:text="${i}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${userPage.hasNext() ? '' : 'disabled'}">
+                        <a class="page-link" th:href="@{/userdelete(page=${userPage.number + 1})}" aria-label="次へ">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div th:if="${userPage.totalPages == 0}">
+            <p>削除されたユーザーが見つかりません。</p>
+        </div>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function confirmPermanentDelete(button) {
+            if (confirm("このユーザーを完全に削除しますか？")) {
+                $(button).closest('form').submit();
+            }
+        }
+    </script>
+</body>
+</html>

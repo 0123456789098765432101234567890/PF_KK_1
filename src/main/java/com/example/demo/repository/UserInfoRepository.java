@@ -23,4 +23,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
     Page<UserInfo> findByDeletedFalse(Pageable pageable);
 
     // 特定のユーザーのステータスを更新するメソッドはデフォルトメソッドをサービス層で実装可能
+    
+    Page<UserInfo> findByDeleted(boolean deleted, Pageable pageable);
 }

@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.form.UserListForm;
-import com.example.demo.service.UserListService;
+import com.example.demo.service.UserDeleteService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,43 +19,42 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class UserListController {
-    private final UserListService userListService;
+public class UserDeleteController {
+    private final UserDeleteService userDeleteService;
 
-    @GetMapping("/userlist")
-    public String getUserList(Model model, @RequestParam(defaultValue = "0") int page) {
-        model.addAttribute("userPage", userListService.getAllActiveUsers(PageRequest.of(page, 5)));
+    @GetMapping("/userdelete")
+    public String getUserDeleteList(Model model, @RequestParam(defaultValue = "0") int page) {
+        model.addAttribute("userPage", userDeleteService.getAllDeletedUsers(PageRequest.of(page, 5)));
         model.addAttribute("userListForm", new UserListForm());
-        return "userlist";
+        return "userdelete";
     }
 
-    @PostMapping("/userlist/toggle")
-    @ResponseBody
-    public String toggleUserStatus(@Valid @ModelAttribute UserListForm form, BindingResult result) {
+    @PostMapping("/userdelete/restore")
+    public String restoreUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
             log.error("Validation errors: {}", result.getAllErrors());
             return "error";
         }
         try {
-            userListService.toggleUserStatus(form.getLoginId());
-            return "success";
+            userDeleteService.restoreUser(form.getLoginId());
+            return "redirect:/userdelete";
         } catch (Exception e) {
-            log.error("Error toggling user status for loginId: {}", form.getLoginId(), e);
+            log.error("Error restoring user for loginId: {}", form.getLoginId(), e);
             return "error";
         }
     }
 
-    @PostMapping("/userlist/delete")
-    public String deleteUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
+    @PostMapping("/userdelete/permanentDelete")
+    public String permanentDeleteUser(@Valid @ModelAttribute UserListForm form, BindingResult result) {
         if (result.hasErrors()) {
             log.error("Validation errors: {}", result.getAllErrors());
             return "error";
         }
         try {
-            userListService.softDeleteUser(form.getLoginId());
-            return "redirect:/userlist"; // リダイレクトして更新後のユーザー一覧を表示
+            userDeleteService.deleteUserPermanently(form.getLoginId());
+            return "redirect:/userdelete";
         } catch (Exception e) {
-            log.error("Error deleting user for loginId: {}", form.getLoginId(), e);
+            log.error("Error permanently deleting user for loginId: {}", form.getLoginId(), e);
             return "error";
         }
     }
