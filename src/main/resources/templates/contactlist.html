@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>お問い合わせ一覧</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .pagination .page-item {
+            margin: 0 2px;
+        }
+
+        .pagination .page-link {
+            min-width: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>お問い合わせ一覧</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>カテゴリー</th>
+                    <th>内容</th>
+                    <th>ステータス</th>
+                    <th>詳細確認</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="contact : ${contactPage.content}">
+                    <td th:text="${contact.contact_category}"></td>
+                    <td th:text="${#strings.abbreviate(contact.contact_detail, 10)}"></td>
+                    <td th:text="${contact.status}"></td>
+                    <td>
+                        <a th:href="@{/contactlist/{contact_id}(contact_id=${contact.contact_id})}" class="btn btn-info">詳細</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav aria-label="ページナビゲーション">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${contactPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/contactlist(page=${contactPage.number - 1})}" aria-label="前へ">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, contactPage.totalPages)}" th:classappend="${contactPage.number + 1 == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/contactlist(page=${i - 1})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${contactPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/contactlist(page=${contactPage.number + 1})}" aria-label="次へ">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
