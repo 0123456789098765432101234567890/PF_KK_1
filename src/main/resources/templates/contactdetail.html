@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>お問い合わせ一覧</title>
+    <meta charset="UTF-8">
+    <title>お問い合わせ詳細</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <style>
-        .pagination .page-item {
-            margin: 0 2px;
-        }
-
-        .pagination .page-link {
-            min-width: 40px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>お問い合わせ一覧</h1>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>カテゴリー</th>
-                    <th>詳細</th>
-                    <th>ステータス</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="contact : ${contactPage.content}">
-                    <td th:text="${contact.contact_category}"></td>
-                    <td th:text="${#strings.abbreviate(contact.contact_detail, 10)}"></td>
-                    <td th:text="${contact.status}"></td>
-                    <td>
-                        <a th:href="@{/contactlist/{contact_id}(contact_id=${contact.contact_id})}" class="btn btn-info">詳細</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <nav aria-label="ページナビゲーション">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${contactPage.hasPrevious() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/contactlist(page=${contactPage.number - 1})}" aria-label="前へ">&laquo;</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(1, contactPage.totalPages)}" th:classappend="${contactPage.number + 1 == i ? 'active' : ''}">
-                    <a class="page-link" th:href="@{/contactlist(page=${i - 1})}" th:text="${i}"></a>
-                </li>
-                <li class="page-item" th:classappend="${contactPage.hasNext() ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{/contactlist(page=${contactPage.number + 1})}" aria-label="次へ">&raquo;</a>
-                </li>
-            </ul>
-        </nav>
+        <h1>お問い合わせ詳細</h1>
+        <form th:action="@{/contactlist/update}" th:object="${contact}" method="post">
+            <input type="hidden" th:field="*{contact_id}" />
+            <div class="form-group">
+                <label for="contact_category">カテゴリー:</label>
+                <p th:text="${contact.contactCategory.category_name}"></p>
+            </div>
+            <div class="form-group">
+                <label for="contact_detail">詳細:</label>
+                <p th:utext="${#strings.replace(contact.contact_detail, '\n', '<br/>')}"></p>
+            </div>
+            <div class="form-group">
+                <label for="status">ステータス:</label>
+                <select id="status" th:field="*{status}" class="form-control">
+                    <option value="未対応" th:selected="${contact.status == '未対応'}">未対応</option>
+                    <option value="対応中" th:selected="${contact.status == '対応中'}">対応中</option>
+                    <option value="対応済み" th:selected="${contact.status == '対応済み'}">対応済み</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
+        </form>
+        <a th:href="@{/contactlist}" class="btn btn-secondary mt-3">一覧に戻る</a>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function(event) {
+                event.preventDefault();
+                var form = $(this);
+                $.post(form.attr('action'), form.serialize(), function(response) {
+                    if (response === 'success') {
+                        alert('更新しました');
+                        window.location.href = '/contactlist';
+                    } else {
+                        alert('更新に失敗しました');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

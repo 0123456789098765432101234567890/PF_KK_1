@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>お問い合わせ一覧</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
@@ -23,14 +24,14 @@
             <thead>
                 <tr>
                     <th>カテゴリー</th>
-                    <th>内容</th>
+                    <th>詳細</th>
                     <th>ステータス</th>
-                    <th>詳細確認</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="contact : ${contactPage.content}">
-                    <td th:text="${contact.contact_category}"></td>
+                    <td th:text="${contact.contactCategory.category_name}"></td>
                     <td th:text="${#strings.abbreviate(contact.contact_detail, 10)}"></td>
                     <td th:text="${contact.status}"></td>
                     <td>
