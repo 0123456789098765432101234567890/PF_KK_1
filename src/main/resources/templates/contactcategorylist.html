@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>お問い合わせカテゴリー一覧</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .pagination .page-item {
+            margin: 0 2px;
+        }
+
+        .pagination .page-link {
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <div class="header-container">
+            <h1>お問い合わせカテゴリー一覧</h1>
+            <a th:href="@{/contactlist}" class="btn btn-primary">お問い合わせ一覧</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>カテゴリーID</th>
+                    <th>カテゴリー名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="category : ${categoryPage.content}">
+                    <td th:text="${category.category_id}"></td>
+                    <td th:text="${category.category_name}"></td>
+                    <td class="action-buttons">
+                        <a th:href="@{/contactcategorylist/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
+                        <form th:action="@{/contactcategorylist/toggle}" method="post" style="display: inline;">
+                            <input type="hidden" name="categoryId" th:value="${category.category_id}" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirmDelete()">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav aria-label="ページナビゲーション">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${categoryPage.hasPrevious() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/contactcategorylist(page=${categoryPage.number - 1})}" aria-label="前へ">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, categoryPage.totalPages)}" th:classappend="${categoryPage.number + 1 == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{/contactcategorylist(page=${i - 1})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${categoryPage.hasNext() ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{/contactcategorylist(page=${categoryPage.number + 1})}" aria-label="次へ">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function confirmDelete() {
+            return confirm('本当に削除しますか？');
+        }
+
+        $(document).ready(function() {
+            if (sessionStorage.getItem("deleteSuccess")) {
+                alert("削除に成功しました。");
+                sessionStorage.removeItem("deleteSuccess");
+            }
+        });
+
+        $('form').submit(function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.post(form.attr('action'), form.serialize(), function(response) {
+                if (response === 'success') {
+                    sessionStorage.setItem("deleteSuccess", true);
+                    location.reload();
+                } else {
+                    alert("削除に失敗しました。");
+                }
+            }).fail(function() {
+                alert("削除に失敗しました。");
+            });
+        });
+    </script>
+</body>
+</html>

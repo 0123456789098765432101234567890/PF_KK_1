@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>お問い合わせカテゴリー編集</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>お問い合わせカテゴリー編集</h1>
+        <form th:action="@{/contactcategorylist/update}" method="post">
+            <div class="form-group">
+                <label for="category_id">カテゴリーID:</label>
+                <p th:text="${contactCategory.category_id}"></p>
+                <input type="hidden" name="category_id" th:value="${contactCategory.category_id}" />
+            </div>
+            <div class="form-group">
+                <label for="category_name">カテゴリー名:</label>
+                <input type="text" id="category_name" name="category_name" th:value="${contactCategory.category_name}" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
+        </form>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('form').submit(function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.post(form.attr('action'), form.serialize(), function(response) {
+                if (response === 'success') {
+                    alert('更新しました');
+                    window.location.href = '/contactcategorylist';
+                } else {
+                    alert('更新に失敗しました');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

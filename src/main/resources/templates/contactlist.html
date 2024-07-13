@@ -13,13 +13,22 @@
             min-width: 40px;
             text-align: center;
         }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>お問い合わせ一覧</h1>
+        <div class="header-container">
+            <h1>お問い合わせ一覧</h1>
+            <a th:href="@{/contactcategorylist}" class="btn btn-primary">カテゴリー一覧</a>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>

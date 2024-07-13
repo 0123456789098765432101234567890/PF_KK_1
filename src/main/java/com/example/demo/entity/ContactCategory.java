@@ -21,4 +21,7 @@ public class ContactCategory {
     
     @Column(name = "category_name")
     private String category_name;
+    
+    @Column(name = "deleted")
+    private boolean deleted; // logical delete flag
 }
