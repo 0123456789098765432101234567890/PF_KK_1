@@ -14,19 +14,13 @@ import lombok.RequiredArgsConstructor;
 public class ContactCategoryListService {
     private final ContactCategoryRepository contactCategoryRepository;
 
-    public Page<ContactCategory> getAllContactCategories(Pageable pageable) {
+    public Page<ContactCategory> getAllCategories(Pageable pageable) {
         return contactCategoryRepository.findAllByDeletedFalse(pageable);
     }
 
-    public ContactCategory getContactCategoryById(Long categoryId) {
-        return contactCategoryRepository.findById(categoryId).orElse(null);
-    }
-
-    public void toggleContactCategoryDeleted(Long categoryId) {
-        ContactCategory contactCategory = getContactCategoryById(categoryId);
-        if (contactCategory != null) {
-            contactCategory.setDeleted(!contactCategory.isDeleted());
-            contactCategoryRepository.save(contactCategory);
-        }
+    public void toggleCategoryDeleted(Long categoryId) {
+        ContactCategory category = contactCategoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + categoryId));
+        category.setDeleted(!category.isDeleted());
+        contactCategoryRepository.save(category);
     }
 }

@@ -21,18 +21,18 @@ public class ContactCategoryListController {
 
     @GetMapping("/contactcategorylist")
     public String getContactCategoryList(Model model, @RequestParam(defaultValue = "0") int page) {
-        model.addAttribute("categoryPage", contactCategoryListService.getAllContactCategories(PageRequest.of(page, 5)));
+        model.addAttribute("categoryPage", contactCategoryListService.getAllCategories(PageRequest.of(page, 5)));
         return "contactcategorylist";
     }
 
     @PostMapping("/contactcategorylist/toggle")
     @ResponseBody
-    public String toggleContactCategoryDeleted(@RequestParam Long categoryId) {
+    public String toggleCategoryDeleted(@RequestParam Long categoryId) {
         try {
-            contactCategoryListService.toggleContactCategoryDeleted(categoryId);
+            contactCategoryListService.toggleCategoryDeleted(categoryId);
             return "success";
         } catch (Exception e) {
-            log.error("Error toggling contact category deleted status for category_id: {}", categoryId, e);
+            log.error("Error toggling deleted status for category_id: {}", categoryId, e);
             return "error";
         }
     }
