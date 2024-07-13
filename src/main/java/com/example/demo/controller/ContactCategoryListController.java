@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ContactCategoryListService;
 
@@ -26,14 +25,9 @@ public class ContactCategoryListController {
     }
 
     @PostMapping("/contactcategorylist/toggle")
-    @ResponseBody
-    public String toggleCategoryDeleted(@RequestParam Long categoryId) {
-        try {
-            contactCategoryListService.toggleCategoryDeleted(categoryId);
-            return "success";
-        } catch (Exception e) {
-            log.error("Error toggling deleted status for category_id: {}", categoryId, e);
-            return "error";
-        }
+    public String toggleCategory(@RequestParam("categoryId") Long categoryId, Model model) {
+        contactCategoryListService.toggleCategoryDeleted(categoryId);
+        model.addAttribute("message", "削除に成功しました。");
+        return "redirect:/contactcategorylist";
     }
 }

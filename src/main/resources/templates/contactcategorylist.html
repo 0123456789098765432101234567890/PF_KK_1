@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>お問い合わせカテゴリー一覧</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
@@ -24,6 +23,11 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -32,7 +36,15 @@
     <div class="container">
         <div class="header-container">
             <h1>お問い合わせカテゴリー一覧</h1>
-            <a th:href="@{/contactlist}" class="btn btn-primary">お問い合わせ一覧</a>
+            <div class="button-group">
+                <a th:href="@{/contactcategoryadd}" class="btn btn-primary">カテゴリー追加</a>
+                <a th:href="@{/contactlist}" class="btn btn-primary">お問い合わせ一覧</a>
+            </div>
+        </div>
+        <div th:if="${message}">
+            <script>
+                alert(/*[[${message}]]*/ '削除に成功しました。');
+            </script>
         </div>
         <table class="table table-striped">
             <thead>
@@ -47,7 +59,7 @@
                     <td th:text="${category.category_id}"></td>
                     <td th:text="${category.category_name}"></td>
                     <td class="action-buttons">
-                        <a th:href="@{/contactcategoryedit/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
+                        <a th:href="@{/contactcategorylist/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
                         <form th:action="@{/contactcategorylist/toggle}" method="post" style="display: inline;">
                             <input type="hidden" name="categoryId" th:value="${category.category_id}" />
                             <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">削除</button>
