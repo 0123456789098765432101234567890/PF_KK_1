@@ -10,94 +10,55 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.example.demo.authentication.CustomSuccessHandler;
 import com.example.demo.constant.UrlConst;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * Spring Securityカスタマイズクラス
- * 
- * @author ys-fj
- *
- */
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-	/** パスワードエンコーダー */
-	private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
+    private final MessageSource messageSource;
 
-	/** ユーザー情報取得Service */
-	private final UserDetailsService userDetailsService;
+    private final String USERNAME_PARAMETER = "loginId";
+    private final String PASSWORD_PARAMETER = "pass";
 
-	/** メッセージ取得 */
-	private final MessageSource messageSource;
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler();
+    }
 
-	/** ユーザー名のname属性 */
-	private final String USERNAME_PARAMETER = "loginId";
-	
-	/* パスワード名のpsaa属性 */
-	private final String PASSWORD_PARAMETER = "pass";
-
-	/**
-	 * Spring Securityの各種カスタマイズを行います。
-	 * 
-	 * <p>カスタマイズ設定するのは、以下の項目になります。
-	 * <ul>
-	 * <li>認証不要URL</li>
-	 * <li>ログイン画面のURL</li>
-	 * <li>usernameとして利用するリクエストパラメーター名</li>
-	 * <li>ログイン成功時のリダイレクト先URL</li>
-	 * </ul>
-	 * 
-	 * @param http セキュリティ設定
-	 * @return カスタマイズ結果
-	 * @throws Exception 予期せぬ例外が発生した場合
-	 */
-	@Bean
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers(UrlConst.NO_AUTHENTICATION).permitAll()
-                                .requestMatchers("/useradd", "/useradd/confirm", "/useradd/success").authenticated()
-                                .anyRequest().authenticated()) 
-                .formLogin(
-                        login -> login
-                                .loginPage(UrlConst.LOGIN) // 自作ログイン画面(Controller)を使うための設定
-                                .usernameParameter(USERNAME_PARAMETER)
-                                .passwordParameter(PASSWORD_PARAMETER) // ユーザ名パラメータのname属性
-                                .defaultSuccessUrl(UrlConst.MENU) // ログイン成功後のリダイレクトURL
-//                                .failureUrl(UrlConst.LOGIN + "?error=true") // ログイン成功後にバグったので追加した
-                        );
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(UrlConst.NO_AUTHENTICATION).permitAll()
+                .requestMatchers("/useradd", "/useradd/confirm", "/useradd/success").authenticated()
+                .anyRequest().authenticated())
+            .formLogin(login -> login
+                .loginPage(UrlConst.LOGIN)
+                .usernameParameter(USERNAME_PARAMETER)
+                .passwordParameter(PASSWORD_PARAMETER)
+                .successHandler(customSuccessHandler())
+                .permitAll())
+            .logout(logout -> logout.permitAll());
 
         return http.build();
     }
 
-	/**
-	 * Providerのカスタマイズを行い、独自Providerを返却します。
-	 * 
-	 * <p>カスタマイズ設定するのは、以下のフィールドになります。
-	 * <ul>
-	 * <li>UserDetailsService</li>
-	 * <li>PasswordEncoder</li>
-	 * <li>MessageSource</li>
-	 * </ul>
-	 * 
-	 * @return カスタマイズしたProvider情報
-	 */
-	@Bean
-	AuthenticationProvider daoAuthenticationProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		provider.setUserDetailsService(userDetailsService);
-		provider.setPasswordEncoder(passwordEncoder);
-		provider.setMessageSource(messageSource);
-
-		return provider;
-	}  
-	
-	
+    @Bean
+    AuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setMessageSource(messageSource);
+        return provider;
+    }
 }
