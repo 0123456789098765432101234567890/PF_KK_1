@@ -1,14 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>自己紹介評価システム</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
 <body>
 <nav class="navbar bg-info navbar-dark" th:fragment="header">
-	<div class="container-fluid">
-    	<a class="navbar-brand" th:href="@{/menu}">自己紹介評価システム</a>
-    	<form th:action="@{/logout}" method="post">
-    		<span class="text-light" th:text="|ログインID：${#authentication.principal.username}|"></span>
-			<input type="submit" class="btn btn-light" value="ログアウト" />
-		</form>
-	</div>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" onclick="redirectToDashboard()">自己紹介評価システム</a>
+        <form th:action="@{/logout}" method="post">
+            <span class="text-light" th:text="|ログインID：${#authentication.principal.username}|"></span>
+            <input type="submit" class="btn btn-light" value="ログアウト" />
+        </form>
+    </div>
 </nav>
+
+<!-- 他のコンテンツ -->
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+<script th:inline="javascript" defer>
+    /*<![CDATA[*/
+    function redirectToDashboard() {
+        console.log("redirectToDashboard called");
+        /* ユーザーの役割を取得 */
+        var role = /*[[${#authentication.principal.authorities[0].authority}]]*/ 'ROLE_USER';
+
+        console.log("User role:", role);
+
+        /* 役割に応じてリダイレクト先を決定 */
+        if (role === 'ROLE_ADMIN') {
+            console.log("Redirecting to /admindashboard");
+            window.location.href = /*[[@{/admindashboard}]]*/ '/admindashboard';
+        } else if (role === 'ROLE_USER') {
+            console.log("Redirecting to /userdashboard");
+            window.location.href = /*[[@{/userdashboard}]]*/ '/userdashboard';
+        } else {
+            console.log("Redirecting to /menu");
+            window.location.href = /*[[@{/menu}]]*/ '/menu';
+        }
+    }
+    /*]]>*/
+</script>
 </body>
 </html>
