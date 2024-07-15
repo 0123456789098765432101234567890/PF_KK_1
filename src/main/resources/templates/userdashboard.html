@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>ダッシュボード</title>
@@ -8,16 +7,11 @@
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container-fluid">
         <h2>ダッシュボード</h2>
-        <div class="mt-3">
-            商品一覧の確認、管理はコチラ
-        </div>
-        <a href="" class="btn btn-primary">商品一覧画面へ</a>
         <div class="mt-3">
             アカウント情報設定画面
         </div>
@@ -46,14 +40,15 @@
         </th:block>
     </div>
 
+    <div th:if="${successMessage}" th:text="${successMessage}" id="success-message" style="display: none;"></div>
+
     <script>
         $(document).ready(function() {
-            /*[[${successMessage != null}]]*/ {
-                alert(/*[[${successMessage}]]*/ '更新に成功しました。');
+            var successMessage = $('#success-message').text();
+            if (successMessage) {
+                alert(successMessage);
             }
         });
     </script>
-
 </body>
-
 </html>
