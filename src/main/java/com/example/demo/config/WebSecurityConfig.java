@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.example.demo.authentication.CustomSuccessHandler;
 import com.example.demo.constant.UrlConst;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
@@ -25,13 +26,14 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final MessageSource messageSource;
+    private final HttpSession session;
 
     private final String USERNAME_PARAMETER = "loginId";
     private final String PASSWORD_PARAMETER = "pass";
 
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler();
+        return new CustomSuccessHandler(session);
     }
 
     @Bean

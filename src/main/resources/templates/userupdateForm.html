@@ -11,6 +11,7 @@
     <div class="container">
         <h1>ユーザー情報更新</h1>
         <form th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{loginId}" />
             <div class="form-group">
                 <label for="userName">名前:</label>
                 <input type="text" id="userName" th:field="*{userName}" class="form-control" />

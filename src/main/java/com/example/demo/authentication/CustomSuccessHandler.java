@@ -11,9 +11,16 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Component("customAuthenticationSuccessHandler")
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final HttpSession session;
+
+    public CustomSuccessHandler(HttpSession session) {
+        this.session = session;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -34,6 +41,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         if (redirectUrl.isEmpty()) {
             throw new IllegalStateException();
         }
+
+        // ユーザー名をセッションに保存
+        session.setAttribute("loginId", authentication.getName());
 
         response.sendRedirect(redirectUrl);
     }

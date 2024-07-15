@@ -11,6 +11,7 @@
     <div class="container">
         <h1>ユーザー情報更新確認</h1>
         <form th:action="@{/userupdate/confirm}" th:object="${userUpdateForm}" method="post">
+            <input type="hidden" th:field="*{loginId}" />
             <div class="form-group">
                 <label for="userName">名前:</label>
                 <p th:text="${userUpdateForm.userName}"></p>
