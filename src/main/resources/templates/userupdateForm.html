@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー情報更新</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー情報更新</h1>
+        <form th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="userName">名前:</label>
+                <input type="text" id="userName" th:field="*{userName}" class="form-control" />
+                <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="userNameKana">名前（ふりがな）:</label>
+                <input type="text" id="userNameKana" th:field="*{userNameKana}" class="form-control" />
+                <div th:if="${#fields.hasErrors('userNameKana')}" th:errors="*{userNameKana}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="prof_img">プロフィール画像:</label>
+                <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                <div th:if="${#fields.hasErrors('prof_img')}" th:errors="*{prof_img}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="gender">性別:</label>
+                <select id="gender" th:field="*{gender}" class="form-control">
+                    <option value="男性" th:selected="${userUpdateForm.gender == '男性'}">男性</option>
+                    <option value="女性" th:selected="${userUpdateForm.gender == '女性'}">女性</option>
+                    <option value="その他" th:selected="${userUpdateForm.gender == 'その他'}">その他</option>
+                </select>
+                <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="age">年齢:</label>
+                <input type="number" id="age" th:field="*{age}" class="form-control" />
+                <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="selfIntro">自己紹介:</label>
+                <textarea id="selfIntro" th:field="*{selfIntro}" class="form-control"></textarea>
+                <div th:if="${#fields.hasErrors('selfIntro')}" th:errors="*{selfIntro}" class="text-danger"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">更新内容確認</button>
+        </form>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

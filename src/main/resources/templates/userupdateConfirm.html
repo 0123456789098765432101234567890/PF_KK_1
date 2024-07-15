@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー情報更新確認</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー情報更新確認</h1>
+        <form th:action="@{/userupdate/confirm}" th:object="${userUpdateForm}" method="post">
+            <div class="form-group">
+                <label for="userName">名前:</label>
+                <p th:text="${userUpdateForm.userName}"></p>
+                <input type="hidden" th:field="*{userName}" />
+            </div>
+            <div class="form-group">
+                <label for="userNameKana">名前（ふりがな）:</label>
+                <p th:text="${userUpdateForm.userNameKana}"></p>
+                <input type="hidden" th:field="*{userNameKana}" />
+            <div class="form-group">
+                <label for="prof_img">プロフィール画像:</label>
+                <img th:if="${base64Image}" th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" />
+                <input type="hidden" th:field="*{profImgBytes}" />
+            </div>
+            </div>
+            <div class="form-group">
+                <label for="gender">性別:</label>
+                <p th:text="${userUpdateForm.gender}"></p>
+                <input type="hidden" th:field="*{gender}" />
+            </div>
+            <div class="form-group">
+                <label for="age">年齢:</label>
+                <p th:text="${userUpdateForm.age}"></p>
+                <input type="hidden" th:field="*{age}" />
+            </div>
+            <div class="form-group">
+                <label for="selfIntro">自己紹介:</label>
+                <p th:text="${userUpdateForm.selfIntro}"></p>
+                <input type="hidden" th:field="*{selfIntro}" />
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
+        </form>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

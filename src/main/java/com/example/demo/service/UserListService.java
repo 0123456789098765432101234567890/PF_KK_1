@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class UserListService {
     private final UserInfoRepository userInfoRepository;
 
-    public Page<UserInfo> getAllActiveUsers(Pageable pageable) {
-        return userInfoRepository.findByDeleted(false, pageable);
+    public Page<UserInfo> getAllUsers(Pageable pageable) {
+        return userInfoRepository.findAll(pageable);
     }
 
     @Transactional
@@ -31,16 +31,6 @@ public class UserListService {
             } else {
                 user.setStatus("ALLOWED");
             }
-            userInfoRepository.save(user);
-        }
-    }
-
-    @Transactional
-    public void softDeleteUser(String loginId) {
-        Optional<UserInfo> userOptional = userInfoRepository.findById(loginId);
-        if (userOptional.isPresent()) {
-            UserInfo user = userOptional.get();
-            user.setDeleted(true);
             userInfoRepository.save(user);
         }
     }
