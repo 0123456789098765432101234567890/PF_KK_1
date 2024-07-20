@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -25,4 +26,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
     // 特定のユーザーのステータスを更新するメソッドはデフォルトメソッドをサービス層で実装可能
     
     Page<UserInfo> findByDeleted(boolean deleted, Pageable pageable);
+    
+    List<UserInfo> findByRoles(String roles);
 }

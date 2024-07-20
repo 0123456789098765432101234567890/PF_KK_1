@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,5 +23,9 @@ public class UserInfoService {
 
     public UserInfo findByLoginId(String loginId) {
         return userInfoRepository.findById(loginId).orElse(null);
+    }
+    
+    public List<UserInfo> getAllUsersWithRoleUser() {
+        return userInfoRepository.findByRoles("USER");
     }
 }

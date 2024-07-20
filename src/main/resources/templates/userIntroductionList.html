@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー紹介一覧</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>ユーザー紹介一覧</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>プロフィール画像</th>
+                    <th>ユーザー名</th>
+                    <th>いいね獲得数</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td><img th:if="${user.profImg}" custom:base64encode="${user.profImg}" alt="プロフィール画像" width="50" height="50" /></td>
+                    <td th:text="${user.user_name}"></td>
+                    <td th:text="${@likeService.getLikeCount(user.loginId)}"></td>
+                    <td>
+                        <button th:if="${!@likeService.hasLiked(user.loginId, #authentication.name)}" th:attr="data-login-id=${user.loginId}" class="btn btn-success like-btn">いいね</button>
+                        <button th:if="${@likeService.hasLiked(user.loginId, #authentication.name)}" th:attr="data-login-id=${user.loginId}" class="btn btn-danger unlike-btn">よくない</button>
+                        <a th:href="@{/userdetail/{loginId}(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.like-btn').click(function() {
+                var button = $(this);
+                var loginId = button.data('login-id');
+                $.post('/userintroduction/like', {loginId: loginId}, function() {
+                    button.removeClass('btn-success like-btn').addClass('btn-danger unlike-btn').text('よくない');
+                });
+            });
+
+            $(document).on('click', '.unlike-btn', function() {
+                var button = $(this);
+                var loginId = button.data('login-id');
+                $.post('/userintroduction/unlike', {loginId: loginId}, function() {
+                    button.removeClass('btn-danger unlike-btn').addClass('btn-success like-btn').text('いいね');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
