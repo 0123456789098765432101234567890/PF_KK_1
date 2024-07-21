@@ -14,9 +14,11 @@ import com.example.demo.service.LikeService;
 import com.example.demo.service.UserIntroductionService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class UserIntroductionController {
 
     private final UserIntroductionService userIntroductionService;

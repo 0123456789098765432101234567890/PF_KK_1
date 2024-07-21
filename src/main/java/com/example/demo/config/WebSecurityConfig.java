@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.example.demo.authentication.CustomSuccessHandler;
 import com.example.demo.constant.UrlConst;
@@ -50,7 +51,9 @@ public class WebSecurityConfig {
                 .passwordParameter(PASSWORD_PARAMETER)
                 .successHandler(customSuccessHandler())
                 .permitAll())
-            .logout(logout -> logout.permitAll());
+            .logout(logout -> logout.permitAll())
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())); // CSRFトークンを設定
 
         return http.build();
     }

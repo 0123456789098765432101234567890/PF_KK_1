@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>ユーザー紹介一覧</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
@@ -29,8 +31,8 @@
                             <td th:text="${user.userName}"></td>
                             <td th:text="${user.likeCount}"></td>
                             <td>
-                                <button th:if="${!user.liked}" data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
-                                <button th:if="${user.liked}" data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
+                                <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
+                                <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
                                 <a th:href="@{/userdetail/(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
                             </td>
                         </tr>
@@ -44,34 +46,34 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener("DOMContentLoaded", function() {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
             document.querySelectorAll(".like-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
-                    console.log("Like button clicked for user: " + loginId);
-                    likeUser(loginId);
+                    likeUser(loginId, csrfToken, csrfHeader);
                 });
             });
 
             document.querySelectorAll(".unlike-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
-                    console.log("Unlike button clicked for user: " + loginId);
-                    unlikeUser(loginId);
+                    unlikeUser(loginId, csrfToken, csrfHeader);
                 });
             });
         });
 
-        function likeUser(loginId) {
-            console.log("Sending like request for user: " + loginId);
+        function likeUser(loginId, csrfToken, csrfHeader) {
             fetch('/like', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
-                    console.log("Like request successful");
                     location.reload();
                 } else {
                     console.log("Like request failed");
@@ -81,17 +83,16 @@
             });
         }
 
-        function unlikeUser(loginId) {
-            console.log("Sending unlike request for user: " + loginId);
+        function unlikeUser(loginId, csrfToken, csrfHeader) {
             fetch('/unlike', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
-                    console.log("Unlike request successful");
                     location.reload();
                 } else {
                     console.log("Unlike request failed");
