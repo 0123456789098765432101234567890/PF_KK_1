@@ -8,4 +8,5 @@ import com.example.demo.entity.Like;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByLoginIdAndFromLoginId(String loginId, String fromLoginId);
+    long countByLoginId(String loginId); // 追加
 }

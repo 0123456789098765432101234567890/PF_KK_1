@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
+    private final LikeService likeService;
 
     public Page<UserInfo> findAll(Pageable pageable) {
         return userInfoRepository.findAll(pageable);
@@ -33,6 +34,7 @@ public class UserInfoService {
                     if (user.getProfImg() != null) {
                         user.setBase64Image(Base64.getEncoder().encodeToString(user.getProfImg()));
                     }
+                    user.setLikeCount(likeService.countLikesByLoginId(user.getLoginId()));
                     return user;
                 })
                 .collect(Collectors.toList());
@@ -44,6 +46,7 @@ public class UserInfoService {
                     if (user.getProfImg() != null) {
                         user.setBase64Image(Base64.getEncoder().encodeToString(user.getProfImg()));
                     }
+                    user.setLikeCount(likeService.countLikesByLoginId(user.getLoginId()));
                     return user;
                 })
                 .collect(Collectors.toList());

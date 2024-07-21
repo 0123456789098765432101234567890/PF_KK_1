@@ -44,4 +44,8 @@ public class LikeService {
     public boolean hasLiked(String loginId, String fromLoginId) {
         return likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId).isPresent();
     }
+
+    public long countLikesByLoginId(String loginId) {
+        return likeRepository.countByLoginId(loginId);
+    }
 }

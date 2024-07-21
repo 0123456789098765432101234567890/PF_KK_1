@@ -28,11 +28,11 @@
                             <td>
                                 <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" width="100" height="100" />
                             </td>
-                            <td th:text="${user.userName}"></td>
+                            <td th:text="${user.user_name}"></td>
                             <td th:text="${user.likeCount}"></td>
                             <td>
-                                <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
-                                <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
+                                <button th:if="${!user.liked}" data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
+                                <button th:if="${user.liked}" data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
                                 <a th:href="@{/userdetail/(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
                             </td>
                         </tr>

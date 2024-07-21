@@ -68,6 +68,9 @@ public class UserInfo {
 
     @OneToMany(mappedBy = "loginId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
+    
+    @Transient
+    private boolean liked; // liked プロパティを追加
 
 	/** ユーザー権限 */
     @Column
@@ -79,6 +82,10 @@ public class UserInfo {
     private String base64Image;
 
     public String getBase64Image() {
-        return Base64.getEncoder().encodeToString(this.profImg);
+        if (this.profImg != null) {
+            return Base64.getEncoder().encodeToString(this.profImg);
+        } else {
+            return "";
+        }
     }
 }
