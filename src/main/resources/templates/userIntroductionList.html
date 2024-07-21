@@ -1,59 +1,96 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>ユーザー紹介一覧</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<meta charset="UTF-8">
+	<title>ユーザー紹介一覧</title>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
+
 <body>
-    <div th:insert="~{common/sourceList :: sourceList}"></div>
-    <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー紹介一覧</h1>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>プロフィール画像</th>
-                    <th>ユーザー名</th>
-                    <th>いいね獲得数</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="user : ${users}">
-                    <td><img th:if="${user.profImg}" custom:base64encode="${user.profImg}" alt="プロフィール画像" width="50" height="50" /></td>
-                    <td th:text="${user.user_name}"></td>
-                    <td th:text="${@likeService.getLikeCount(user.loginId)}"></td>
-                    <td>
-                        <button th:if="${!@likeService.hasLiked(user.loginId, #authentication.name)}" th:attr="data-login-id=${user.loginId}" class="btn btn-success like-btn">いいね</button>
-                        <button th:if="${@likeService.hasLiked(user.loginId, #authentication.name)}" th:attr="data-login-id=${user.loginId}" class="btn btn-danger unlike-btn">よくない</button>
-                        <a th:href="@{/userdetail/{loginId}(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<div th:insert="~{common/sourceList :: sourceList}"></div>
+	<div th:replace="~{common/header :: header}"></div>
+	<div class="container">
+		<h1>ユーザー紹介一覧</h1>
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>プロフィール画像</th>
+							<th>ユーザー名</th>
+							<th>いいね獲得数</th>
+							<th>アクション</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td><img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" width="100"
+									height="100" /></td>
+							<td th:text="${user.userName}"></td>
+							<td th:text="${user.likeCount}"></td>
+							<td>
+								<button th:if="${!user.liked}" data-user-id="${user.loginId}"
+									class="btn btn-primary like-button">いいね</button>
+								<button th:if="${user.liked}" data-user-id="${user.loginId}"
+									class="btn btn-secondary unlike-button">よくない</button>
+								<a th:href="@{/userdetail/(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
-    <script>
-        $(document).ready(function() {
-            $('.like-btn').click(function() {
-                var button = $(this);
-                var loginId = button.data('login-id');
-                $.post('/userintroduction/like', {loginId: loginId}, function() {
-                    button.removeClass('btn-success like-btn').addClass('btn-danger unlike-btn').text('よくない');
-                });
-            });
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		document.addEventListener("DOMContentLoaded", function () {
+			document.querySelectorAll(".like-button").forEach(function (button) {
+				button.addEventListener("click", function () {
+					var loginId = this.getAttribute("data-user-id");
+					likeUser(loginId);
+				});
+			});
 
-            $(document).on('click', '.unlike-btn', function() {
-                var button = $(this);
-                var loginId = button.data('login-id');
-                $.post('/userintroduction/unlike', {loginId: loginId}, function() {
-                    button.removeClass('btn-danger unlike-btn').addClass('btn-success like-btn').text('いいね');
-                });
-            });
-        });
-    </script>
+			document.querySelectorAll(".unlike-button").forEach(function (button) {
+				button.addEventListener("click", function () {
+					var loginId = this.getAttribute("data-user-id");
+					unlikeUser(loginId);
+				});
+			});
+		});
+
+		function likeUser(loginId) {
+			fetch('/like', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({loginId: loginId})
+			}).then(response => {
+				if (response.ok) {
+					location.reload();
+				}
+			});
+		}
+
+		function unlikeUser(loginId) {
+			fetch('/unlike', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({loginId: loginId})
+			}).then(response => {
+				if (response.ok) {
+					location.reload();
+				}
+			});
+		}
+		/*]]>*/
+	</script>
 </body>
+
 </html>

@@ -14,31 +14,25 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class LikeService {
+
     private final LikeRepository likeRepository;
 
     @Transactional
     public void likeUser(String loginId, String fromLoginId) {
-        Optional<Like> existingLike = likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId);
-        if (existingLike.isEmpty()) {
-            Like like = new Like();
-            like.setLoginId(loginId);
-            like.setFromLoginId(fromLoginId);
-            like.setLikedAt(new Timestamp(System.currentTimeMillis()));
-            likeRepository.save(like);
+        Optional<Like> like = likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId);
+        if (like.isPresent()) {
+            likeRepository.delete(like.get());
+        } else {
+            Like newLike = new Like();
+            newLike.setLoginId(loginId);
+            newLike.setFromLoginId(fromLoginId);
+            newLike.setLikedAt(new Timestamp(System.currentTimeMillis()));
+            likeRepository.save(newLike);
         }
     }
 
-    @Transactional
-    public void unlikeUser(String loginId, String fromLoginId) {
-        Optional<Like> existingLike = likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId);
-        existingLike.ifPresent(likeRepository::delete);
-    }
-
+    @Transactional(readOnly = true)
     public boolean hasLiked(String loginId, String fromLoginId) {
         return likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId).isPresent();
-    }
-
-    public Long getLikeCount(String loginId) {
-        return likeRepository.countByLoginId(loginId);
     }
 }

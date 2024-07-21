@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.UserInfo;
@@ -28,4 +30,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, String> {
     Page<UserInfo> findByDeleted(boolean deleted, Pageable pageable);
     
     List<UserInfo> findByRoles(String roles);
+    
+    @Query("SELECT u FROM UserInfo u LEFT JOIN FETCH u.likes WHERE u.roles = :roles")
+    List<UserInfo> findAllUsersWithLikes(@Param("roles") String roles);
 }

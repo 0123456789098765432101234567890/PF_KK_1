@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -55,8 +58,14 @@ public class UserInfo {
     private Integer age;
 
     @Column(name = "self_intro")
-    @Size(max = 1500, message = "Self introduction must be at most 1500 characters")
+//  @Size(max = 1500, message = "Self introduction must be at most 1500 characters")
     private String selfIntro;
+    
+    @Column(name = "like_count")
+    private long likeCount;
+
+    @OneToMany(mappedBy = "loginId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes;
 
 	/** ユーザー権限 */
 	@Column
