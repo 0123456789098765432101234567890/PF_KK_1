@@ -23,8 +23,15 @@ public class LikeService {
 
     public void likeUser(String loginId, String fromLoginId) {
         log.debug("Attempting to like user with loginId: {}", loginId);
+
+        if (likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId).isPresent()) {
+            log.debug("Like already exists for user with loginId: {} by: {}", loginId, fromLoginId);
+            return;  // すでに「いいね」されている場合は処理を中断
+        }
+
         UserInfo user = userInfoRepository.findById(loginId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + loginId));
+        
         Like like = new Like();
         like.setLoginId(loginId);
         like.setFromLoginId(fromLoginId);

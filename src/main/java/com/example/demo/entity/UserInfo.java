@@ -71,6 +71,14 @@ public class UserInfo {
     
     @Transient
     private boolean liked; // liked プロパティを追加
+    
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
 
 	/** ユーザー権限 */
     @Column
