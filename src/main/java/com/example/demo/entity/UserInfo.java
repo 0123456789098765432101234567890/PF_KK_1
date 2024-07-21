@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.Base64;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -68,10 +70,15 @@ public class UserInfo {
     private List<Like> likes;
 
 	/** ユーザー権限 */
-	@Column
-	private String authority;
+    @Column
+    private String authority;
 
-	public UserInfo() {
-	}
+    public UserInfo() {}
 
+    @Transient
+    private String base64Image;
+
+    public String getBase64Image() {
+        return Base64.getEncoder().encodeToString(this.profImg);
+    }
 }
