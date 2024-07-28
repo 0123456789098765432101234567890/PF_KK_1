@@ -23,9 +23,8 @@ public class UserIntroductionController {
 
     @GetMapping("/userintroduction")
     public String getUserIntroduction(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        List<UserInfo> users = userInfoService.getAllUsersWithRoleUser();
         String loginId = userDetails.getUsername();
-
+        List<UserInfo> users = userInfoService.getAllUsersWithRoleUser();
         for (UserInfo user : users) {
             boolean liked = likeService.hasLiked(user.getLoginId(), loginId);
             user.setLiked(liked);

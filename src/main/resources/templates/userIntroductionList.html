@@ -29,7 +29,7 @@
                                 <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" width="100" height="100" />
                             </td>
                             <td th:text="${user.user_name}"></td>
-                            <td th:text="${user.likeCount}"></td>
+                            <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}"></td>
                             <td>
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
@@ -76,15 +76,18 @@
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
-                    console.log("Like request successful for user: " + loginId);
-                    button.textContent = "よくない";
-                    button.classList.remove("btn-primary", "like-button");
-                    button.classList.add("btn-secondary", "unlike-button");
-                    button.removeEventListener("click", function() {
-                        likeUser(loginId, csrfToken, csrfHeader, button);
-                    });
-                    button.addEventListener("click", function() {
-                        unlikeUser(loginId, csrfToken, csrfHeader, button);
+                    response.json().then(data => {
+                        console.log("Like request successful for user: " + loginId);
+                        updateLikeCount(loginId, data.likeCount);
+                        button.textContent = "よくない";
+                        button.classList.remove("btn-primary", "like-button");
+                        button.classList.add("btn-secondary", "unlike-button");
+                        button.removeEventListener("click", function() {
+                            likeUser(loginId, csrfToken, csrfHeader, button);
+                        });
+                        button.addEventListener("click", function() {
+                            unlikeUser(loginId, csrfToken, csrfHeader, button);
+                        });
                     });
                 } else {
                     console.log("Like request failed for user: " + loginId);
@@ -104,15 +107,18 @@
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
-                    console.log("Unlike request successful for user: " + loginId);
-                    button.textContent = "いいね";
-                    button.classList.remove("btn-secondary", "unlike-button");
-                    button.classList.add("btn-primary", "like-button");
-                    button.removeEventListener("click", function() {
-                        unlikeUser(loginId, csrfToken, csrfHeader, button);
-                    });
-                    button.addEventListener("click", function() {
-                        likeUser(loginId, csrfToken, csrfHeader, button);
+                    response.json().then(data => {
+                        console.log("Unlike request successful for user: " + loginId);
+                        updateLikeCount(loginId, data.likeCount);
+                        button.textContent = "いいね";
+                        button.classList.remove("btn-secondary", "unlike-button");
+                        button.classList.add("btn-primary", "like-button");
+                        button.removeEventListener("click", function() {
+                            unlikeUser(loginId, csrfToken, csrfHeader, button);
+                        });
+                        button.addEventListener("click", function() {
+                            likeUser(loginId, csrfToken, csrfHeader, button);
+                        });
                     });
                 } else {
                     console.log("Unlike request failed for user: " + loginId);
@@ -120,6 +126,10 @@
             }).catch(error => {
                 console.error("Error:", error);
             });
+        }
+
+        function updateLikeCount(loginId, likeCount) {
+            document.getElementById("like-count-" + loginId).textContent = likeCount;
         }
         /*]]>*/
     </script>
