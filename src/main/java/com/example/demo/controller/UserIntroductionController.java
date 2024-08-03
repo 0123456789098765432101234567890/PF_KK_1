@@ -26,8 +26,8 @@ public class UserIntroductionController {
 
     @GetMapping("/userintroduction")
     public String getUserIntroduction(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        List<UserInfo> users = userInfoService.getAllUsersWithRoleUser();
         String loginId = userDetails.getUsername();
+        List<UserInfo> users = userInfoService.getAllUsersWithRoleUser(loginId); // ログイン中のユーザーを除外し、ランダムに並び替えたユーザーリストを取得
 
         for (UserInfo user : users) {
             boolean liked = likeService.hasLiked(user.getLoginId(), loginId);
@@ -45,7 +45,12 @@ public class UserIntroductionController {
         if (user == null) {
             log.debug("User not found, redirecting to user introduction list");
             return "redirect:/userintroduction";
-        }	
+        }
+        
+        // Update likeCount for the user
+        long likeCount = likeService.countLikesByLoginId(loginId);
+        user.setLikeCount(likeCount);
+        
         boolean liked = likeService.hasLiked(loginId, userDetails.getUsername());
         user.setLiked(liked);
         model.addAttribute("user", user);

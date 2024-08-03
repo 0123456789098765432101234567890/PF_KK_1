@@ -42,10 +42,13 @@ public class LikeService {
 
     public void unlikeUser(String loginId, String fromLoginId) {
         log.debug("Attempting to unlike user with loginId: {}", loginId);
-        Like like = likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId)
-            .orElseThrow(() -> new IllegalArgumentException("No like found for user ID: " + loginId));
-        likeRepository.delete(like);
-        log.debug("User with loginId: {} unliked successfully by: {}", loginId, fromLoginId);
+        likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId).ifPresentOrElse(
+            like -> {
+                likeRepository.delete(like);
+                log.debug("User with loginId: {} unliked successfully by: {}", loginId, fromLoginId);
+            },
+            () -> log.warn("No like found for user with loginId: {} by: {}", loginId, fromLoginId)
+        );
     }
 
     public boolean hasLiked(String loginId, String fromLoginId) {
