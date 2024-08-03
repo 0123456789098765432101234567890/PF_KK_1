@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.account;
 
 import java.util.Base64;
 
@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.UserInfo;
 import com.example.demo.form.UserEditForm;
-import com.example.demo.service.UserEditService;
 import com.example.demo.service.UserInfoService;
+import com.example.demo.service.account.UserEditService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

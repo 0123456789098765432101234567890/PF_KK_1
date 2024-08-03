@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.account;
 
 import java.util.Base64;
 
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.form.UserListForm;
 import com.example.demo.service.UserInfoService;
-import com.example.demo.service.UserListService;
+import com.example.demo.service.account.UserListService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

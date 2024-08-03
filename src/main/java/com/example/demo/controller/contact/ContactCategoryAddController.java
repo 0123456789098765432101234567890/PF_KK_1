@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.contact;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.form.ContactCategoryForm;
-import com.example.demo.service.ContactCategoryAddService;
+import com.example.demo.service.contact.ContactCategoryAddService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

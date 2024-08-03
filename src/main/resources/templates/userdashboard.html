@@ -36,6 +36,10 @@
             アカウント追加画面
         </div>
         <a th:href="@{/useradd}" class="btn btn-primary">追加画面へ</a>
+        <div class="mt-3">
+            月間いいねランキング
+        </div>
+        <a th:href="@{/likeranking}" class="btn btn-primary">ランキング画面へ</a>
         <th:block th:if="${hasUserManageAuth}">
             <div class="mt-3">
                 ユーザー情報の管理はコチラ

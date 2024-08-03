@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.account;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.form.UserListForm;
-import com.example.demo.service.UserDeleteService;
+import com.example.demo.service.account.UserDeleteService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

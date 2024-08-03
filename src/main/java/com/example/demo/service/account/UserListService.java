@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.account;
 
 import java.util.Optional;
 
@@ -14,25 +14,33 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserDeleteService {
+public class UserListService {
     private final UserInfoRepository userInfoRepository;
 
-    public Page<UserInfo> getAllDeletedUsers(Pageable pageable) {
-        return userInfoRepository.findByDeleted(true, pageable);
+    public Page<UserInfo> getAllUsers(Pageable pageable) {
+        return userInfoRepository.findAll(pageable);
     }
 
     @Transactional
-    public void restoreUser(String loginId) {
+    public void toggleUserStatus(String loginId) {
         Optional<UserInfo> userOptional = userInfoRepository.findById(loginId);
         if (userOptional.isPresent()) {
             UserInfo user = userOptional.get();
-            user.setDeleted(false);
+            if ("ALLOWED".equals(user.getStatus())) {
+                user.setStatus("DENIED");
+            } else {
+                user.setStatus("ALLOWED");
+            }
             userInfoRepository.save(user);
         }
     }
 
     @Transactional
-    public void deleteUserPermanently(String loginId) {
+    public void deleteUser(String loginId) {
         userInfoRepository.deleteById(loginId);
+    }
+
+    public UserInfo getUserByLoginId(String loginId) {
+        return userInfoRepository.findById(loginId).orElse(null);
     }
 }

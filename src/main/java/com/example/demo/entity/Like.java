@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,12 +24,13 @@ public class Like {
     @Column(name = "like_id")
     private Long likeId;
 
-    @Column(name = "login_id")
+    @Column(name = "login_id", nullable = false)
     private String loginId;
 
-    @Column(name = "from_login_id")
+    @Column(name = "from_login_id", nullable = false)
     private String fromLoginId;
 
-    @Column(name = "liked_at")
-    private Timestamp likedAt;
+    // likedAtの型をTimestampからLocalDateTimeに変更
+    @Column(name = "liked_at", nullable = false)
+    private LocalDateTime likedAt;
 }

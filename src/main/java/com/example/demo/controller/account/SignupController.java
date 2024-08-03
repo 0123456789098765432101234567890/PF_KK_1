@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.account;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ import com.example.demo.constant.SignupMessage;
 import com.example.demo.constant.UrlConst;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.form.SignupForm;
-import com.example.demo.service.SignupService;
+import com.example.demo.service.account.SignupService;
 import com.example.demo.util.AppUtil;
 
 import lombok.RequiredArgsConstructor;

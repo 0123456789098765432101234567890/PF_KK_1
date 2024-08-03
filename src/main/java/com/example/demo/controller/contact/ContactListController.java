@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.contact;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Contact;
-import com.example.demo.service.ContactListService;
+import com.example.demo.service.contact.ContactListService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

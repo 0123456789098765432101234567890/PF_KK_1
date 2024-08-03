@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.account;
 
 import java.util.Base64;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.form.UserAddForm;
-import com.example.demo.service.UserAddService;
+import com.example.demo.service.account.UserAddService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
