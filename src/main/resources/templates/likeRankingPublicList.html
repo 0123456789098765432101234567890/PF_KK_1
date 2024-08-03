@@ -1,69 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>月間いいねランキング</title>
+    <title>月間ランキング</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>月間いいねランキング</h1>
+        <h1>月間ランキング</h1>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>プロフィール画像</th>
+                            <th style="text-align: center;">順位</th>
+                            <th style="text-align: center;">プロフィール画像</th>
                             <th>お名前</th>
-                            <th>アクション</th>
                             <th>総いいね獲得数</th>
+                            <th>アクション</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="user : ${users}">
+                        <!-- ユーザーをリストで繰り返し表示する -->
+                        <tr th:each="user, iter : ${users}">
+                            <!-- 順位を表示する（インデックスは0から始まるため+1） -->
+                            <td style="text-align: center; vertical-align: middle;" th:text="${iter.index + 1}"></td>
                             <td>
-                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" width="100"
-                                    height="100" />
+                                <!-- 画像の最大幅と高さを設定し、アスペクト比を維持 -->
+                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
+                                    style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
                             </td>
+                            <!-- ユーザー名を表示 -->
                             <td th:text="${user.user_name}"></td>
+                            <!-- 総いいね獲得数を表示 -->
+                            <td th:text="${user.likeCount}"></td>
                             <td>
-                                <a th:href="@{/userdetail/(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
+                                <!-- いいねボタン -->
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
+                                <!-- 詳細ページへのリンク -->
+                                <a th:href="@{/userdetail/(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
                             </td>
-                            <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}"></td>
                         </tr>
                     </tbody>
                 </table>
+                <!-- ユーザー一覧へのリンク -->
+                <a th:href="@{/userintroduction}" class="btn btn-info">ユーザー一覧はこちら</a>
             </div>
         </div>
-        <a th:href="@{/userintroduction}" class="btn btn-info">ユーザー一覧はこちら</a>
     </div>
 
+    <!-- 必要なスクリプトファイルをインクルード -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/like.js}"></script>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-            document.querySelectorAll(".like-button").forEach(function (button) {
-                button.addEventListener("click", function () {
+            document.querySelectorAll(".like-button").forEach(function(button) {
+                button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
                     likeUser(loginId, csrfToken, csrfHeader, this);
                 });
             });
 
-            document.querySelectorAll(".unlike-button").forEach(function (button) {
-                button.addEventListener("click", function () {
+            document.querySelectorAll(".unlike-button").forEach(function(button) {
+                button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
                     unlikeUser(loginId, csrfToken, csrfHeader, this);
                 });
@@ -86,10 +95,10 @@
                         button.textContent = "よくない";
                         button.classList.remove("btn-primary", "like-button");
                         button.classList.add("btn-secondary", "unlike-button");
-                        button.removeEventListener("click", function () {
+                        button.removeEventListener("click", function() {
                             likeUser(loginId, csrfToken, csrfHeader, button);
                         });
-                        button.addEventListener("click", function () {
+                        button.addEventListener("click", function() {
                             unlikeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
@@ -117,10 +126,10 @@
                         button.textContent = "いいね";
                         button.classList.remove("btn-secondary", "unlike-button");
                         button.classList.add("btn-primary", "like-button");
-                        button.removeEventListener("click", function () {
+                        button.removeEventListener("click", function() {
                             unlikeUser(loginId, csrfToken, csrfHeader, button);
                         });
-                        button.addEventListener("click", function () {
+                        button.addEventListener("click", function() {
                             likeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
@@ -138,5 +147,4 @@
         /*]]>*/
     </script>
 </body>
-
 </html>
