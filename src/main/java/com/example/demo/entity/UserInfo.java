@@ -59,7 +59,7 @@ public class UserInfo {
     @Column(name = "age")
     private Integer age;
 
-    @Column(name = "self_intro")
+    @Column(name = "self_intro", columnDefinition = "TEXT")
 //  @Size(max = 1500, message = "Self introduction must be at most 1500 characters")
     private String selfIntro;
     

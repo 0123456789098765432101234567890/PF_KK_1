@@ -54,6 +54,7 @@ public class UserAddController {
             log.debug("No profile image received");
         }
 
+        log.debug("Self Introduction Content Before Confirmation: {}", form.getSelf_intro());
         model.addAttribute("userAddForm", form);
         log.debug("Redirecting to confirmation page with form: {}", form.getUser_name());
         return "useraddConfirm";

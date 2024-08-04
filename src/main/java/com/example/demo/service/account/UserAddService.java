@@ -44,8 +44,8 @@ public class UserAddService {
             user.setSelfIntro(form.getSelf_intro());
         }
 
-//        log.debug("Saving user: {}", user); ←コンソールがバグる
-          log.debug("Saving user with username: {}, email: {}", user.getUser_name(), user.getEmail()); // 必要な情報のみ出力
+     // log.debug("Saving user: {}", user); ←コンソールがバグる
+        log.debug("Saving user with username: {}, email: {}, self_intro: {}", user.getUser_name(), user.getEmail(), user.getSelfIntro()); // 必要な情報のみ出力
         userInfoRepository.save(user);
     }
 }

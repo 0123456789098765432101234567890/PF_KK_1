@@ -18,9 +18,6 @@
                 <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
                     style="max-width: 100%; max-height: 400px; height: auto; width: auto; display: block; margin-left: auto; margin-right: auto;" />
             </div>
-<!--		<div class="col-md-4">-->
-<!--			<img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" class="img-fluid" />-->
-<!--		</div> -->
             <div class="col-md-8">
                 <div>
                     <strong>お名前: </strong><span th:text="${user.user_name}"></span>
@@ -34,9 +31,10 @@
                 <div>
                     <strong>年齢: </strong><span th:text="${user.age}"></span>
                 </div>
-                <div>
-                    <strong>自己紹介: </strong>
-                    <p th:utext="${#strings.replace(user.selfIntro, '\n', '<br/>')}"></p>
+                <div class="form-group">
+                    <label for="self_intro">自己紹介:</label>
+                    <!-- idを追加してJSで改行を適用 -->
+                    <p id="self_intro_content" th:text="${user.selfIntro}"></p>
                 </div>
                 <div>
                     <strong>総いいね獲得数: </strong><span id="like-count" th:text="${user.likeCount}"></span>
@@ -51,100 +49,106 @@
     </div>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-	<script th:inline="javascript">
-	    /*<![CDATA[*/
-	    document.addEventListener("DOMContentLoaded", function() {
-	        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-	        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-	
-	        // イベントの設定
-	        function setButtonEvents() {
-	            document.querySelectorAll(".like-button").forEach(function(button) {
-	                button.addEventListener("click", function() {
-	                    const loginId = this.getAttribute("data-user-id");
-	                    likeUser(loginId, csrfToken, csrfHeader, this);
-	                });
-	            });
-	
-	            document.querySelectorAll(".unlike-button").forEach(function(button) {
-	                button.addEventListener("click", function() {
-	                    const loginId = this.getAttribute("data-user-id");
-	                    unlikeUser(loginId, csrfToken, csrfHeader, this);
-	                });
-	            });
-	        }
-	
-	        setButtonEvents();  // 初期設定
-	
-	        function likeUser(loginId, csrfToken, csrfHeader, button) {
-	            fetch('/like', {
-	                method: 'POST',
-	                headers: {
-	                    'Content-Type': 'application/json',
-	                    [csrfHeader]: csrfToken
-	                },
-	                body: JSON.stringify({ loginId: loginId })
-	            }).then(response => {
-	                if (response.ok) {
-	                    response.json().then(data => {
-	                        updateLikeCount(data.likeCount);
-	                        toggleButtonState(button, true);
-	                        setButtonEvents(); // イベントリスナーを再設定
-	                    });
-	                } else {
-	                    console.error("Like request failed for user: " + loginId);
-	                }
-	            }).catch(error => {
-	                console.error("Error:", error);
-	            });
-	        }
-	
-	        function unlikeUser(loginId, csrfToken, csrfHeader, button) {
-	            fetch('/unlike', {
-	                method: 'POST',
-	                headers: {
-	                    'Content-Type': 'application/json',
-	                    [csrfHeader]: csrfToken
-	                },
-	                body: JSON.stringify({ loginId: loginId })
-	            }).then(response => {
-	                if (response.ok) {
-	                    response.json().then(data => {
-	                        updateLikeCount(data.likeCount);
-	                        toggleButtonState(button, false);
-	                        setButtonEvents(); // イベントリスナーを再設定
-	                    });
-	                } else {
-	                    console.error("Unlike request failed for user: " + loginId);
-	                }
-	            }).catch(error => {
-	                console.error("Error:", error);
-	            });
-	        }
-	
-	        function updateLikeCount(likeCount) {
-	            document.getElementById("like-count").textContent = likeCount;
-	        }
-	
-	        function toggleButtonState(button, liked) {
-	            const newButton = document.createElement('button');
-	            newButton.setAttribute('data-user-id', button.getAttribute('data-user-id'));
-	
-	            if (liked) {
-	                newButton.textContent = "よくない";
-	                newButton.classList.add("btn", "btn-secondary", "unlike-button");
-	            } else {
-	                newButton.textContent = "いいね";
-	                newButton.classList.add("btn", "btn-primary", "like-button");
-	            }
-	
-	            button.parentNode.replaceChild(newButton, button);
-	            setButtonEvents(); // 新しいボタンにイベントリスナーを設定
-	        }
-	    });
-	    /*]]>*/
-	</script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener("DOMContentLoaded", function() {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
+            // 自己紹介の改行を反映
+            var selfIntro = document.getElementById('self_intro_content');
+            if (selfIntro) {
+                var content = selfIntro.textContent || selfIntro.innerText;
+                selfIntro.innerHTML = content.replace(/\n/g, '<br/>');
+            }
+
+            // イベントの設定
+            function setButtonEvents() {
+                document.querySelectorAll(".like-button").forEach(function(button) {
+                    button.addEventListener("click", function() {
+                        const loginId = this.getAttribute("data-user-id");
+                        likeUser(loginId, csrfToken, csrfHeader, this);
+                    });
+                });
+
+                document.querySelectorAll(".unlike-button").forEach(function(button) {
+                    button.addEventListener("click", function() {
+                        const loginId = this.getAttribute("data-user-id");
+                        unlikeUser(loginId, csrfToken, csrfHeader, this);
+                    });
+                });
+            }
+
+            setButtonEvents();  // 初期設定
+
+            function likeUser(loginId, csrfToken, csrfHeader, button) {
+                fetch('/like', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify({ loginId: loginId })
+                }).then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            updateLikeCount(data.likeCount);
+                            toggleButtonState(button, true);
+                            setButtonEvents(); // イベントリスナーを再設定
+                        });
+                    } else {
+                        console.error("Like request failed for user: " + loginId);
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+
+            function unlikeUser(loginId, csrfToken, csrfHeader, button) {
+                fetch('/unlike', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify({ loginId: loginId })
+                }).then(response => {
+                    if (response.ok) {
+                        response.json().then(data => {
+                            updateLikeCount(data.likeCount);
+                            toggleButtonState(button, false);
+                            setButtonEvents(); // イベントリスナーを再設定
+                        });
+                    } else {
+                        console.error("Unlike request failed for user: " + loginId);
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                });
+            }
+
+            function updateLikeCount(likeCount) {
+                document.getElementById("like-count").textContent = likeCount;
+            }
+
+            function toggleButtonState(button, liked) {
+                const newButton = document.createElement('button');
+                newButton.setAttribute('data-user-id', button.getAttribute('data-user-id'));
+
+                if (liked) {
+                    newButton.textContent = "よくない";
+                    newButton.classList.add("btn", "btn-secondary", "unlike-button");
+                } else {
+                    newButton.textContent = "いいね";
+                    newButton.classList.add("btn", "btn-primary", "like-button");
+                }
+
+                button.parentNode.replaceChild(newButton, button);
+                setButtonEvents(); // 新しいボタンにイベントリスナーを設定
+            }
+        });
+        /*]]>*/
+    </script>
 
 </body>
 </html>
