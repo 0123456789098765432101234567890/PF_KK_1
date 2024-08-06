@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>お問い合わせ内容確認</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+
+    <div class="container">
+        <h1>お問い合わせ内容確認</h1>
+        <form th:action="@{/contact/register}" th:object="${contactForm}" method="post">
+            <div class="form-group">
+                <label for="categoryId">カテゴリー:</label>
+                <p th:text="${#lists.find(categories, 'category_id', contactForm.category_id)?.category_name}">Category Name</p>
+                <input type="hidden" th:field="*{category_id}" />
+            </div>
+
+            <div class="form-group">
+                <label for="contactDetail">お問い合わせ内容:</label>
+                <p id="contact_detail_content" th:text="${contactForm.contact_detail}">お問い合わせ内容</p>
+                <input type="hidden" th:field="*{contact_detail}" />
+            </div>
+
+            <button type="button" class="btn btn-secondary" onclick="history.back()">前の画面に戻る</button>
+            <button type="submit" class="btn btn-primary" onclick="showSuccessMessage(event)">送信</button>
+        </form>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        function showSuccessMessage(event) {
+            event.preventDefault();
+            alert("お問い合わせを送信しました。");
+            event.target.closest('form').submit();
+        }
+
+        function convertNewlinesToBreaks(text) {
+            return text.replace(/\n/g, '<br/>');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var contactDetail = document.getElementById('contact_detail_content');
+            if (contactDetail) {
+                contactDetail.innerHTML = convertNewlinesToBreaks(contactDetail.textContent);
+            }
+        });
+    </script>
+</body>
+
+</html>
