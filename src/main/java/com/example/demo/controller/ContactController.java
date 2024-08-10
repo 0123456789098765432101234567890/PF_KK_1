@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.entity.Contact;
-import com.example.demo.entity.ContactCategory;
 import com.example.demo.form.ContactForm;
 import com.example.demo.service.ContactService;
+import com.example.demo.service.MailService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,65 +25,68 @@ import lombok.extern.slf4j.Slf4j;
 public class ContactController {
 
     private final ContactService contactService;
+    private final MailService mailService;
 
+    // お問い合わせフォームを表示
     @GetMapping("/contact")
     public String showContactForm(Model model) {
-        // 削除されていないカテゴリーを取得
-        List<ContactCategory> categories = contactService.getCategories();
-        model.addAttribute("categories", categories);
-
-        if (!model.containsAttribute("contactForm")) {
-            model.addAttribute("contactForm", new ContactForm());
-        }
-
+        model.addAttribute("contactForm", new ContactForm());
+        model.addAttribute("categories", contactService.getCategories());
         return "contactForm";
     }
 
+    // 入力内容確認画面への遷移
     @PostMapping("/contact")
-    public String processContactForm(@Valid @ModelAttribute ContactForm contactForm, BindingResult result, Model model) {
+    public String confirmContact(@Valid @ModelAttribute ContactForm contactForm, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            log.debug("Validation errors: {}", result.getAllErrors());
+            model.addAttribute("categories", contactService.getCategories());
             return "contactForm";
         }
 
-        log.debug("Redirecting to confirmation page with form: {}", contactForm.getContact_detail());
-        
-        // 確認画面にもカテゴリ情報を渡す
-        List<ContactCategory> categories = contactService.getCategories();
-        model.addAttribute("categories", categories);
-
-        // カテゴリ名を取得
-        ContactCategory category = contactService.getCategoryById(contactForm.getCategory_id());
-        String categoryName = category != null ? category.getCategory_name() : "Unknown Category";
-
+        // カテゴリー名を表示用に設定
+        String categoryName = contactService.getCategoryById(contactForm.getCategory_id()).getCategory_name();
         model.addAttribute("categoryName", categoryName);
         model.addAttribute("contactForm", contactForm);
 
         return "contactConfirm";
     }
 
-    @PostMapping("/contact/register")
-    public String registerContact(@Valid @ModelAttribute ContactForm contactForm, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            log.debug("Validation errors on confirmation: {}", result.getAllErrors());
-            return "contactConfirm";
-        }
+    // 確認画面から送信
+    @PostMapping("/contact/confirm")
+    public String sendContact(@ModelAttribute ContactForm contactForm) {
+        // メール通知を送信
+        String to = "k.kondo@oplan.co.jp"; // 通知先のメールアドレス
+        String subject = "お問い合わせ通知";
+        String message = buildEmailMessage(contactForm);
 
-        try {
-            // 新しいお問い合わせを作成し、データベースに保存
-            Contact contact = new Contact();
-            contact.setContactCategory(contactService.getCategoryById(contactForm.getCategory_id()));
-            contact.setContact_detail(contactForm.getContact_detail());
-            contact.setStatus("未対応");
+        mailService.sendMail(to, subject, message);
 
-            contactService.saveContact(contact);
-            log.debug("Contact successfully added, redirecting to success page");
+        // ContactFormをContactエンティティに変換
+        Contact contact = convertToContactEntity(contactForm);
 
-            return "redirect:/contactlist"; // 修正：成功ページではなく一覧にリダイレクト
-        } catch (Exception e) {
-            log.error("Error confirming contact addition", e);
-            model.addAttribute("contactAddError", "Failed to confirm contact addition. Please try again.");
-            return "contactConfirm";
-        }
+        // データベースに保存
+        contactService.saveContact(contact);
+
+        // ポップアップメッセージ表示後、/contactlistにリダイレクト
+        return "redirect:/contactlist";
+    }
+
+    // ContactFormをContactエンティティに変換するメソッド
+    private Contact convertToContactEntity(ContactForm contactForm) {
+        Contact contact = new Contact();
+        contact.setContactCategory(contactService.getCategoryById(contactForm.getCategory_id()));
+        contact.setContact_detail(contactForm.getContact_detail());
+        contact.setStatus("未対応"); // 新しいお問い合わせは常に「未対応」で開始
+        return contact;
+    }
+
+    // メールの内容を構築
+    private String buildEmailMessage(ContactForm contactForm) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("お問い合わせが送信されました。\n\n");
+        sb.append("送信日時: ").append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).append("\n");
+        sb.append("カテゴリー: ").append(contactService.getCategoryById(contactForm.getCategory_id()).getCategory_name()).append("\n");
+        sb.append("お問い合わせ内容:\n").append(contactForm.getContact_detail()).append("\n");
+        return sb.toString();
     }
 }

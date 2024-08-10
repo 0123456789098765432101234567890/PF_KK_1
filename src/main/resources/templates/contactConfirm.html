@@ -13,7 +13,7 @@
 
     <div class="container">
         <h1>お問い合わせ内容確認</h1>
-        <form th:action="@{/contact/register}" th:object="${contactForm}" method="post">
+        <form th:action="@{/contact/confirm}" th:object="${contactForm}" method="post">
             <div class="form-group">
                 <label for="categoryId">カテゴリー:</label>
                 <p th:text="${categoryName}">Category Name</p>

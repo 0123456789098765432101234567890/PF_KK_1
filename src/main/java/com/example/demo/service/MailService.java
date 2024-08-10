@@ -19,6 +19,7 @@ public class MailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("k.kondo@oplan.co.jp");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
