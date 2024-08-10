@@ -27,6 +27,7 @@ public class ContactController {
 
     @GetMapping("/contact")
     public String showContactForm(Model model) {
+        // 削除されていないカテゴリーを取得
         List<ContactCategory> categories = contactService.getCategories();
         model.addAttribute("categories", categories);
 
@@ -45,8 +46,10 @@ public class ContactController {
         }
 
         log.debug("Redirecting to confirmation page with form: {}", contactForm.getContact_detail());
+        
+        // 確認画面にもカテゴリ情報を渡す
         List<ContactCategory> categories = contactService.getCategories();
-        model.addAttribute("categories", categories); // 確認画面にもカテゴリ情報を渡す
+        model.addAttribute("categories", categories);
 
         // カテゴリ名を取得
         ContactCategory category = contactService.getCategoryById(contactForm.getCategory_id());
@@ -66,6 +69,7 @@ public class ContactController {
         }
 
         try {
+            // 新しいお問い合わせを作成し、データベースに保存
             Contact contact = new Contact();
             contact.setContactCategory(contactService.getCategoryById(contactForm.getCategory_id()));
             contact.setContact_detail(contactForm.getContact_detail());
@@ -74,16 +78,11 @@ public class ContactController {
             contactService.saveContact(contact);
             log.debug("Contact successfully added, redirecting to success page");
 
-            return "redirect:/contact/success";
+            return "redirect:/contactlist"; // 修正：成功ページではなく一覧にリダイレクト
         } catch (Exception e) {
             log.error("Error confirming contact addition", e);
             model.addAttribute("contactAddError", "Failed to confirm contact addition. Please try again.");
             return "contactConfirm";
         }
-    }
-
-    @GetMapping("/contact/success")
-    public String showSuccessPage() {
-        return "contactSuccess";
     }
 }

@@ -16,7 +16,7 @@
         <form th:action="@{/contact/register}" th:object="${contactForm}" method="post">
             <div class="form-group">
                 <label for="categoryId">カテゴリー:</label>
-                <p th:text="${#lists.find(categories, 'category_id', contactForm.category_id)?.category_name}">Category Name</p>
+                <p th:text="${categoryName}">Category Name</p>
                 <input type="hidden" th:field="*{category_id}" />
             </div>
 
@@ -39,6 +39,7 @@
             event.target.closest('form').submit();
         }
 
+        // 改行を表示する関数
         function convertNewlinesToBreaks(text) {
             return text.replace(/\n/g, '<br/>');
         }

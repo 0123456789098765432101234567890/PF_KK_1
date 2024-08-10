@@ -17,10 +17,6 @@
                 <p th:text="${contact.contactCategory.category_name}"></p>
             </div>
             <div class="form-group">
-                <label for="contact_detail">詳細:</label>
-                <p th:utext="${#strings.replace(contact.contact_detail, '\n', '<br/>')}"></p>
-            </div>
-            <div class="form-group">
                 <label for="status">ステータス:</label>
                 <select id="status" th:field="*{status}" class="form-control">
                     <option value="未対応" th:selected="${contact.status == '未対応'}">未対応</option>
@@ -31,11 +27,26 @@
             <button type="submit" class="btn btn-primary">更新</button>
         </form>
         <a th:href="@{/contactlist}" class="btn btn-secondary mt-3">一覧に戻る</a>
+            <div class="form-group">
+                <label for="contact_detail">詳細:</label>
+                <!-- 改行を <br> に変換する -->
+                <p id="contact_detail_content" th:text="${contact.contact_detail}"></p>
+            </div>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // 改行を <br> に変換する関数
+            function convertNewlinesToBreaks(text) {
+                return text.replace(/\n/g, '<br/>');
+            }
+
+            // 詳細の内容に改行を反映
+            var contactDetailContent = $('#contact_detail_content');
+            contactDetailContent.html(convertNewlinesToBreaks(contactDetailContent.text()));
+
+            // フォーム送信時の処理
             $('form').submit(function(event) {
                 event.preventDefault();
                 var form = $(this);
