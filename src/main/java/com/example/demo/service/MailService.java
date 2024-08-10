@@ -22,7 +22,7 @@ public class MailService {
             helper.setFrom("k.kondo@oplan.co.jp");
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body, true);
+            helper.setText(body, false); // false を指定してプレーンテキストで送信
             mailSender.send(message);
             log.info("Email sent to: {}", to);
         } catch (Exception e) {
