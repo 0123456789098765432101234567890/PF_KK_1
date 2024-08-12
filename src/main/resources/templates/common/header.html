@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>自己紹介評価システム</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
 <body>
 <nav class="navbar bg-info navbar-dark" th:fragment="header">
-	<div class="container-fluid">
-    	<a class="navbar-brand" th:href="@{/menu}">自己紹介評価システム</a>
-    	<form th:action="@{/logout}" method="post">
-    		<span class="text-light" th:text="|ログインID：${#authentication.principal.username}|"></span>
-			<input type="submit" class="btn btn-light" value="ログアウト" />
-		</form>
-	</div>
+    <div class="container-fluid">
+        <!-- Thymeleaf の条件式を使用して href を設定 -->
+        <a class="navbar-brand" th:href="${#authentication.principal.authorities[0].authority == 'ROLE_ADMIN'} ? @{/admindashboard} : @{/userdashboard}">
+            自己紹介評価システム
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <span class="text-light" th:text="|ログインID：${#authentication.principal.username}|"></span>
+            <input type="submit" class="btn btn-light" value="ログアウト" />
+        </form>
+    </div>
 </nav>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

@@ -1,14 +1,9 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.example.demo.entity.UserInfo;
 import com.example.demo.service.AdminLikeRankingService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,26 +16,18 @@ public class AdminLikeRankingController {
 
     private final AdminLikeRankingService rankingService;
 
+    /**
+     * /adminLikeRanking にアクセスした際に年間と月間のランキングを表示
+     * @param model モデルにランキングデータを追加
+     * @return adminLikeRanking テンプレート
+     */
     @GetMapping("/adminLikeRanking")
-    public String showAdminLikeRanking(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        String loginId = userDetails.getUsername();
-        log.info("AdminLikeRankingページを表示しています。ログインID: {}", loginId);
-
-        try {
-            List<UserInfo> monthlyRanking = rankingService.getTop5UsersForMonth();
-            List<UserInfo> weeklyRanking = rankingService.getTop5UsersForWeek();
-            
-            // デバッグのために各ユーザーの画像データをログに出力
-            monthlyRanking.forEach(user -> log.info("User: {}, ImageData: {}", user.getLoginId(), user.getBase64Image()));
-            weeklyRanking.forEach(user -> log.info("User: {}, ImageData: {}", user.getLoginId(), user.getBase64Image()));
-
-            model.addAttribute("monthlyRanking", monthlyRanking);
-            model.addAttribute("weeklyRanking", weeklyRanking);
-
-            return "adminLikeRanking";
-        } catch (Exception e) {
-            log.error("ランキングの取得中にエラーが発生しました", e);
-            return "error/500";
-        }
+    public String getAdminLikeRanking(Model model) {
+        // 年間ランキングと月間ランキングをモデルに追加
+        model.addAttribute("annualRanking", rankingService.getTop5UsersForYear());
+        model.addAttribute("monthlyRanking", rankingService.getTop5UsersForMonth());
+        
+        // adminLikeRanking テンプレートを表示
+        return "adminLikeRanking";  // HTMLファイル名が `adminLikeRanking.html` であると仮定しています
     }
 }

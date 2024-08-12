@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.Base64;
 import java.util.List;
@@ -23,45 +24,61 @@ public class AdminLikeRankingService {
     private final UserInfoRepository userInfoRepository;
     private final LikeRepository likeRepository;
 
-    public List<UserInfo> getTop5UsersForMonth() {
-        YearMonth currentMonth = YearMonth.now();
-        LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
-        LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
+    /**
+     * 年間いいねランキングを取得します
+     * @return 年間ランキング上位5ユーザー
+     */
+    public List<UserInfo> getTop5UsersForYear() {
+        // 現在の年の初日と末日を取得
+        Year currentYear = Year.now();
+        LocalDateTime startOfYear = currentYear.atDay(1).atStartOfDay();
+        LocalDateTime endOfYear = currentYear.atMonth(12).atEndOfMonth().atTime(23, 59, 59);
 
-        log.info("Calculating LikeCount for the month, From: {}, To: {}", startOfMonth, endOfMonth);
+        log.info("年間いいねランキングを計算中です。期間: {} から {}", startOfYear, endOfYear);
 
-        return userInfoRepository.findByRoles("USER").stream()  // USER権限のアカウントを対象にする
+        return userInfoRepository.findByRoles("USER").stream()
                 .map(user -> {
+                    // プロフィール画像をBase64に変換して設定
                     if (user.getProfImg() != null) {
                         user.setBase64Image(Base64.getEncoder().encodeToString(user.getProfImg()));
                     }
-                    long likeCount = likeRepository.countByLoginIdAndLikedAtBetween(user.getLoginId(), startOfMonth, endOfMonth);
+                    // 年間のいいね数を取得して設定
+                    long likeCount = likeRepository.countByLoginIdAndLikedAtBetween(user.getLoginId(), startOfYear, endOfYear);
                     user.setLikeCount(likeCount);
-                    log.info("User: {}, LikeCount for Month: {}", user.getLoginId(), likeCount);
+                    log.info("ユーザー: {}, 年間いいね数: {}", user.getLoginId(), likeCount);
                     return user;
                 })
+                // いいね数で降順ソート
                 .sorted((u1, u2) -> Long.compare(u2.getLikeCount(), u1.getLikeCount()))
                 .limit(5)
                 .collect(Collectors.toList());
     }
 
-    public List<UserInfo> getTop5UsersForWeek() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startOfWeek = now.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
-        LocalDateTime endOfWeek = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
+    /**
+     * 月間いいねランキングを取得します
+     * @return 月間ランキング上位5ユーザー
+     */
+    public List<UserInfo> getTop5UsersForMonth() {
+        // 現在の月の初日と末日を取得
+        YearMonth currentMonth = YearMonth.now();
+        LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
+        LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
 
-        log.info("Calculating LikeCount for the week, From: {}, To: {}", startOfWeek, endOfWeek);
+        log.info("月間いいねランキングを計算中です。期間: {} から {}", startOfMonth, endOfMonth);
 
-        return userInfoRepository.findByRoles("USER").stream()  // USER権限のアカウントを対象にする
+        return userInfoRepository.findByRoles("USER").stream()
                 .map(user -> {
+                    // プロフィール画像をBase64に変換して設定
                     if (user.getProfImg() != null) {
                         user.setBase64Image(Base64.getEncoder().encodeToString(user.getProfImg()));
                     }
-                    long likeCount = likeRepository.countByLoginIdAndLikedAtBetween(user.getLoginId(), startOfWeek, endOfWeek);
+                    // 月間のいいね数を取得して設定
+                    long likeCount = likeRepository.countByLoginIdAndLikedAtBetween(user.getLoginId(), startOfMonth, endOfMonth);
                     user.setLikeCount(likeCount);
-                    log.info("User: {}, LikeCount for Week: {}", user.getLoginId(), likeCount);
+                    log.info("ユーザー: {}, 月間いいね数: {}", user.getLoginId(), likeCount);
                     return user;
                 })
+                // いいね数で降順ソート
                 .sorted((u1, u2) -> Long.compare(u2.getLikeCount(), u1.getLikeCount()))
                 .limit(5)
                 .collect(Collectors.toList());
