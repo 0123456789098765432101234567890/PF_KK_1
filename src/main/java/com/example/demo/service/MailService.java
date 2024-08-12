@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
@@ -15,6 +16,7 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
+    @Async
     public void sendMail(String to, String subject, String body) {
         try {
             MimeMessage message = mailSender.createMimeMessage();

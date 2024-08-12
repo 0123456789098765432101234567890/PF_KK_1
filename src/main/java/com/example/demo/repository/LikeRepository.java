@@ -12,13 +12,15 @@ import com.example.demo.entity.Like;
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
+    // 特定のユーザーが他のユーザーに対していいねをした履歴を取得
     Optional<Like> findByLoginIdAndFromLoginId(String loginId, String fromLoginId);
 
+    // 特定のユーザーが受けたいいねの総数を取得
     long countByLoginId(String loginId);
 
-    // 追加: 指定された期間内のいいね数をカウント
+    // 指定された期間内で特定のユーザーが受けたいいねの数をカウント
     long countByLoginIdAndLikedAtBetween(String loginId, LocalDateTime start, LocalDateTime end);
 
-    // ユーザーの月間いいね数を取得するメソッド
+    // 指定された期間内で特定のユーザーが受けたいいねをリストとして取得
     List<Like> findAllByLoginIdAndLikedAtBetween(String loginId, LocalDateTime start, LocalDateTime end);
 }
