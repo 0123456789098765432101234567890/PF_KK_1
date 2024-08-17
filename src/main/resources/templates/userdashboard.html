@@ -10,46 +10,81 @@
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
+
     <div class="container-fluid">
-        <h2>ダッシュボード</h2>
+        <h2 class="my-4">ダッシュボード</h2>
+
+        <!-- userLikeCount 機能をここに埋め込む -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-header bg-primary text-white">
+                        年間いいね数
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-0" th:text="${annualLikeCount}">0</h3>
+                    </div>
+                    <div class="card-footer text-muted">
+                        現在の年の総いいね数
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card text-center">
+                    <div class="card-header bg-success text-white">
+                        月間いいね数
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-0" th:text="${monthlyLikeCount}">0</h3>
+                    </div>
+                    <div class="card-footer text-muted">
+                        現在の月の総いいね数
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 既存のコンテンツ -->
         <div class="mt-3">
             ユーザー紹介
         </div>
         <a th:href="@{/userintroduction}" class="btn btn-primary">一覧画面へ</a>
         <div class="mt-3">
-            アカウント情報設定画面
-        </div>
-        <a th:href="@{/usersetting}" class="btn btn-primary">設定画面へ</a>
-        <div class="mt-3">
-            プロフィール情報設定画面
-        </div>
-        <a th:href="@{/userupdate}" class="btn btn-primary">設定画面へ</a>
-        <div class="mt-3">
-            ユーザー一覧画面
-        </div>
-        <a th:href="@{/userlist}" class="btn btn-primary">一覧画面へ</a>
-        <div class="mt-3">
-            お問い合わせ一覧
-        </div>
-        <a th:href="@{/contactlist}" class="btn btn-primary">お問い合わせ一覧へ</a>
-        <div class="mt-3">
-            アカウント追加画面
-        </div>
-        <a th:href="@{/useradd}" class="btn btn-primary">追加画面へ</a>
-        <div class="mt-3">
             月間いいねランキング
         </div>
         <a th:href="@{/likeranking}" class="btn btn-primary">ランキング画面へ</a>
+		<div class="mt-3">
+		    お問い合わせ一覧
+		</div>
+		<a th:href="@{/contactlist}" class="btn btn-primary">お問い合わせ一覧へ</a>
         <div class="mt-3">
             お問い合わせ送信
         </div>
         <a th:href="@{/contact}" class="btn btn-primary">お問い合わせ入力画面へ</a>
-        <th:block th:if="${hasUserManageAuth}">
-            <div class="mt-3">
-                ユーザー情報の管理はコチラ
-            </div>
-            <a href="" class="btn btn-danger">ユーザー管理画面へ</a>
-        </th:block>
+		<div class="mt-3">
+		    プロフィール情報設定画面
+		</div>
+		<a th:href="@{/userupdate}" class="btn btn-primary">設定画面へ</a>
+		<div class="mt-3">
+		    アカウント情報設定画面
+		</div>
+		<a th:href="@{/usersetting}" class="btn btn-primary">設定画面へ</a>
+		
+<!--		<p>以下非表示</p>-->
+<!--		<div class="mt-3">-->
+<!--		    ユーザー一覧画面-->
+<!--		</div>-->
+<!--		<a th:href="@{/userlist}" class="btn btn-primary">一覧画面へ</a>-->
+<!--		<div class="mt-3">-->
+<!--		    アカウント追加画面-->
+<!--		</div>-->
+<!--		<a th:href="@{/useradd}" class="btn btn-primary">追加画面へ</a>-->
+<!--        <th:block th:if="${hasUserManageAuth}">-->
+<!--            <div class="mt-3">-->
+<!--                ユーザー情報の管理はコチラ-->
+<!--            </div>-->
+<!--            <a href="" class="btn btn-danger">ユーザー管理画面へ</a>-->
+<!--        </th:block>-->
     </div>
 
     <div th:if="${successMessage}" th:text="${successMessage}" id="success-message" style="display: none;"></div>
