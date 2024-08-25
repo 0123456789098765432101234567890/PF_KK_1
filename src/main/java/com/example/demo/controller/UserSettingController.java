@@ -52,7 +52,7 @@ public class UserSettingController {
             String loginId = (String) session.getAttribute("loginId");
             userSettingService.updateUserSettings(loginId, form);
             redirectAttributes.addFlashAttribute("successMessage", "更新に成功しました。");
-            return "redirect:/userdashboard";
+            return "redirect:/usersetting";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "更新に失敗しました。再試行してください。");
             return "usersettingForm";

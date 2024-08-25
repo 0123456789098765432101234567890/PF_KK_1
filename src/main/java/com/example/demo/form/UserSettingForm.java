@@ -13,7 +13,7 @@ public class UserSettingForm {
     @NotBlank(message = "メールアドレスを入力してください。")
     private String email;
 
-    @Pattern(regexp = "^[a-zA-Z0-9_-]{3,32}$", message = "パスワードは3〜32文字の半角英数字と_-のみ許可されます。")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{4,32}$", message = "パスワードは4〜32文字の半角英数字と_-のみ許可されます。")
     @NotBlank(message = "パスワードを入力してください。")
     private String pass;
 }

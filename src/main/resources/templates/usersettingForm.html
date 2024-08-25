@@ -2,14 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>ユーザー設定</title>
+    <title>アカウント情報設定</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
+
     <div class="container">
-        <h1>ユーザー設定</h1>
+        <h1>アカウント情報設定</h1>
         <form th:action="@{/usersetting}" th:object="${userSettingForm}" method="post">
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
@@ -24,6 +27,17 @@
             <button type="submit" class="btn btn-primary">更新</button>
         </form>
     </div>
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- ポップアップメッセージの表示部分 -->
+    <div th:if="${successMessage}" th:text="${successMessage}" id="success-message" style="display: none;"></div>
+
+    <script>
+        $(document).ready(function() {
+            var successMessage = $('#success-message').text();
+            if (successMessage) {
+                alert(successMessage);
+            }
+        });
+    </script>
 </body>
 </html>
