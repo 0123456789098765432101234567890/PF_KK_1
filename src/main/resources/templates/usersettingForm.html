@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>アカウント情報設定</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
@@ -11,24 +12,27 @@
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
 
-    <div class="container">
-        <h1>アカウント情報設定</h1>
-        <form th:action="@{/usersetting}" th:object="${userSettingForm}" method="post">
-            <div class="form-group">
-                <label for="email">メールアドレス:</label>
-                <input type="email" id="email" th:field="*{email}" class="form-control" />
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <h1 class="mb-4 text-center">アカウント情報設定</h1>
+                <form th:action="@{/usersetting}" th:object="${userSettingForm}" method="post">
+                    <div class="form-group">
+                        <label for="email" class="form-label">メールアドレス:</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" />
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass" class="form-label">パスワード:</label>
+                        <input type="password" id="pass" th:field="*{pass}" class="form-control" />
+                        <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="text-danger"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 w-100">更新</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="pass">パスワード:</label>
-                <input type="password" id="pass" th:field="*{pass}" class="form-control" />
-                <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="text-danger"></div>
-            </div>
-            <button type="submit" class="btn btn-primary">更新</button>
-        </form>
+        </div>
     </div>
 
-    <!-- ポップアップメッセージの表示部分 -->
     <div th:if="${successMessage}" th:text="${successMessage}" id="success-message" style="display: none;"></div>
 
     <script>

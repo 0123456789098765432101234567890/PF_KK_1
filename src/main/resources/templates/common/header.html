@@ -3,6 +3,33 @@
 <head>
     <title>自己紹介評価システム</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        /* ヘッダー全体のスタイル */
+        .navbar {
+            padding: 10px 20px; /* ヘッダー全体のパディング */
+        }
+
+        /* ブランド名の左側に固定マージンを追加 */
+        .navbar-brand {
+            margin-left: 20px; /* 固定のマージンを追加 */
+            font-size: 1.5rem; /* フォントサイズを固定 */
+        }
+
+        /* ログアウトフォームの左側に固定マージンを追加 */
+        .navbar form {
+            margin-left: auto; /* 右端に配置 */
+        }
+
+        .navbar form span {
+            margin-right: 10px; /* 固定のマージンを追加 */
+            font-size: 1rem; /* フォントサイズを固定 */
+        }
+
+        .navbar form .btn {
+            font-size: 1rem; /* ボタンのフォントサイズを固定 */
+            padding: 5px 10px; /* ボタンのパディングを固定 */
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar bg-info navbar-dark" th:fragment="header">
