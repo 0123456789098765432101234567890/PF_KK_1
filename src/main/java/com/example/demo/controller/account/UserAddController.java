@@ -60,6 +60,7 @@ public class UserAddController {
         return "useraddConfirm";
     }
 
+
     @PostMapping("/useradd/register")
     public String registerUser(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
         if (result.hasErrors()) {

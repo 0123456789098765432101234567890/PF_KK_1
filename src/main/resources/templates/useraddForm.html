@@ -108,6 +108,11 @@
             }
             $('input[name="roles"]').change(toggleUserFields);
             toggleUserFields(); // 初期表示
+
+            // ブラウザの戻るボタンで表示された場合の対策
+            $(window).on('pageshow', function() {
+                toggleUserFields();
+            });
         });
     </script>
 </body>
