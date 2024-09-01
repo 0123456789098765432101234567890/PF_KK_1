@@ -49,7 +49,8 @@
                             <a th:href="@{/useredit/{loginId}(loginId=${user.loginId})}" class="btn btn-warning">編集</a>
                         </div>
                         <div>
-                            <form th:action="@{/userlist/delete}" method="post" style="display: inline-block;">
+                            <!-- 削除ボタンの修正 -->
+                            <form th:action="@{/userlist/delete}" method="post" style="display: inline-block;" onsubmit="return confirm('本当に削除しますか？');">
                                 <input type="hidden" name="loginId" th:value="${user.loginId}" />
                                 <button type="submit" class="btn btn-danger">削除</button>
                             </form>
@@ -75,35 +76,35 @@
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('.toggle-status-btn').click(function (event) {
-                event.preventDefault();
-
-                var button = $(this);
-                var form = button.closest('form');
-                var loginId = form.find('input[name="loginId"]').val();
-                var currentStatus = form.find('input[name="status"]').val();
-                var newStatus = currentStatus === 'ALLOWED' ? 'DENIED' : 'ALLOWED';
-
-                form.find('input[name="status"]').val(newStatus);
-
-                var formData = form.serialize();
-
-                $.post(form.attr('action'), formData, function (response) {
-                    if (response === 'success') {
-                        var statusSpan = button.closest('tr').find('span[data-id]');
-                        statusSpan.text(newStatus);
-                        button.text(newStatus === 'ALLOWED' ? 'アクセス禁止' : 'アクセス許可');
-                    } else {
-                        alert('ステータス更新エラー');
-                        form.find('input[name="status"]').val(currentStatus);
-                    }
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert('ステータス更新エラー');
-                    form.find('input[name="status"]').val(currentStatus);
-                });
-            });
-        });
+		$(document).ready(function () {
+		    // ステータス切り替えボタンの処理はそのまま
+		    $('.toggle-status-btn').click(function (event) {
+		        event.preventDefault();
+		
+		        var button = $(this);
+		        var form = button.closest('form');
+		        var formData = form.serialize();
+		
+		        $.post(form.attr('action'), formData, function (response) {
+		            window.location.href = "/userlist";  // ステータス変更後にリダイレクト
+		        }).fail(function (jqXHR, textStatus, errorThrown) {
+		            alert('ステータス更新エラー');
+		        });
+		    });
+		
+		    // 削除ボタンの処理
+		    $('form[th\\:action="@{/userlist/delete}"]').submit(function (event) {
+		        event.preventDefault();
+		        var form = $(this);
+		        var formData = form.serialize();
+		
+		        $.post(form.attr('action'), formData, function (response) {
+		            window.location.href = "/userlist";  // 削除後にリダイレクト
+		        }).fail(function (jqXHR, textStatus, errorThrown) {
+		            alert('削除に失敗しました');
+		        });
+		    });
+		});
     </script>
 </body>
 </html>

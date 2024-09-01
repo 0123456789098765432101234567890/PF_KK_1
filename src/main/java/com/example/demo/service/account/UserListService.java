@@ -15,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserListService {
+
     private final UserInfoRepository userInfoRepository;
 
     public Page<UserInfo> getAllUsers(Pageable pageable) {
-        return userInfoRepository.findAll(pageable);
+        return userInfoRepository.findByDeletedFalse(pageable);
     }
 
     @Transactional
@@ -36,8 +37,13 @@ public class UserListService {
     }
 
     @Transactional
-    public void deleteUser(String loginId) {
-        userInfoRepository.deleteById(loginId);
+    public void softDeleteUser(String loginId) {
+        Optional<UserInfo> userOptional = userInfoRepository.findById(loginId);
+        if (userOptional.isPresent()) {
+            UserInfo user = userOptional.get();
+            user.setDeleted(true);  // deletedフラグをtrueに設定
+            userInfoRepository.save(user);
+        }
     }
 
     public UserInfo getUserByLoginId(String loginId) {
