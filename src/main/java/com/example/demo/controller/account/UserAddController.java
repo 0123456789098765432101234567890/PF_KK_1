@@ -69,8 +69,8 @@ public class UserAddController {
         }
         try {
             userAddService.addUser(form);
-            log.debug("User successfully added, redirecting to success page");
-            return "redirect:/useradd/success";
+            log.debug("User successfully added, redirecting to user list");
+            return "redirect:/userlist?addSuccess=true"; // リダイレクトURLにクエリパラメータを追加
         } catch (Exception e) {
             log.error("Error confirming user addition", e);
             model.addAttribute("userAddError", "Failed to confirm user addition. Please try again.");

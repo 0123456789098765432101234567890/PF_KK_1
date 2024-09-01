@@ -42,6 +42,7 @@ public class UserListService {
         if (userOptional.isPresent()) {
             UserInfo user = userOptional.get();
             user.setDeleted(true);  // deletedフラグをtrueに設定
+            user.setStatus("DENIED");  // ステータスをDENIEDに設定
             userInfoRepository.save(user);
         }
     }

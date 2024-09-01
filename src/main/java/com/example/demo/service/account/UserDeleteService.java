@@ -26,7 +26,8 @@ public class UserDeleteService {
         Optional<UserInfo> userOptional = userInfoRepository.findById(loginId);
         if (userOptional.isPresent()) {
             UserInfo user = userOptional.get();
-            user.setDeleted(false);
+            user.setDeleted(false); // 削除フラグをfalseに設定
+            user.setStatus("ALLOWED"); // ステータスをALLOWEDに設定
             userInfoRepository.save(user);
         }
     }

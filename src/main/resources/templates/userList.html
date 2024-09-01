@@ -12,13 +12,33 @@
             min-width: 40px;
             text-align: center;
         }
+
+        .header-buttons {
+            display: flex;
+            justify-content: flex-end; /* 右側に寄せる */
+            gap: 10px; /* ボタン間のスペース */
+            margin-bottom: 20px; /* 下部にスペース */
+        }
+
+        .header-buttons button {
+            min-width: 120px; /* ボタンの最小幅を設定 */
+        }
     </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>ユーザー一覧</h1>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>ユーザー一覧</h1>
+            <div class="header-buttons">
+                <!-- アカウント追加ボタン -->
+                <a href="http://localhost:8080/useradd" class="btn btn-success">アカウント追加</a>
+                <!-- 削除アカウントボタン -->
+                <a href="http://localhost:8080/userdelete" class="btn btn-danger">削除アカウント</a>
+            </div>
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -75,42 +95,47 @@
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // ステータス切り替えボタンの処理はそのまま
-            $('.toggle-status-btn').click(function (event) {
-                event.preventDefault();
-
-                var button = $(this);
-                var form = button.closest('form');
-                var formData = form.serialize();
-
-                $.post(form.attr('action'), formData, function (response) {
-                    window.location.href = "/userlist";  // ステータス変更後にリダイレクト
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert('ステータス更新エラー');
-                });
-            });
-
-            // 削除ボタンの処理
-            $('form[th\\:action="@{/userlist/delete}"]').submit(function (event) {
-                event.preventDefault();
-                var form = $(this);
-                var formData = form.serialize();
-
-                $.post(form.attr('action'), formData, function (response) {
-                    alert('アカウントの削除に成功しました'); // 削除成功時のポップアップメッセージ
-                    window.location.href = "/userlist";  // 削除後にリダイレクト
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert('削除に失敗しました');
-                });
-            });
-
-            // URLにdeleteSuccessクエリパラメータが存在する場合にポップアップを表示
-            if (window.location.search.indexOf('deleteSuccess=true') > -1) {
-                alert('アカウントの削除に成功しました');
-            }
-        });
-    </script>
+	<script>
+	    $(document).ready(function () {
+	        // ステータス切り替えボタンの処理はそのまま
+	        $('.toggle-status-btn').click(function (event) {
+	            event.preventDefault();
+	
+	            var button = $(this);
+	            var form = button.closest('form');
+	            var formData = form.serialize();
+	
+	            $.post(form.attr('action'), formData, function (response) {
+	                window.location.href = "/userlist";  // ステータス変更後にリダイレクト
+	            }).fail(function (jqXHR, textStatus, errorThrown) {
+	                alert('ステータス更新エラー');
+	            });
+	        });
+	
+	        // 削除ボタンの処理
+	        $('form[th\\:action="@{/userlist/delete}"]').submit(function (event) {
+	            event.preventDefault();
+	            var form = $(this);
+	            var formData = form.serialize();
+	
+	            $.post(form.attr('action'), formData, function (response) {
+	                alert('アカウントの削除に成功しました'); // 削除成功時のポップアップメッセージ
+	                window.location.href = "/userlist";  // 削除後にリダイレクト
+	            }).fail(function (jqXHR, textStatus, errorThrown) {
+	                alert('削除に失敗しました');
+	            });
+	        });
+	
+	        // URLにaddSuccessクエリパラメータが存在する場合にポップアップを表示
+	        if (window.location.search.indexOf('addSuccess=true') > -1) {
+	            alert('アカウントを追加しました');
+	        }
+	
+	        // URLにdeleteSuccessクエリパラメータが存在する場合にポップアップを表示
+	        if (window.location.search.indexOf('deleteSuccess=true') > -1) {
+	            alert('アカウントの削除に成功しました');
+	        }
+	    });
+	</script>
 </body>
 </html>
