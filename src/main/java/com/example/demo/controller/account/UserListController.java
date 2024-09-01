@@ -55,10 +55,12 @@ public class UserListController {
         try {
             userListService.softDeleteUser(form.getLoginId());
             model.addAttribute("userPage", userListService.getAllUsers(PageRequest.of(page, 5)));
-            return "redirect:/userlist"; // 削除後にユーザー一覧画面にリダイレクト
+            model.addAttribute("deleteSuccess", true);  // 削除成功フラグを追加
+            return "redirect:/userlist?deleteSuccess=true"; // フラグをリダイレクト時に追加
         } catch (Exception e) {
             log.error("Error deleting user for loginId: {}", form.getLoginId(), e);
             return "error";
         }
     }
+
 }
