@@ -33,6 +33,22 @@ public class UserAddController {
 
     @PostMapping("/useradd")
     public String processUserAddForm(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
+        // "ADMIN" の場合、@NotEmptyがない項目のエラーチェックをスキップ
+        if ("ADMIN".equals(form.getRoles())) {
+            if (result.hasFieldErrors("user_name_kana")) {
+                result.rejectValue("user_name_kana", null, null);
+            }
+            if (result.hasFieldErrors("gender")) {
+                result.rejectValue("gender", null, null);
+            }
+            if (result.hasFieldErrors("age")) {
+                result.rejectValue("age", null, null);
+            }
+            if (result.hasFieldErrors("self_intro")) {
+                result.rejectValue("self_intro", null, null);
+            }
+        }
+
         if (result.hasErrors()) {
             log.debug("Validation errors: {}", result.getAllErrors());
             model.addAttribute("userAddForm", form);
@@ -59,7 +75,6 @@ public class UserAddController {
         log.debug("Redirecting to confirmation page with form: {}", form.getUser_name());
         return "useraddConfirm";
     }
-
 
     @PostMapping("/useradd/register")
     public String registerUser(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
