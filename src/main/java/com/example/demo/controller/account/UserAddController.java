@@ -1,6 +1,8 @@
 package com.example.demo.controller.account;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,19 +35,19 @@ public class UserAddController {
 
     @PostMapping("/useradd")
     public String processUserAddForm(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
-        // "ADMIN" の場合、@NotEmptyがない項目のエラーチェックをスキップ
+        // "ADMIN" の場合、特定のフィールドのエラーチェックを無視する
         if ("ADMIN".equals(form.getRoles())) {
-            if (result.hasFieldErrors("user_name_kana")) {
-                result.rejectValue("user_name_kana", null, null);
-            }
-            if (result.hasFieldErrors("gender")) {
-                result.rejectValue("gender", null, null);
-            }
-            if (result.hasFieldErrors("age")) {
-                result.rejectValue("age", null, null);
-            }
-            if (result.hasFieldErrors("self_intro")) {
-                result.rejectValue("self_intro", null, null);
+            List<String> fieldsToSkip = Arrays.asList("user_name_kana", "gender", "age", "self_intro");
+
+            // 該当フィールドにエラーがある場合、それをスキップされたメッセージに上書きする
+            for (String field : fieldsToSkip) {
+                if (result.hasFieldErrors(field)) {
+                    // 該当するフィールドのすべてのエラーメッセージをクリア
+                    result.getFieldErrors(field).clear();
+                    // エラーメッセージをスキップされた旨を設定
+                    result.rejectValue(field, "validation.skipped." + field, "検証はスキップされました。");
+                    log.debug("Skipping validation error for field: {}", field);
+                }
             }
         }
 
@@ -76,6 +78,7 @@ public class UserAddController {
         return "useraddConfirm";
     }
 
+
     @PostMapping("/useradd/register")
     public String registerUser(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -86,7 +89,7 @@ public class UserAddController {
         try {
             userAddService.addUser(form);
             log.debug("User successfully added, redirecting to user list");
-            return "redirect:/userlist?addSuccess=true"; // リダイレクトURLにクエリパラメータを追加
+            return "redirect:/userlist?addSuccess=true";
         } catch (Exception e) {
             log.error("Error confirming user addition", e);
             model.addAttribute("userAddError", "Failed to confirm user addition. Please try again.");
