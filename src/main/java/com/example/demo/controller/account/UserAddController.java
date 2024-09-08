@@ -1,8 +1,6 @@
 package com.example.demo.controller.account;
 
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,18 +8,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.form.AdminAddForm;
 import com.example.demo.form.UserAddForm;
 import com.example.demo.service.account.UserAddService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class UserAddController {
     private final UserAddService userAddService;
 
@@ -34,72 +31,33 @@ public class UserAddController {
     }
 
     @PostMapping("/useradd")
-    public String processUserAddForm(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
-        // "ADMIN" の場合、特定のフィールドのエラーチェックを無視する
-        if ("ADMIN".equals(form.getRoles())) {
-            List<String> fieldsToSkip = Arrays.asList("user_name_kana", "gender", "age", "self_intro");
+    public String processUserAddForm(@RequestParam("roles") String roles, @Valid @ModelAttribute UserAddForm userForm, 
+                                     BindingResult userResult, @Valid @ModelAttribute AdminAddForm adminForm, 
+                                     BindingResult adminResult, Model model) {
 
-            // 該当フィールドにエラーがある場合、それをスキップされたメッセージに上書きする
-            for (String field : fieldsToSkip) {
-                if (result.hasFieldErrors(field)) {
-                    // 該当するフィールドのすべてのエラーメッセージをクリア
-                    result.getFieldErrors(field).clear();
-                    // エラーメッセージをスキップされた旨を設定
-                    result.rejectValue(field, "validation.skipped." + field, "検証はスキップされました。");
-                    log.debug("Skipping validation error for field: {}", field);
+        if ("ADMIN".equals(roles)) {
+            if (adminResult.hasErrors()) {
+                model.addAttribute("adminAddForm", adminForm);
+                return "useraddForm";
+            }
+            // 管理者登録処理（必要に応じて追加）
+            return "useraddConfirm";
+        } else {
+            if (userResult.hasErrors()) {
+                model.addAttribute("userAddForm", userForm);
+                return "useraddForm";
+            }
+
+            if (userForm.getProf_img() != null && !userForm.getProf_img().isEmpty()) {
+                try {
+                    userForm.setProfImgBytes(userForm.getProf_img().getBytes());
+                    String base64Image = Base64.getEncoder().encodeToString(userForm.getProf_img().getBytes());
+                    model.addAttribute("base64Image", base64Image);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        }
-
-        if (result.hasErrors()) {
-            log.debug("Validation errors: {}", result.getAllErrors());
-            model.addAttribute("userAddForm", form);
-            return "useraddForm";
-        }
-
-        // プロファイル画像をバイト配列に変換
-        MultipartFile profImg = form.getProf_img();
-        if (profImg != null && !profImg.isEmpty()) {
-            try {
-                form.setProfImgBytes(profImg.getBytes());
-                String base64Image = Base64.getEncoder().encodeToString(profImg.getBytes());
-                model.addAttribute("base64Image", base64Image);
-                log.debug("Converted profile image to byte array (size: {} bytes)", form.getProfImgBytes().length);
-            } catch (Exception e) {
-                log.error("Failed to convert profile image to byte array", e);
-            }
-        } else {
-            log.debug("No profile image received");
-        }
-
-        log.debug("Self Introduction Content Before Confirmation: {}", form.getSelf_intro());
-        model.addAttribute("userAddForm", form);
-        log.debug("Redirecting to confirmation page with form: {}", form.getUser_name());
-        return "useraddConfirm";
-    }
-
-
-    @PostMapping("/useradd/register")
-    public String registerUser(@Valid @ModelAttribute UserAddForm form, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            log.debug("Validation errors on confirmation: {}", result.getAllErrors());
-            model.addAttribute("userAddForm", form);
             return "useraddConfirm";
         }
-        try {
-            userAddService.addUser(form);
-            log.debug("User successfully added, redirecting to user list");
-            return "redirect:/userlist?addSuccess=true";
-        } catch (Exception e) {
-            log.error("Error confirming user addition", e);
-            model.addAttribute("userAddError", "Failed to confirm user addition. Please try again.");
-            model.addAttribute("userAddForm", form);
-            return "useraddConfirm";
-        }
-    }
-
-    @GetMapping("/useradd/success")
-    public String showSuccessPage() {
-        return "useraddSuccess";
     }
 }

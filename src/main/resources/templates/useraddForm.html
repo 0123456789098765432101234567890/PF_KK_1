@@ -33,7 +33,6 @@
             <div class="form-group">
                 <label for="user_name">名前:</label>
                 <input type="text" id="user_name" th:field="*{user_name}" class="form-control" />
-                <!-- 手動でエラーメッセージを表示 -->
                 <div th:if="${#fields.hasErrors('user_name')}" class="text-danger">
                     <p th:each="err : ${#fields.errors('user_name')}" th:text="${err}"></p>
                 </div>
@@ -42,7 +41,6 @@
             <div class="form-group" id="nameKanaGroup">
                 <label for="user_name_kana">名前（ふりがな）:</label>
                 <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
-                <!-- 手動でエラーメッセージを表示 -->
                 <div th:if="${#fields.hasErrors('user_name_kana')}" class="text-danger">
                     <p th:each="err : ${#fields.errors('user_name_kana')}" th:text="${err}"></p>
                 </div>
@@ -51,26 +49,25 @@
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
                 <input type="email" id="email" th:field="*{email}" class="form-control" />
-                <!-- 手動でエラーメッセージを表示 -->
                 <div th:if="${#fields.hasErrors('email')}" class="text-danger">
                     <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="pass">パスワード:</label>
                 <input type="password" id="pass" th:field="*{pass}" class="form-control" />
-                <!-- 手動でエラーメッセージを表示 -->
                 <div th:if="${#fields.hasErrors('pass')}" class="text-danger">
                     <p th:each="err : ${#fields.errors('pass')}" th:text="${err}"></p>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="status">ステータス:</label>
                 <select id="status" th:field="*{status}" class="form-control">
                     <option value="ALLOWED" th:selected="${userAddForm.status == 'ALLOWED'}">許可</option>
                     <option value="DENIED" th:selected="${userAddForm.status == 'DENIED'}">禁止</option>
                 </select>
-                <!-- 手動でエラーメッセージを表示 -->
                 <div th:if="${#fields.hasErrors('status')}" class="text-danger">
                     <p th:each="err : ${#fields.errors('status')}" th:text="${err}"></p>
                 </div>
@@ -80,11 +77,11 @@
                 <div class="form-group">
                     <label for="prof_img">プロフィール画像:</label>
                     <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-                    <!-- 手動でエラーメッセージを表示 -->
                     <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="gender">性別:</label>
                     <select id="gender" th:field="*{gender}" class="form-control">
@@ -92,23 +89,22 @@
                         <option value="女性">女性</option>
                         <option value="その他">その他</option>
                     </select>
-                    <!-- 手動でエラーメッセージを表示 -->
                     <div th:if="${#fields.hasErrors('gender')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('gender')}" th:text="${err}"></p>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="age">年齢:</label>
                     <input type="number" id="age" th:field="*{age}" class="form-control" />
-                    <!-- 手動でエラーメッセージを表示 -->
                     <div th:if="${#fields.hasErrors('age')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('age')}" th:text="${err}"></p>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="self_intro">自己紹介:</label>
                     <textarea id="self_intro" th:field="*{self_intro}" class="form-control"></textarea>
-                    <!-- 手動でエラーメッセージを表示 -->
                     <div th:if="${#fields.hasErrors('self_intro')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('self_intro')}" th:text="${err}"></p>
                     </div>
@@ -119,6 +115,7 @@
             <button type="submit" class="btn btn-primary">確認</button>
         </form>
     </div>
+    
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
