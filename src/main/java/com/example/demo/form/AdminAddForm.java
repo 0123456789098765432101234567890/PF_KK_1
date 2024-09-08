@@ -13,6 +13,9 @@ public class AdminAddForm {
 
     @NotEmpty(message = "パスワードは必須項目です")
     private String pass;
+    
+    @NotEmpty(message = "ステータスは必須項目です")
+    private String status; // "ALLOWED" or "DENIED"
 
     private String roles = "ADMIN";  // 管理者のデフォルト値
 }
