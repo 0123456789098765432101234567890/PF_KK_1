@@ -21,11 +21,9 @@
             <div class="form-group">
                 <label for="roles">権限:</label>
                 <div>
-                    <input type="radio" id="admin" name="roles" value="ADMIN"
-                        th:checked="${userAddForm.roles == null || userAddForm.roles == 'ADMIN'}" />
+                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userAddForm.roles == null || userAddForm.roles == 'ADMIN'}" />
                     <label for="admin">管理者</label>
-                    <input type="radio" id="user" name="roles" value="USER"
-                        th:checked="${userAddForm.roles == 'USER'}" />
+                    <input type="radio" id="user" name="roles" value="USER" th:checked="${userAddForm.roles == 'USER'}" />
                     <label for="user">一般</label>
                 </div>
             </div>

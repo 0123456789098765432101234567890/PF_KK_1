@@ -1,52 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>追加アカウント情報確認</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>追加アカウント情報確認</h1>
         <form th:action="@{/useradd/register}" th:object="${userAddForm}" method="post">
+
             <div class="form-group">
                 <label for="user_name">名前:</label>
-                <p th:text="${userAddForm.user_name}"></p> <!-- ここでuser_nameが正しくバインドされる -->
+                <p th:text="${userAddForm.user_name}"></p>
                 <input type="hidden" th:field="*{user_name}" />
             </div>
+
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
-                <p th:text="${userAddForm.email}"></p> <!-- ここでemailが正しくバインドされる -->
+                <p th:text="${userAddForm.email}"></p>
                 <input type="hidden" th:field="*{email}" />
             </div>
+
             <div class="form-group">
                 <label for="pass">パスワード:</label>
                 <p th:text="${userAddForm.pass}"></p>
                 <input type="hidden" th:field="*{pass}" />
             </div>
+
             <div class="form-group">
                 <label for="status">ステータス:</label>
                 <p th:text="${userAddForm.status == 'ALLOWED' ? '許可' : '禁止'}"></p>
                 <input type="hidden" th:field="*{status}" />
             </div>
+
             <div class="form-group">
                 <label for="roles">権限:</label>
                 <p th:text="${userAddForm.roles == 'ADMIN' ? '管理者' : '一般'}"></p>
                 <input type="hidden" th:field="*{roles}" />
             </div>
+
             <div th:if="${userAddForm.roles == 'USER'}">
                 <div class="form-group">
                     <label for="user_name_kana">名前（ふりがな）:</label>
-                    <p th:text="${userAddForm.user_name_kana}"></p> <!-- ここもuserAddFormのフィールドにバインド -->
+                    <p th:text="${userAddForm.user_name_kana}"></p>
                     <input type="hidden" th:field="*{user_name_kana}" />
                 </div>
-                <!-- 他のフィールドも同様に -->
+
+                <div class="form-group">
+                    <label for="gender">性別:</label>
+                    <p th:text="${userAddForm.gender}"></p>
+                    <input type="hidden" th:field="*{gender}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="age">年齢:</label>
+                    <p th:text="${userAddForm.age}"></p>
+                    <input type="hidden" th:field="*{age}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="self_intro">自己紹介:</label>
+                    <p id="self_intro_content" th:utext="${#strings.replace(userAddForm.self_intro, '\\n', '<br/>')}"></p>
+                    <input type="hidden" th:field="*{self_intro}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="prof_img">プロフィール画像:</label>
+                    <img th:if="${base64Image}" th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                    <input type="hidden" th:field="*{profImgBytes}" />
+                </div>
             </div>
+
+            <!-- rolesの値をhiddenフィールドとして保持 -->
+            <input type="hidden" th:field="*{roles}" />
+
             <button type="submit" class="btn btn-primary">登録</button>
         </form>
     </div>
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
+
 </html>
