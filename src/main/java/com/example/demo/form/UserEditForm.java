@@ -2,49 +2,63 @@ package com.example.demo.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.validation.FileSize;
+
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class UserEditForm {
-    @NotEmpty(message = "Username is required")
-    @Size(max = 255, message = "Username must be at most 255 characters")
+
+    public interface AdminValidation {}
+    public interface UserValidation {}
+
+    @NotEmpty(message = "ユーザー名は必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    @Size(max = 255, message = "ユーザー名は255文字以内で入力してください", groups = {UserValidation.class, AdminValidation.class})
     private String user_name;
 
-    @NotEmpty(message = "Email is required")
-    @Email(message = "Invalid email format")
-    @Size(max = 255, message = "Email must be at most 255 characters")
+    @NotEmpty(message = "メールアドレスは必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    @Email(message = "メールアドレスの形式が正しくありません", groups = {UserValidation.class, AdminValidation.class})
+    @Size(max = 255, message = "メールアドレスは255文字以内で入力してください", groups = {UserValidation.class, AdminValidation.class})
     private String email;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 3, max = 32, message = "Password must be between 3 and 32 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Password can only contain alphanumeric characters, dashes, and underscores")
+    @NotEmpty(message = "パスワードは必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    @Size(min = 3, max = 32, message = "パスワードは3文字以上32文字以内で入力してください", groups = {UserValidation.class, AdminValidation.class})
     private String pass;
 
-    @NotEmpty(message = "Status is required")
-    private String status;
+    @NotEmpty(message = "ステータスは必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    private String status; // "ALLOWED" or "DENIED"
 
+    @NotNull(message = "プロフィール画像を選択してください", groups = UserValidation.class)
+    @FileSize(maxSize = 2 * 1024 * 1024, message = "ファイルサイズが2MBを超えています。")
     private MultipartFile prof_img;
+
     private byte[] profImgBytes;
 
-    @Size(max = 255, message = "Username kana must be at most 255 characters")
+    @NotEmpty(message = "名前（ふりがな）は必須項目です", groups = UserValidation.class)
+    @Size(max = 255, message = "名前（ふりがな）は255文字以内で入力してください", groups = UserValidation.class)
+    @Pattern(regexp = "^[ぁ-んー]+$", message = "名前（ふりがな）はひらがなのみ使用できます", groups = UserValidation.class)
     private String user_name_kana;
 
+    @NotNull(message = "性別は必須項目です", groups = {UserValidation.class})
     private String gender;
 
-    @Max(value = 999, message = "Age must be a valid number and at most 3 digits")
+    @NotNull(message = "年齢は必須項目です", groups = {UserValidation.class})
     private Integer age;
 
-    @Size(max = 1500, message = "Self introduction must be at most 1500 characters")
+    @Size(max = 1500, message = "自己紹介は1500文字以内で入力してください", groups = UserValidation.class)
     private String self_intro;
 
-    @NotEmpty(message = "Role is required")
-    private String roles;
+    @NotEmpty(message = "権限は必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    private String roles; // "ADMIN" or "USER"
 
+    // loginId フィールドの追加
     private String loginId;
+
+    // 画像のBase64エンコード文字列を保持
     private String profImgBase64;
 }

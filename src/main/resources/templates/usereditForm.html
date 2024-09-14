@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>ユーザー編集</title>
@@ -10,56 +11,91 @@
         }
     </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>ユーザー編集</h1>
-        <form th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
+        <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
+            
+            <!-- 権限 -->
             <div class="form-group">
                 <label for="roles">権限:</label>
                 <div>
-                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userEditForm.roles == 'ADMIN'}" />
+                    <input type="radio" id="admin" name="roles" value="ADMIN"
+                        th:checked="${userEditForm.roles == null || userEditForm.roles == 'ADMIN'}" />
                     <label for="admin">管理者</label>
-                    <input type="radio" id="user" name="roles" value="USER" th:checked="${userEditForm.roles == 'USER'}" />
+                    <input type="radio" id="user" name="roles" value="USER"
+                        th:checked="${userEditForm.roles == 'USER'}" />
                     <label for="user">一般</label>
                 </div>
-                <div th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}" class="text-danger"></div>
             </div>
+
+            <!-- 名前 -->
             <div class="form-group">
                 <label for="user_name">名前:</label>
                 <input type="text" id="user_name" th:field="*{user_name}" class="form-control" />
-                <div th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('user_name')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('user_name')}" th:text="${err}"></p>
+                </div>
             </div>
+
+            <!-- 名前（ふりがな） -->
+            <div class="form-group" id="nameKanaGroup">
+                <label for="user_name_kana">名前（ふりがな）:</label>
+                <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
+                <div th:if="${#fields.hasErrors('user_name_kana')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('user_name_kana')}" th:text="${err}"></p>
+                </div>
+            </div>
+
+            <!-- メールアドレス -->
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
                 <input type="email" id="email" th:field="*{email}" class="form-control" />
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('email')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+                </div>
             </div>
+
+            <!-- パスワード -->
             <div class="form-group">
                 <label for="pass">パスワード:</label>
                 <input type="password" id="pass" th:field="*{pass}" class="form-control" />
-                <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('pass')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('pass')}" th:text="${err}"></p>
+                </div>
             </div>
+
+            <!-- ステータス -->
             <div class="form-group">
                 <label for="status">ステータス:</label>
                 <select id="status" th:field="*{status}" class="form-control">
                     <option value="ALLOWED" th:selected="${userEditForm.status == 'ALLOWED'}">許可</option>
                     <option value="DENIED" th:selected="${userEditForm.status == 'DENIED'}">禁止</option>
                 </select>
-                <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('status')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('status')}" th:text="${err}"></p>
+                </div>
             </div>
-            <div id="userFields" th:classappend="${userEditForm.roles == 'USER' ? '' : 'hidden'}">
+
+            <!-- 以下は「一般ユーザー」選択時のみ表示 -->
+            <div id="userFields" class="hidden">
+                <!-- プロフィール画像 -->
                 <div class="form-group">
                     <label for="prof_img">プロフィール画像:</label>
                     <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-                    <div th:if="${#fields.hasErrors('prof_img')}" th:errors="*{prof_img}" class="text-danger"></div>
+                    <!-- ファイルサイズエラーの表示 -->
+                    <div th:if="${fileSizeError != null}" class="text-danger">
+                        <p th:text="${fileSizeError}"></p>
+                    </div>
+                    <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="user_name_kana">名前（ふりがな）:</label>
-                    <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
-                    <div th:if="${#fields.hasErrors('user_name_kana')}" th:errors="*{user_name_kana}" class="text-danger"></div>
-                </div>
+
+                <!-- 性別 -->
                 <div class="form-group">
                     <label for="gender">性別:</label>
                     <select id="gender" th:field="*{gender}" class="form-control">
@@ -67,37 +103,70 @@
                         <option value="女性">女性</option>
                         <option value="その他">その他</option>
                     </select>
-                    <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="text-danger"></div>
+                    <div th:if="${#fields.hasErrors('gender')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('gender')}" th:text="${err}"></p>
+                    </div>
                 </div>
+
+                <!-- 年齢 -->
                 <div class="form-group">
                     <label for="age">年齢:</label>
                     <input type="number" id="age" th:field="*{age}" class="form-control" />
-                    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
+                    <div th:if="${#fields.hasErrors('age')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('age')}" th:text="${err}"></p>
+                    </div>
                 </div>
+
+                <!-- 自己紹介 -->
                 <div class="form-group">
                     <label for="self_intro">自己紹介:</label>
                     <textarea id="self_intro" th:field="*{self_intro}" class="form-control"></textarea>
-                    <div th:if="${#fields.hasErrors('self_intro')}" th:errors="*{self_intro}" class="text-danger"></div>
+                    <div th:if="${#fields.hasErrors('self_intro')}" class="text-danger">
+                        <p th:each="err : ${#fields.errors('self_intro')}" th:text="${err}"></p>
+                    </div>
                 </div>
             </div>
+
             <input type="hidden" th:field="*{profImgBytes}" />
             <button type="submit" class="btn btn-primary">編集内容確認</button>
         </form>
     </div>
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             function toggleUserFields() {
                 if ($('#user').is(':checked')) {
                     $('#userFields').removeClass('hidden');
+                    $('#nameKanaGroup').removeClass('hidden');
                 } else {
                     $('#userFields').addClass('hidden');
+                    $('#nameKanaGroup').addClass('hidden');
                 }
             }
             $('input[name="roles"]').change(toggleUserFields);
             toggleUserFields(); // 初期表示
+
+            // ファイルサイズチェック
+            document.getElementById('prof_img').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file && file.size > 2 * 1024 * 1024) { // 2MBの制限
+                    alert('ファイルサイズが2MBを超えています。');
+                    event.target.value = ''; // フィールドをクリア
+                }
+            });
+
+            // ファイル未選択チェック
+            document.getElementById('userEditForm').addEventListener('submit', function(event) {
+                const fileInput = document.getElementById('prof_img');
+                if (!fileInput.value && $('#user').is(':checked')) {
+                    alert('プロフィール画像を選択してください。');
+                    event.preventDefault(); // フォーム送信をキャンセル
+                }
+            });
         });
     </script>
 </body>
+
 </html>

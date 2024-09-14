@@ -44,10 +44,10 @@ public class UserAddForm {
     @Pattern(regexp = "^[ぁ-んー]+$", message = "名前（ふりがな）はひらがなのみ使用できます", groups = UserValidation.class)
     private String user_name_kana;
 
-    @NotNull(message = "性別は必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    @NotNull(message = "性別は必須項目です", groups = {UserValidation.class})
     private String gender;
 
-    @NotNull(message = "年齢は必須項目です", groups = {UserValidation.class, AdminValidation.class})
+    @NotNull(message = "年齢は必須項目です", groups = {UserValidation.class})
     private Integer age;
 
     @Size(max = 1500, message = "自己紹介は1500文字以内で入力してください", groups = UserValidation.class)
