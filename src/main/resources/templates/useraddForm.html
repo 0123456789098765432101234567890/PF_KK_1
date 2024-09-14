@@ -144,8 +144,9 @@
                     $('#nameKanaGroup').addClass('hidden');
                 }
             }
+
             $('input[name="roles"]').change(toggleUserFields);
-            toggleUserFields(); // 初期表示
+            toggleUserFields(); // 初期表示時にチェックされた状態を確認
 
             // ファイルサイズチェック
             document.getElementById('prof_img').addEventListener('change', function(event) {
@@ -163,6 +164,11 @@
                     alert('プロフィール画像を選択してください。');
                     event.preventDefault(); // フォーム送信をキャンセル
                 }
+            });
+
+            // ページがキャッシュされた状態でもラジオボタンによって表示が正しいか確認
+            $(window).on('pageshow', function () {
+                toggleUserFields();
             });
         });
     </script>

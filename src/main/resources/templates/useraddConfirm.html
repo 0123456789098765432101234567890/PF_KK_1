@@ -79,7 +79,10 @@
             <!-- rolesの値をhiddenフィールドとして保持 -->
             <input type="hidden" th:field="*{roles}" />
 
-            <button type="submit" class="btn btn-primary">登録</button>
+            <div class="form-group">
+                <button type="button" class="btn btn-secondary" onclick="history.back();">戻る</button>
+                <button type="submit" class="btn btn-primary">登録</button>
+            </div>
         </form>
     </div>
 
