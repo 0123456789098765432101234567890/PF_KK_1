@@ -18,7 +18,7 @@
     <div class="container">
         <h1>ユーザー編集</h1>
         <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
-            
+
             <!-- 権限 -->
             <div class="form-group">
                 <label for="roles">権限:</label>
@@ -80,21 +80,25 @@
                 </div>
             </div>
 
+            <!-- プロフィール画像 -->
+            <div class="form-group">
+                <label for="prof_img">プロフィール画像:</label>
+                <!-- 既存のプロフィール画像を表示 -->
+                <div th:if="${base64Image}">
+                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                </div>
+                <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                <!-- ファイルサイズエラーの表示 -->
+                <div th:if="${fileSizeError != null}" class="text-danger">
+                    <p th:text="${fileSizeError}"></p>
+                </div>
+                <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
+                </div>
+            </div>
+
             <!-- 以下は「一般ユーザー」選択時のみ表示 -->
             <div id="userFields" class="hidden">
-                <!-- プロフィール画像 -->
-                <div class="form-group">
-                    <label for="prof_img">プロフィール画像:</label>
-                    <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-                    <!-- ファイルサイズエラーの表示 -->
-                    <div th:if="${fileSizeError != null}" class="text-danger">
-                        <p th:text="${fileSizeError}"></p>
-                    </div>
-                    <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
-                        <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
-                    </div>
-                </div>
-
                 <!-- 性別 -->
                 <div class="form-group">
                     <label for="gender">性別:</label>
@@ -145,6 +149,7 @@
                     $('#nameKanaGroup').addClass('hidden');
                 }
             }
+
             $('input[name="roles"]').change(toggleUserFields);
             toggleUserFields(); // 初期表示
 
@@ -157,14 +162,7 @@
                 }
             });
 
-            // ファイル未選択チェック
-            document.getElementById('userEditForm').addEventListener('submit', function(event) {
-                const fileInput = document.getElementById('prof_img');
-                if (!fileInput.value && $('#user').is(':checked')) {
-                    alert('プロフィール画像を選択してください。');
-                    event.preventDefault(); // フォーム送信をキャンセル
-                }
-            });
+           
         });
     </script>
 </body>

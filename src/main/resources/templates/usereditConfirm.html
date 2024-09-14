@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>編集アカウント情報確認</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -79,12 +85,18 @@
             <!-- rolesの値をhiddenフィールドとして保持 -->
             <input type="hidden" th:field="*{roles}" />
 
-            <button type="submit" class="btn btn-primary">更新</button>
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">戻る</button>
+                <button type="submit" class="btn btn-primary">更新</button>
+            </div>
         </form>
-        <a th:href="@{/useredit/{loginId}(loginId=${userEditForm.loginId})}" class="btn btn-secondary">戻る</a>
     </div>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
-
 </html>
