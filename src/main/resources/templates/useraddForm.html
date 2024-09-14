@@ -17,17 +17,21 @@
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>ユーザー追加</h1>
-        <form th:action="@{/useradd}" th:object="${userAddForm}" method="post" enctype="multipart/form-data">
+        <form id="userAddForm" th:action="@{/useradd}" th:object="${userAddForm}" method="post" enctype="multipart/form-data">
+            <!-- 権限 -->
             <div class="form-group">
                 <label for="roles">権限:</label>
                 <div>
-                    <input type="radio" id="admin" name="roles" value="ADMIN" th:checked="${userAddForm.roles == null || userAddForm.roles == 'ADMIN'}" />
+                    <input type="radio" id="admin" name="roles" value="ADMIN"
+                        th:checked="${userAddForm.roles == null || userAddForm.roles == 'ADMIN'}" />
                     <label for="admin">管理者</label>
-                    <input type="radio" id="user" name="roles" value="USER" th:checked="${userAddForm.roles == 'USER'}" />
+                    <input type="radio" id="user" name="roles" value="USER"
+                        th:checked="${userAddForm.roles == 'USER'}" />
                     <label for="user">一般</label>
                 </div>
             </div>
 
+            <!-- 名前 -->
             <div class="form-group">
                 <label for="user_name">名前:</label>
                 <input type="text" id="user_name" th:field="*{user_name}" class="form-control" />
@@ -36,6 +40,7 @@
                 </div>
             </div>
 
+            <!-- 名前（ふりがな） -->
             <div class="form-group" id="nameKanaGroup">
                 <label for="user_name_kana">名前（ふりがな）:</label>
                 <input type="text" id="user_name_kana" th:field="*{user_name_kana}" class="form-control" />
@@ -44,6 +49,7 @@
                 </div>
             </div>
 
+            <!-- メールアドレス -->
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
                 <input type="email" id="email" th:field="*{email}" class="form-control" />
@@ -52,6 +58,7 @@
                 </div>
             </div>
 
+            <!-- パスワード -->
             <div class="form-group">
                 <label for="pass">パスワード:</label>
                 <input type="password" id="pass" th:field="*{pass}" class="form-control" />
@@ -60,6 +67,7 @@
                 </div>
             </div>
 
+            <!-- ステータス -->
             <div class="form-group">
                 <label for="status">ステータス:</label>
                 <select id="status" th:field="*{status}" class="form-control">
@@ -71,15 +79,22 @@
                 </div>
             </div>
 
+            <!-- 以下は「一般ユーザー」選択時のみ表示 -->
             <div id="userFields" class="hidden">
+                <!-- プロフィール画像 -->
                 <div class="form-group">
                     <label for="prof_img">プロフィール画像:</label>
                     <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                    <!-- ファイルサイズエラーの表示 -->
+                    <div th:if="${fileSizeError != null}" class="text-danger">
+                        <p th:text="${fileSizeError}"></p>
+                    </div>
                     <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
                     </div>
                 </div>
 
+                <!-- 性別 -->
                 <div class="form-group">
                     <label for="gender">性別:</label>
                     <select id="gender" th:field="*{gender}" class="form-control">
@@ -92,6 +107,7 @@
                     </div>
                 </div>
 
+                <!-- 年齢 -->
                 <div class="form-group">
                     <label for="age">年齢:</label>
                     <input type="number" id="age" th:field="*{age}" class="form-control" />
@@ -100,6 +116,7 @@
                     </div>
                 </div>
 
+                <!-- 自己紹介 -->
                 <div class="form-group">
                     <label for="self_intro">自己紹介:</label>
                     <textarea id="self_intro" th:field="*{self_intro}" class="form-control"></textarea>
@@ -113,7 +130,7 @@
             <button type="submit" class="btn btn-primary">確認</button>
         </form>
     </div>
-    
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -130,9 +147,22 @@
             $('input[name="roles"]').change(toggleUserFields);
             toggleUserFields(); // 初期表示
 
-            // ブラウザの戻るボタンで表示された場合の対策
-            $(window).on('pageshow', function() {
-                toggleUserFields();
+            // ファイルサイズチェック
+            document.getElementById('prof_img').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file && file.size > 2 * 1024 * 1024) { // 2MBの制限
+                    alert('ファイルサイズが2MBを超えています。');
+                    event.target.value = ''; // フィールドをクリア
+                }
+            });
+
+            // ファイル未選択チェック
+            document.getElementById('userAddForm').addEventListener('submit', function(event) {
+                const fileInput = document.getElementById('prof_img');
+                if (!fileInput.value && $('#user').is(':checked')) {
+                    alert('プロフィール画像を選択してください。');
+                    event.preventDefault(); // フォーム送信をキャンセル
+                }
             });
         });
     </script>

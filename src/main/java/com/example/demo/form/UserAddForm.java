@@ -2,8 +2,11 @@ package com.example.demo.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.validation.FileSize;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -11,7 +14,6 @@ import lombok.Data;
 @Data
 public class UserAddForm {
 
-    // グループを内部クラスとして定義
     public interface AdminValidation {}
     public interface UserValidation {}
 
@@ -31,7 +33,10 @@ public class UserAddForm {
     @NotEmpty(message = "ステータスは必須項目です", groups = {UserValidation.class, AdminValidation.class})
     private String status; // "ALLOWED" or "DENIED"
 
+    @NotNull(message = "プロフィール画像を選択してください")
+    @FileSize(maxSize = 2 * 1024 * 1024, message = "ファイルサイズが2MBを超えています。")
     private MultipartFile prof_img;
+
     private byte[] profImgBytes;
 
     @NotEmpty(message = "名前（ふりがな）は必須項目です", groups = UserValidation.class)
@@ -39,8 +44,10 @@ public class UserAddForm {
     @Pattern(regexp = "^[ぁ-んー]+$", message = "名前（ふりがな）はひらがなのみ使用できます", groups = UserValidation.class)
     private String user_name_kana;
 
+    @NotNull(message = "性別は必須項目です", groups = {UserValidation.class, AdminValidation.class})
     private String gender;
 
+    @NotNull(message = "年齢は必須項目です", groups = {UserValidation.class, AdminValidation.class})
     private Integer age;
 
     @Size(max = 1500, message = "自己紹介は1500文字以内で入力してください", groups = UserValidation.class)
