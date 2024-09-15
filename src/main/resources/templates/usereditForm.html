@@ -80,22 +80,23 @@
                 </div>
             </div>
 
-            <!-- プロフィール画像 -->
-            <div class="form-group">
-                <label for="prof_img">プロフィール画像:</label>
-                <!-- 既存のプロフィール画像を表示 -->
-                <div th:if="${base64Image}">
-                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
-                </div>
-                <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-                <!-- ファイルサイズエラーの表示 -->
-                <div th:if="${fileSizeError != null}" class="text-danger">
-                    <p th:text="${fileSizeError}"></p>
-                </div>
-                <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
-                    <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
-                </div>
-            </div>
+			<!-- プロフィール画像（一般ユーザー選択時のみ表示） -->
+			<div class="form-group hidden" id="profileImageGroup">
+			    <label for="prof_img">プロフィール画像:</label>
+			    <!-- 既存のプロフィール画像を表示 -->
+			    <div th:if="${base64Image}">
+			        <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+			    </div>
+			    <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+			    <!-- ファイルサイズエラーの表示 -->
+			    <div th:if="${fileSizeError != null}" class="text-danger">
+			        <p th:text="${fileSizeError}"></p>
+			    </div>
+			    <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
+			        <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
+			    </div>
+			</div>
+
 
             <!-- 以下は「一般ユーザー」選択時のみ表示 -->
             <div id="userFields" class="hidden">
@@ -143,15 +144,17 @@
             function toggleUserFields() {
                 if ($('#user').is(':checked')) {
                     $('#userFields').removeClass('hidden');
+                    $('#profileImageGroup').removeClass('hidden'); // プロフィール画像を表示
                     $('#nameKanaGroup').removeClass('hidden');
                 } else {
                     $('#userFields').addClass('hidden');
+                    $('#profileImageGroup').addClass('hidden'); // プロフィール画像を非表示
                     $('#nameKanaGroup').addClass('hidden');
                 }
             }
 
             $('input[name="roles"]').change(toggleUserFields);
-            toggleUserFields(); // 初期表示
+            toggleUserFields(); // 初期表示でラジオボタンの選択状態に合わせて表示
 
             // ファイルサイズチェック
             document.getElementById('prof_img').addEventListener('change', function(event) {
@@ -161,8 +164,6 @@
                     event.target.value = ''; // フィールドをクリア
                 }
             });
-
-           
         });
     </script>
 </body>
