@@ -3,11 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ユーザー追加</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .hidden {
             display: none;
+        }
+
+        /* 大きい画面での幅制限 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px; /* 最大幅を設定 */
+            }
+        }
+
+        /* 小さい画面のレスポンシブ対応 */
+        @media (max-width: 767px) {
+            .container {
+                width: 100%; /* 幅いっぱいに表示 */
+                padding: 0 15px; /* 左右に少し余白を持たせる */
+            }
+
+            h1 {
+                font-size: 1.5rem; /* タイトルサイズを調整 */
+            }
+
+            .form-control {
+                font-size: 0.9rem; /* フォーム入力の文字サイズを調整 */
+            }
+
+            .btn {
+                font-size: 1rem; /* ボタンのサイズを調整 */
+            }
         }
     </style>
 </head>
@@ -15,8 +43,9 @@
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー追加</h1>
+    
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">ユーザー追加</h1>
         <form id="userAddForm" th:action="@{/useradd}" th:object="${userAddForm}" method="post" enctype="multipart/form-data">
             <!-- 権限 -->
             <div class="form-group">
@@ -85,7 +114,6 @@
                 <div class="form-group">
                     <label for="prof_img">プロフィール画像:</label>
                     <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-                    <!-- ファイルサイズエラーの表示 -->
                     <div th:if="${fileSizeError != null}" class="text-danger">
                         <p th:text="${fileSizeError}"></p>
                     </div>
@@ -127,7 +155,7 @@
             </div>
 
             <input type="hidden" th:field="*{profImgBytes}" />
-            <button type="submit" class="btn btn-primary">確認</button>
+            <button type="submit" class="btn btn-primary mt-4 w-100">確認</button> <!-- w-100 追加 -->
         </form>
     </div>
 

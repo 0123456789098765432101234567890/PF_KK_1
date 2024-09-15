@@ -3,15 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>追加アカウント情報確認</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        /* ボタンの横並び対応 */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 0 auto; /* 中央に配置 */
+        }
+
+        /* ボタンスタイル */
+        .button-group .btn {
+            width: 48%; /* 合計80%に対してボタンを均等に配置 */
+            white-space: nowrap; /* 文字を常に横書きに */
+        }
+
+        /* 大きな画面対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>追加アカウント情報確認</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">追加アカウント情報確認</h1>
         <form th:action="@{/useradd/register}" th:object="${userAddForm}" method="post">
 
             <div class="form-group">
@@ -76,10 +99,7 @@
                 </div>
             </div>
 
-            <!-- rolesの値をhiddenフィールドとして保持 -->
-            <input type="hidden" th:field="*{roles}" />
-
-            <div class="form-group">
+            <div class="button-group mt-4">
                 <button type="button" class="btn btn-secondary" onclick="history.back();">戻る</button>
                 <button type="submit" class="btn btn-primary">登録</button>
             </div>

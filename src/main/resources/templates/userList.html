@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ユーザー一覧</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
+        /* 通常のスタイル */
         .pagination .page-item {
             margin: 0 2px;
         }
@@ -15,19 +17,53 @@
 
         .header-buttons {
             display: flex;
-            justify-content: flex-end; /* 右側に寄せる */
-            gap: 10px; /* ボタン間のスペース */
-            margin-bottom: 20px; /* 下部にスペース */
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .header-buttons button {
-            min-width: 120px; /* ボタンの最小幅を設定 */
+            min-width: 120px;
+        }
+
+        /* 大きな画面向けのスタイル */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 900px; /* 幅を制限 */
+            }
+        }
+
+        /* 小さな画面向けのスタイル */
+        @media (max-width: 767px) {
+            .container {
+                width: 100%; /* 幅いっぱい */
+                padding: 0 10px; /* 余白を設定 */
+            }
+
+            h1 {
+                font-size: 1.5rem; /* タイトルサイズを調整 */
+            }
+
+            .header-buttons {
+                flex-direction: column;
+                gap: 5px;
+                align-items: stretch;
+            }
+
+            .header-buttons a {
+                width: 100%; /* ボタンを画面幅いっぱいに */
+            }
+
+            table {
+                font-size: 0.9rem; /* テーブルのフォントサイズを調整 */
+            }
         }
     </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
+
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h1>ユーザー一覧</h1>
@@ -93,49 +129,45 @@
             </ul>
         </nav>
     </div>
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-	    $(document).ready(function () {
-	        // ステータス切り替えボタンの処理はそのまま
-	        $('.toggle-status-btn').click(function (event) {
-	            event.preventDefault();
-	
-	            var button = $(this);
-	            var form = button.closest('form');
-	            var formData = form.serialize();
-	
-	            $.post(form.attr('action'), formData, function (response) {
-	                window.location.href = "/userlist";  // ステータス変更後にリダイレクト
-	            }).fail(function (jqXHR, textStatus, errorThrown) {
-	                alert('ステータス更新エラー');
-	            });
-	        });
-	
-	        // 削除ボタンの処理
-	        $('form[th\\:action="@{/userlist/delete}"]').submit(function (event) {
-	            event.preventDefault();
-	            var form = $(this);
-	            var formData = form.serialize();
-	
-	            $.post(form.attr('action'), formData, function (response) {
-	                alert('アカウントの削除に成功しました'); // 削除成功時のポップアップメッセージ
-	                window.location.href = "/userlist";  // 削除後にリダイレクト
-	            }).fail(function (jqXHR, textStatus, errorThrown) {
-	                alert('削除に失敗しました');
-	            });
-	        });
-	
-	        // URLにaddSuccessクエリパラメータが存在する場合にポップアップを表示
-	        if (window.location.search.indexOf('addSuccess=true') > -1) {
-	            alert('アカウントを追加しました');
-	        }
-	
-	        // URLにdeleteSuccessクエリパラメータが存在する場合にポップアップを表示
-	        if (window.location.search.indexOf('deleteSuccess=true') > -1) {
-	            alert('アカウントの削除に成功しました');
-	        }
-	    });
-	</script>
+    <script>
+        $(document).ready(function () {
+            $('.toggle-status-btn').click(function (event) {
+                event.preventDefault();
+                var button = $(this);
+                var form = button.closest('form');
+                var formData = form.serialize();
+
+                $.post(form.attr('action'), formData, function (response) {
+                    window.location.href = "/userlist";
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert('ステータス更新エラー');
+                });
+            });
+
+            $('form[th\\:action="@{/userlist/delete}"]').submit(function (event) {
+                event.preventDefault();
+                var form = $(this);
+                var formData = form.serialize();
+
+                $.post(form.attr('action'), formData, function (response) {
+                    alert('アカウントの削除に成功しました');
+                    window.location.href = "/userlist";
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert('削除に失敗しました');
+                });
+            });
+
+            if (window.location.search.indexOf('addSuccess=true') > -1) {
+                alert('アカウントを追加しました');
+            }
+
+            if (window.location.search.indexOf('deleteSuccess=true') > -1) {
+                alert('アカウントの削除に成功しました');
+            }
+        });
+    </script>
 </body>
 </html>
