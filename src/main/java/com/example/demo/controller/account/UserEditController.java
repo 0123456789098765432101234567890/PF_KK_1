@@ -1,6 +1,9 @@
 package com.example.demo.controller.account;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,14 +103,20 @@ public class UserEditController {
     // 編集内容の登録
     @PostMapping("/useredit/submit")
     public String submitEdit(@Valid @ModelAttribute("userEditForm") UserEditForm form, BindingResult result, SessionStatus sessionStatus) {
-        // バリデーションエラーがあれば再度確認画面に戻る
+    	// バリデーションエラーがあれば再度確認画面に戻る
         if (result.hasErrors()) {
             log.error("Validation errors on submit: {}", result.getAllErrors());
-            return "usereditConfirm";
+            return "usereditForm";
         }
 
         try {
-            // ユーザー情報の更新
+            // rolesフィールドの重複を削除する
+            String[] roleArray = form.getRoles().split(",");
+            Set<String> uniqueRoles = new HashSet<>(Arrays.asList(roleArray));
+            String deduplicatedRoles = String.join(",", uniqueRoles);
+            form.setRoles(deduplicatedRoles);
+
+            // ユーザー情報を更新
             userEditService.updateUser(form);
             sessionStatus.setComplete();
             log.debug("User successfully updated, redirecting to user list");
@@ -117,4 +126,5 @@ public class UserEditController {
             return "error";
         }
     }
+
 }
