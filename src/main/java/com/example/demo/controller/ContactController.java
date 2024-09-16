@@ -68,7 +68,7 @@ public class ContactController {
         contactService.saveContact(contact);
 
         // ポップアップメッセージ表示後、/contactlistにリダイレクト
-        return "redirect:/contactlist";
+        return "redirect:/contactlistUser";
     }
 
     // ContactFormをContactエンティティに変換するメソッド

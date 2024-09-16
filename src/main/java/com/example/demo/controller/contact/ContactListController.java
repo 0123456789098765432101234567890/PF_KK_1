@@ -38,7 +38,7 @@ public class ContactListController {
         model.addAttribute("contact", contact);
         return "contactdetail";
     }
-
+    
     @PostMapping("/contactlist/update")
     @ResponseBody
     public String updateContactStatus(@ModelAttribute Contact contact) {
@@ -49,5 +49,22 @@ public class ContactListController {
             log.error("Error updating contact status for contact_id: {}", contact.getContact_id(), e);
             return "error";
         }
+    }
+
+    @GetMapping("/contactlistUser")
+    public String getContactListUser(Model model, @RequestParam(defaultValue = "0") int page) {
+        model.addAttribute("contactPage", contactListService.getAllContacts(PageRequest.of(page, 5)));
+        return "contactlistUser";
+    }
+
+    @GetMapping("/contactlistUser/{contact_id}")
+    public String getContactDetailUser(@PathVariable("contact_id") Long contactId, Model model) {
+        Contact contact = contactListService.getContactById(contactId);
+        if (contact == null) {
+            log.error("Contact with id: {} not found", contactId);
+            return "error"; // エラービューにリダイレクト
+        }
+        model.addAttribute("contact", contact);
+        return "contactdetailUser"; // 一般ユーザー用の詳細画面に遷移
     }
 }

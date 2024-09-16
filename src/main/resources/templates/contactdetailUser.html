@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>お問い合わせ詳細（一般ユーザー用）</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div th:insert="~{common/sourceList :: sourceList}"></div>
+    <div th:replace="~{common/header :: header}"></div>
+    <div class="container">
+        <h1>お問い合わせ詳細（一般ユーザー用）</h1>
+        <form th:object="${contact}">
+            <input type="hidden" th:field="*{contact_id}" />
+            <div class="form-group">
+                <label for="contact_category">カテゴリー:</label>
+                <p th:text="${contact.contactCategory.category_name}"></p>
+            </div>
+            <div class="form-group">
+                <label for="status">ステータス:</label>
+                <!-- ステータスを表示するだけで、選択できないようにする -->
+                <p th:text="${contact.status}"></p>
+            </div>
+        </form>
+        <a th:href="@{/contactlistUser}" class="btn btn-secondary mt-3">一覧に戻る</a>
+        <div class="form-group">
+            <label for="contact_detail">詳細:</label>
+            <!-- 改行を <br> に変換する -->
+            <p id="contact_detail_content" th:text="${contact.contact_detail}"></p>
+        </div>
+    </div>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 改行を <br> に変換する関数
+            function convertNewlinesToBreaks(text) {
+                return text.replace(/\n/g, '<br/>');
+            }
+
+            // 詳細の内容に改行を反映
+            var contactDetailContent = $('#contact_detail_content');
+            contactDetailContent.html(convertNewlinesToBreaks(contactDetailContent.text()));
+        });
+    </script>
+</body>
+</html>

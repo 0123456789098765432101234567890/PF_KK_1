@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>ユーザー一覧</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,19 +30,19 @@
         /* 大きな画面向けのスタイル */
         @media (min-width: 768px) {
             .container {
-                max-width: 900px; /* 幅を制限 */
+                max-width: 900px;
             }
         }
 
         /* 小さな画面向けのスタイル */
         @media (max-width: 767px) {
             .container {
-                width: 100%; /* 幅いっぱい */
-                padding: 0 10px; /* 余白を設定 */
+                width: 100%;
+                padding: 0 10px;
             }
 
             h1 {
-                font-size: 1.5rem; /* タイトルサイズを調整 */
+                font-size: 1.5rem;
             }
 
             .header-buttons {
@@ -51,15 +52,29 @@
             }
 
             .header-buttons a {
-                width: 100%; /* ボタンを画面幅いっぱいに */
+                width: 100%;
             }
 
             table {
-                font-size: 0.9rem; /* テーブルのフォントサイズを調整 */
+                font-size: 0.9rem;
+            }
+
+            /* ボタン内の文字サイズを調整 */
+            .btn {
+                font-size: 0.85rem;
+                white-space: nowrap; /* 文字を1行にする */
+            }
+        }
+
+        /* さらに小さな画面向けのスタイル（375px以下） */
+        @media (max-width: 375px) {
+            .btn {
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
@@ -170,4 +185,5 @@
         });
     </script>
 </body>
+
 </html>
