@@ -3,11 +3,31 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ユーザー編集</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .hidden {
             display: none;
+        }
+
+        /* ボタンとフォームのスタイル */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .button-group .btn {
+            width: 48%;
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
         }
     </style>
 </head>
@@ -15,8 +35,9 @@
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー編集</h1>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">ユーザー編集</h1>
         <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
 
             <!-- 権限 -->
@@ -80,25 +101,22 @@
                 </div>
             </div>
 
-			<!-- プロフィール画像（一般ユーザー選択時のみ表示） -->
-			<div class="form-group hidden" id="profileImageGroup">
-			    <label for="prof_img">プロフィール画像:</label>
-			    <!-- 既存のプロフィール画像を表示 -->
-			    <div th:if="${base64Image}">
-			        <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
-			    </div>
-			    <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
-			    <!-- ファイルサイズエラーの表示 -->
-			    <div th:if="${fileSizeError != null}" class="text-danger">
-			        <p th:text="${fileSizeError}"></p>
-			    </div>
-			    <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
-			        <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
-			    </div>
-			</div>
+            <!-- プロフィール画像（一般ユーザー選択時のみ表示） -->
+            <div class="form-group hidden" id="profileImageGroup">
+                <label for="prof_img">プロフィール画像:</label>
+                <div th:if="${base64Image}">
+                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                </div>
+                <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                <div th:if="${fileSizeError != null}" class="text-danger">
+                    <p th:text="${fileSizeError}"></p>
+                </div>
+                <div th:if="${#fields.hasErrors('prof_img')}" class="text-danger">
+                    <p th:each="err : ${#fields.errors('prof_img')}" th:text="${err}"></p>
+                </div>
+            </div>
 
-
-            <!-- 以下は「一般ユーザー」選択時のみ表示 -->
+            <!-- 一般ユーザー選択時のみ表示 -->
             <div id="userFields" class="hidden">
                 <!-- 性別 -->
                 <div class="form-group">
@@ -133,7 +151,12 @@
             </div>
 
             <input type="hidden" th:field="*{profImgBytes}" />
-            <button type="submit" class="btn btn-primary">編集内容確認</button>
+
+            <!-- ボタン部分 -->
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="history.back();">戻る</button>
+                <button type="submit" class="btn btn-primary">編集内容確認</button>
+            </div>
         </form>
     </div>
 

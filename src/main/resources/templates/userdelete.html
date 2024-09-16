@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>削除ユーザー一覧</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
@@ -12,13 +15,62 @@
             min-width: 40px;
             text-align: center;
         }
+
+        /* タイトルとボタンを同じ行に配置 */
+        .title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* ボタンの縦並びと余白の調整 */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        /* ボタン内の文字を折り返さず1行にする */
+        .btn {
+            white-space: nowrap;
+        }
+
+        /* 画面幅が狭い時のボタンの文字サイズを調整 */
+        @media (max-width: 397px) {
+            .btn {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* テーブルスタイル */
+        .table-striped th,
+        .table-striped td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>削除ユーザー一覧</h1>
+
+    <div class="container mt-5">
+        <!-- タイトルとボタンの配置 -->
+        <div class="title-container">
+            <h1 class="mb-0">削除ユーザー一覧</h1>
+            <a href="http://localhost:8080/userlist" class="btn btn-info">ユーザー一覧画面へ</a>
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -32,26 +84,26 @@
                 <tr th:each="user : ${userPage.content}">
                     <td th:text="${user.user_name}"></td>
                     <td th:text="${user.email}"></td>
+                    <td><span th:text="${user.status}" data-id="${user.loginId}"></span></td>
                     <td>
-                        <span th:text="${user.status}" data-id="${user.loginId}"></span>
-                    </td>
-                    <td>
-                        <div>
-                            <form th:action="@{/userdelete/restore}" method="post" style="display: inline-block;">
+                        <div class="button-group">
+                            <!-- 復元ボタン -->
+                            <form th:action="@{/userdelete/restore}" method="post">
                                 <input type="hidden" name="loginId" th:value="${user.loginId}" />
-                                <button type="submit" class="btn btn-success">復元</button>
+                                <button type="submit" class="btn btn-success w-100">復元</button>
                             </form>
-                        </div>
-                        <div>
-                            <form th:action="@{/userdelete/permanentDelete}" method="post" style="display: inline-block;">
+
+                            <!-- 完全削除ボタン -->
+                            <form th:action="@{/userdelete/permanentDelete}" method="post">
                                 <input type="hidden" name="loginId" th:value="${user.loginId}" />
-                                <button type="button" class="btn btn-danger" onclick="confirmPermanentDelete(this)">完全に削除</button>
+                                <button type="button" class="btn btn-danger w-100" onclick="confirmPermanentDelete(this)">完全に削除</button>
                             </form>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+
         <div th:if="${userPage.totalPages > 0}">
             <nav aria-label="ページナビゲーション">
                 <ul class="pagination justify-content-center">
@@ -67,10 +119,12 @@
                 </ul>
             </nav>
         </div>
+
         <div th:if="${userPage.totalPages == 0}">
             <p>削除されたユーザーが見つかりません。</p>
         </div>
     </div>
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -81,4 +135,5 @@
         }
     </script>
 </body>
+
 </html>

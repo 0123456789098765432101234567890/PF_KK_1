@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>編集アカウント情報確認</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .button-container {
             display: flex;
-            justify-content: flex-start;
-            gap: 10px;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .button-container .btn {
+            width: 48%;
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
         }
     </style>
 </head>
@@ -16,40 +30,47 @@
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>編集アカウント情報確認</h1>
+    
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">編集アカウント情報確認</h1>
         <form th:action="@{/useredit/submit}" th:object="${userEditForm}" method="post">
 
+            <!-- 名前 -->
             <div class="form-group">
                 <label for="user_name">名前:</label>
                 <p th:text="${userEditForm.user_name}"></p>
                 <input type="hidden" th:field="*{user_name}" />
             </div>
 
+            <!-- メールアドレス -->
             <div class="form-group">
                 <label for="email">メールアドレス:</label>
                 <p th:text="${userEditForm.email}"></p>
                 <input type="hidden" th:field="*{email}" />
             </div>
 
+            <!-- パスワード -->
             <div class="form-group">
                 <label for="pass">パスワード:</label>
                 <p th:text="${userEditForm.pass}"></p>
                 <input type="hidden" th:field="*{pass}" />
             </div>
 
+            <!-- ステータス -->
             <div class="form-group">
                 <label for="status">ステータス:</label>
                 <p th:text="${userEditForm.status == 'ALLOWED' ? '許可' : '禁止'}"></p>
                 <input type="hidden" th:field="*{status}" />
             </div>
 
+            <!-- 権限 -->
             <div class="form-group">
                 <label for="roles">権限:</label>
                 <p th:text="${userEditForm.roles == 'ADMIN' ? '管理者' : '一般'}"></p>
                 <input type="hidden" th:field="*{roles}" />
             </div>
 
+            <!-- 一般ユーザーのみ表示 -->
             <div th:if="${userEditForm.roles == 'USER'}">
                 <div class="form-group">
                     <label for="user_name_kana">名前（ふりがな）:</label>
@@ -82,9 +103,7 @@
                 </div>
             </div>
 
-            <!-- rolesの値をhiddenフィールドとして保持 -->
-            <input type="hidden" th:field="*{roles}" />
-
+            <!-- ボタン -->
             <div class="button-container">
                 <button type="button" class="btn btn-secondary" onclick="goBack()">戻る</button>
                 <button type="submit" class="btn btn-primary">更新</button>
@@ -99,4 +118,5 @@
         }
     </script>
 </body>
+
 </html>

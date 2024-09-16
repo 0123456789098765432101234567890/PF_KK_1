@@ -59,7 +59,7 @@
                     <td th:text="${category.category_id}"></td>
                     <td th:text="${category.category_name}"></td>
                     <td class="action-buttons">
-                        <a th:href="@{/contactcategorylist/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
+                        <a th:href="@{/contactcategoryedit/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
                         <form th:action="@{/contactcategorylist/toggle}" method="post" style="display: inline;">
                             <input type="hidden" name="categoryId" th:value="${category.category_id}" />
                             <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">削除</button>

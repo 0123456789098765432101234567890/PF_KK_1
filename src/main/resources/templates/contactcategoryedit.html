@@ -10,12 +10,15 @@
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>お問い合わせカテゴリー編集</h1>
-        <form th:action="@{/contactcategoryedit/update}" th:object="${contactCategory}" method="post">
+        <!-- th:object を contactCategoryForm に変更 -->
+        <form th:action="@{/contactcategoryedit/update}" th:object="${contactCategoryForm}" method="post">
             <div class="form-group">
                 <label for="category_name">カテゴリー名:</label>
+                <!-- category_name のフォーム -->
                 <input type="text" id="category_name" th:field="*{category_name}" class="form-control" />
                 <div th:if="${#fields.hasErrors('category_name')}" th:errors="*{category_name}" class="text-danger"></div>
             </div>
+            <!-- category_id の hidden フィールドをしっかりフォーム内に保持 -->
             <input type="hidden" th:field="*{category_id}" />
             <button type="submit" class="btn btn-primary">更新</button>
         </form>

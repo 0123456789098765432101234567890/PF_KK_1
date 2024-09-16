@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.entity.ContactCategory;
+import com.example.demo.form.ContactCategoryForm;
 import com.example.demo.service.contact.ContactCategoryEditService;
 
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ContactCategoryEditController {
+
     private final ContactCategoryEditService contactCategoryEditService;
 
     @GetMapping("/contactcategoryedit/{categoryId}")
@@ -28,17 +30,34 @@ public class ContactCategoryEditController {
             log.error("ContactCategory with id: {} not found", categoryId);
             return "error"; // エラービューにリダイレクト
         }
-        model.addAttribute("contactCategory", contactCategory);
+
+        // ContactCategoryエンティティをフォームクラスに変換してモデルに追加
+        ContactCategoryForm form = new ContactCategoryForm();
+        form.setCategory_id(contactCategory.getCategory_id()); // category_id をしっかりセット
+        form.setCategory_name(contactCategory.getCategory_name()); // カテゴリー名をセット
+        model.addAttribute("contactCategoryForm", form);
+        model.addAttribute("contactCategory", contactCategory); // エンティティも保持
         return "contactcategoryedit";
     }
 
     @PostMapping("/contactcategoryedit/update")
-    public String updateCategory(@Valid @ModelAttribute ContactCategory contactCategory, BindingResult result, Model model) {
+    public String updateCategory(@Valid @ModelAttribute("contactCategoryForm") ContactCategoryForm contactCategoryForm, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("contactCategory", contactCategory);
-            return "contactcategoryedit";
+            model.addAttribute("contactCategoryForm", contactCategoryForm);
+            model.addAttribute("contactCategory", contactCategoryEditService.getCategoryById(contactCategoryForm.getCategory_id())); // エラー時にもエンティティを保持
+            return "contactcategoryedit"; // バリデーションエラーがあれば再表示
         }
-        contactCategoryEditService.updateCategory(contactCategory);
-        return "redirect:/contactcategorylist";
+
+        // IDに基づいてエンティティを取得し、フォームのデータで更新
+        ContactCategory contactCategory = contactCategoryEditService.getCategoryById(contactCategoryForm.getCategory_id());
+        if (contactCategory == null) {
+            log.error("ContactCategory with id: {} not found");
+            return "error"; // エンティティが見つからない場合
+        }
+
+        contactCategory.setCategory_name(contactCategoryForm.getCategory_name());
+        contactCategoryEditService.updateCategory(contactCategory); // 更新処理
+
+        return "redirect:/contactcategorylist"; // 更新後、カテゴリー一覧へリダイレクト
     }
 }
