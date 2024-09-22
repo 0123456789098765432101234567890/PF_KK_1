@@ -1,5 +1,7 @@
 package com.example.demo.form;
 
+import java.util.Base64;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.UserInfo;
@@ -12,25 +14,28 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserUpdateForm {
-    
+
     private String loginId;
-    
+
     @Size(max = 255, message = "名前は255文字以内で入力してください")
     private String userName;
-    
+
     @Size(max = 255, message = "ふりがなは255文字以内で入力してください")
     @Pattern(regexp = "^[ぁ-ん]+$", message = "ふりがなはひらがなのみ入力可能です")
     private String userNameKana;
-    
+
     private String gender; // "男性", "女性", "その他"
-    
+
     private Integer age;
-    
+
     @Size(max = 1500, message = "自己紹介は1500文字以内で入力してください")
     private String selfIntro;
-    
+
     private MultipartFile prof_img;
     private byte[] profImgBytes;
+
+    // Base64エンコードされた画像の文字列を保持するフィールドを追加
+    private String profImgBase64;
 
     public UserUpdateForm(UserInfo userInfo) {
         this.loginId = userInfo.getLoginId();
@@ -40,5 +45,10 @@ public class UserUpdateForm {
         this.age = userInfo.getAge();
         this.selfIntro = userInfo.getSelfIntro();
         this.profImgBytes = userInfo.getProfImg();
+
+        // プロフィール画像が存在する場合、Base64エンコードして設定
+        if (this.profImgBytes != null && this.profImgBytes.length > 0) {
+            this.profImgBase64 = Base64.getEncoder().encodeToString(this.profImgBytes);
+        }
     }
 }

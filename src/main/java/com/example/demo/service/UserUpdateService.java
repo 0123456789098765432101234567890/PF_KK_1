@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Base64;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +53,14 @@ public class UserUpdateService {
         form.setGender(user.getGender());
         form.setAge(user.getAge());
         form.setSelfIntro(user.getSelfIntro());
+
+        // プロフィール画像のバイト配列と Base64 エンコードの設定
+        if (user.getProfImg() != null) {
+            form.setProfImgBytes(user.getProfImg());
+            String base64Image = Base64.getEncoder().encodeToString(user.getProfImg());
+            form.setProfImgBase64(base64Image); // フォームに Base64 文字列をセット
+        }
+
         return form;
     }
 }

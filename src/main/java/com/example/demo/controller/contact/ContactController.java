@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.contact;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

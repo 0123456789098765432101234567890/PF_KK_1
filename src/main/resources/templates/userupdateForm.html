@@ -4,13 +4,31 @@
     <meta charset="UTF-8">
     <title>ユーザー情報更新</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .button-group .btn {
+            width: 48%;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー情報更新</h1>
-        <form th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post" enctype="multipart/form-data">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">ユーザー情報更新</h1>
+        <form id="userUpdateForm" th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{loginId}" />
             <div class="form-group">
                 <label for="userName">名前:</label>
@@ -22,9 +40,15 @@
                 <input type="text" id="userNameKana" th:field="*{userNameKana}" class="form-control" />
                 <div th:if="${#fields.hasErrors('userNameKana')}" th:errors="*{userNameKana}" class="text-danger"></div>
             </div>
-            <div class="form-group">
+            <!-- プロフィール画像 -->
+            <div class="form-group" id="profileImageGroup">
                 <label for="prof_img">プロフィール画像:</label>
+                <div th:if="${userUpdateForm.profImgBase64}">
+                    <!-- 表示する登録済みの画像 -->
+                    <img th:src="'data:image/jpeg;base64,' + ${userUpdateForm.profImgBase64}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                </div>
                 <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
+                <input type="hidden" th:field="*{profImgBytes}" />
                 <div th:if="${#fields.hasErrors('prof_img')}" th:errors="*{prof_img}" class="text-danger"></div>
             </div>
             <div class="form-group">
@@ -46,9 +70,25 @@
                 <textarea id="selfIntro" th:field="*{selfIntro}" class="form-control"></textarea>
                 <div th:if="${#fields.hasErrors('selfIntro')}" th:errors="*{selfIntro}" class="text-danger"></div>
             </div>
-            <button type="submit" class="btn btn-primary">更新内容確認</button>
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="history.back();">戻る</button>
+                <button type="submit" class="btn btn-primary">更新内容確認</button>
+            </div>
         </form>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // ファイルサイズチェック
+            document.getElementById('prof_img').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file && file.size > 2 * 1024 * 1024) { // 2MBの制限
+                    alert('ファイルサイズが2MBを超えています。');
+                    event.target.value = ''; // フィールドをクリア
+                }
+            });
+        });
+    </script>
 </body>
 </html>
