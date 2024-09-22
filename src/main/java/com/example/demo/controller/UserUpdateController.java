@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.form.UserUpdateForm;
 import com.example.demo.service.UserUpdateService;
@@ -67,5 +68,28 @@ public class UserUpdateController {
         model.addAttribute("userUpdateForm", form);
         log.debug("Redirecting to confirmation page with form: {}", form.getUserName());
         return "userupdateConfirm";
+    }
+
+    @PostMapping("/userupdate/confirm")
+    public String confirmUserUpdate(@Valid @ModelAttribute UserUpdateForm form, BindingResult result, 
+                                    Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            log.debug("Validation errors on confirmation: {}", result.getAllErrors());
+            model.addAttribute("userUpdateForm", form);
+            return "userupdateConfirm";
+        }
+        try {
+            userUpdateService.updateUser(form);
+            log.debug("User successfully updated, redirecting to success page");
+
+            // ポップアップメッセージの設定
+            redirectAttributes.addFlashAttribute("successMessage", "更新に成功しました。");
+            return "redirect:/userdashboard";
+        } catch (Exception e) {
+            log.error("Error confirming user update", e);
+            model.addAttribute("userUpdateError", "ユーザー情報の更新に失敗しました。もう一度お試しください。");
+            model.addAttribute("userUpdateForm", form);
+            return "userupdateConfirm";
+        }
     }
 }

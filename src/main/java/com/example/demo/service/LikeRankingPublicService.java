@@ -22,27 +22,28 @@ public class LikeRankingPublicService {
     private final LikeRepository likeRepository;
 
     public List<UserInfo> getMonthlyRanking() {
-        // 現在の月の初日と末日を取得
         YearMonth currentMonth = YearMonth.now();
         LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
         LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
 
-        // 今月のいいね数をカウントしてユーザーリストを取得
         List<UserInfo> users = userInfoRepository.findByRoles("USER").stream()
                 .map(user -> {
                     if (user.getProfImg() != null) {
                         user.setBase64Image(Base64.getEncoder().encodeToString(user.getProfImg()));
                     }
-                    // 今月のいいね数を設定
-                    long likeCount = likeRepository.countByLoginIdAndLikedAtBetween(
-                            user.getLoginId(), startOfMonth, endOfMonth);
+                    // 月間のいいね数を設定
+                    long likeCount = countMonthlyLikesByLoginId(user.getLoginId(), startOfMonth, endOfMonth);
                     user.setLikeCount(likeCount);
                     return user;
                 })
-                // いいね数で降順ソート
                 .sorted((u1, u2) -> Long.compare(u2.getLikeCount(), u1.getLikeCount()))
                 .collect(Collectors.toList());
 
         return users;
+    }
+
+    // 月間のいいねカウントを取得する新しいメソッド
+    public long countMonthlyLikesByLoginId(String loginId, LocalDateTime startOfMonth, LocalDateTime endOfMonth) {
+        return likeRepository.countByLoginIdAndLikedAtBetween(loginId, startOfMonth, endOfMonth);
     }
 }

@@ -1,50 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ユーザー情報更新確認</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .button-container .btn {
+            width: 48%;
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー情報更新確認</h1>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">ユーザー情報更新確認</h1>
         <form th:action="@{/userupdate/confirm}" th:object="${userUpdateForm}" method="post">
+
+            <!-- ログインID -->
             <input type="hidden" th:field="*{loginId}" />
+
+            <!-- 名前 -->
             <div class="form-group">
                 <label for="userName">名前:</label>
                 <p th:text="${userUpdateForm.userName}"></p>
                 <input type="hidden" th:field="*{userName}" />
             </div>
+
+            <!-- 名前（ふりがな） -->
             <div class="form-group">
                 <label for="userNameKana">名前（ふりがな）:</label>
                 <p th:text="${userUpdateForm.userNameKana}"></p>
                 <input type="hidden" th:field="*{userNameKana}" />
+            </div>
+
+            <!-- プロフィール画像 -->
             <div class="form-group">
                 <label for="prof_img">プロフィール画像:</label>
-                <img th:if="${base64Image}" th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" />
+                <img th:if="${base64Image}" th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像"
+                    style="max-width: 200px; max-height: 200px;" />
                 <input type="hidden" th:field="*{profImgBytes}" />
             </div>
-            </div>
+
+            <!-- 性別 -->
             <div class="form-group">
                 <label for="gender">性別:</label>
                 <p th:text="${userUpdateForm.gender}"></p>
                 <input type="hidden" th:field="*{gender}" />
             </div>
+
+            <!-- 年齢 -->
             <div class="form-group">
                 <label for="age">年齢:</label>
                 <p th:text="${userUpdateForm.age}"></p>
                 <input type="hidden" th:field="*{age}" />
             </div>
+
+            <!-- 自己紹介 -->
             <div class="form-group">
                 <label for="selfIntro">自己紹介:</label>
-                <p th:text="${userUpdateForm.selfIntro}"></p>
+                <p th:utext="${#strings.replace(userUpdateForm.selfIntro, '\\n', '<br/>')}"></p>
                 <input type="hidden" th:field="*{selfIntro}" />
             </div>
-            <button type="submit" class="btn btn-primary">更新</button>
+
+            <!-- ボタン -->
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" onclick="history.back();">戻る</button>
+                <button type="submit" class="btn btn-primary">更新</button>
+            </div>
         </form>
     </div>
+
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
+
 </html>

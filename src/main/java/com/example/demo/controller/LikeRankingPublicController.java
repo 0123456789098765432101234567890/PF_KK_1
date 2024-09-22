@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +33,13 @@ public class LikeRankingPublicController {
         for (UserInfo user : users) {
             boolean liked = likeService.hasLiked(user.getLoginId(), loginId); // 各ユーザーがいいねされているか確認
             user.setLiked(liked); // likedフラグを設定
+
+            // 月間のいいねカウントを取得してセット
+            YearMonth currentMonth = YearMonth.now();
+            LocalDateTime startOfMonth = currentMonth.atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = currentMonth.atEndOfMonth().atTime(23, 59, 59);
+            long monthlyLikeCount = likeRankingPublicService.countMonthlyLikesByLoginId(user.getLoginId(), startOfMonth, endOfMonth);
+            user.setLikeCount(monthlyLikeCount); // 月間のいいね数を設定
         }
 
         model.addAttribute("users", users); // ユーザー情報をモデルに追加
