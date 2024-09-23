@@ -38,8 +38,9 @@
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">ユーザー編集</h1>
-        <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post" enctype="multipart/form-data">
-
+        <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post"
+            enctype="multipart/form-data">
+            
             <!-- 権限 -->
             <div class="form-group">
                 <label for="roles">権限:</label>
@@ -105,7 +106,8 @@
             <div class="form-group hidden" id="profileImageGroup">
                 <label for="prof_img">プロフィール画像:</label>
                 <div th:if="${base64Image}">
-                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                    <img th:src="'data:image/jpeg;base64,' + ${base64Image}" alt="プロフィール画像"
+                        style="max-width: 200px; max-height: 200px;" />
                 </div>
                 <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
                 <div th:if="${fileSizeError != null}" class="text-danger">
@@ -167,25 +169,29 @@
             function toggleUserFields() {
                 if ($('#user').is(':checked')) {
                     $('#userFields').removeClass('hidden');
-                    $('#profileImageGroup').removeClass('hidden'); // プロフィール画像を表示
+                    $('#profileImageGroup').removeClass('hidden');
                     $('#nameKanaGroup').removeClass('hidden');
                 } else {
                     $('#userFields').addClass('hidden');
-                    $('#profileImageGroup').addClass('hidden'); // プロフィール画像を非表示
+                    $('#profileImageGroup').addClass('hidden');
                     $('#nameKanaGroup').addClass('hidden');
                 }
             }
 
             $('input[name="roles"]').change(toggleUserFields);
-            toggleUserFields(); // 初期表示でラジオボタンの選択状態に合わせて表示
+            toggleUserFields();
 
             // ファイルサイズチェック
-            document.getElementById('prof_img').addEventListener('change', function(event) {
+            document.getElementById('prof_img').addEventListener('change', function (event) {
                 const file = event.target.files[0];
-                if (file && file.size > 2 * 1024 * 1024) { // 2MBの制限
+                if (file && file.size > 2 * 1024 * 1024) {
                     alert('ファイルサイズが2MBを超えています。');
-                    event.target.value = ''; // フィールドをクリア
+                    event.target.value = '';
                 }
+            });
+
+            $(window).on('pageshow', function () {
+                toggleUserFields();
             });
         });
     </script>
