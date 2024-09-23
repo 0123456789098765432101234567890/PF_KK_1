@@ -25,20 +25,17 @@ public class LikeService {
     public void likeUser(String loginId, String fromLoginId) {
         log.debug("Attempting to like user with loginId: {}", loginId);
 
-        // 既に「いいね」されているかどうかをチェック
         if (likeRepository.findByLoginIdAndFromLoginId(loginId, fromLoginId).isPresent()) {
             log.debug("Like already exists for user with loginId: {} by: {}", loginId, fromLoginId);
-            return;  // すでに「いいね」されている場合は処理を中断
+            return;
         }
 
         UserInfo user = userInfoRepository.findById(loginId)
             .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + loginId));
-        
+
         Like like = new Like();
         like.setLoginId(loginId);
         like.setFromLoginId(fromLoginId);
-
-        // likedAtを現在の時刻に設定
         like.setLikedAt(LocalDateTime.now());
 
         likeRepository.save(like);
@@ -60,5 +57,10 @@ public class LikeService {
 
     public long countLikesByLoginId(String loginId) {
         return likeRepository.countByLoginId(loginId);
+    }
+
+    // 月間の「いいね」数を取得するメソッド
+    public long countLikesByLoginIdAndDateRange(String loginId, LocalDateTime start, LocalDateTime end) {
+        return likeRepository.countByLoginIdAndLikedAtBetween(loginId, start, end);
     }
 }

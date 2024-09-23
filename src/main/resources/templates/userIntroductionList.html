@@ -25,16 +25,16 @@
                     </thead>
                     <tbody>
                         <tr th:each="user : ${users}">
-							<td><!-- 画像の最大幅と高さを設定し、アスペクト比を維持 -->
-							<img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
-								style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
-							</td>
+                            <td>
+                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
+                                     style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
+                            </td>
                             <td th:text="${user.user_name}"></td>
                             <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}"></td>
                             <td>
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
-								<a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
+                                <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
                             </td>
                         </tr>
                     </tbody>
@@ -47,7 +47,6 @@
     <script th:src="@{/js/like.js}"></script>
 
     <script th:inline="javascript">
-        /*<![CDATA[*/
         document.addEventListener("DOMContentLoaded", function() {
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
@@ -74,11 +73,10 @@
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken
                 },
-                body: JSON.stringify({ loginId: loginId })
+                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true }) // 月間「いいね」数を要求
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log("Like request successful for user: " + loginId);
                         updateLikeCount(loginId, data.likeCount);
                         button.textContent = "よくない";
                         button.classList.remove("btn-primary", "like-button");
@@ -90,8 +88,6 @@
                             unlikeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
-                } else {
-                    console.log("Like request failed for user: " + loginId);
                 }
             }).catch(error => {
                 console.error("Error:", error);
@@ -105,11 +101,10 @@
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken
                 },
-                body: JSON.stringify({ loginId: loginId })
+                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true }) // 月間「いいね」数を要求
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log("Unlike request successful for user: " + loginId);
                         updateLikeCount(loginId, data.likeCount);
                         button.textContent = "いいね";
                         button.classList.remove("btn-secondary", "unlike-button");
@@ -121,8 +116,6 @@
                             likeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
-                } else {
-                    console.log("Unlike request failed for user: " + loginId);
                 }
             }).catch(error => {
                 console.error("Error:", error);
@@ -132,7 +125,6 @@
         function updateLikeCount(loginId, likeCount) {
             document.getElementById("like-count-" + loginId).textContent = likeCount;
         }
-        /*]]>*/
     </script>
 </body>
 </html>

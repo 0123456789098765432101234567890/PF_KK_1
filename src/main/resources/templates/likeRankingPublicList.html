@@ -25,27 +25,36 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- ユーザーをリストで繰り返し表示する -->
                         <tr th:each="user, iter : ${users}">
+                            <!-- 順位を表示する（インデックスは0から始まるため+1） -->
                             <td style="text-align: center; vertical-align: middle;" th:text="${iter.index + 1}"></td>
                             <td>
+                                <!-- 画像の最大幅と高さを設定し、アスペクト比を維持 -->
                                 <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
                                      style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
                             </td>
+                            <!-- ユーザー名を表示 -->
                             <td th:text="${user.user_name}"></td>
-                            <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}"></td>
+                            <!-- 総いいね獲得数を表示 -->
+                            <td th:id="'like-count-' + ${user.loginId}" th:text="${user.likeCount}"></td>
                             <td>
+                                <!-- いいねボタン -->
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
+                                <!-- 詳細ページへのリンク -->
                                 <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <!-- ユーザー一覧へのリンク -->
                 <a th:href="@{/userintroduction}" class="btn btn-info">ユーザー一覧はこちら</a>
             </div>
         </div>
     </div>
 
+    <!-- 必要なスクリプトファイルをインクルード -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/like.js}"></script>
 
@@ -55,6 +64,7 @@
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
+            // いいねボタンにクリックイベントを追加
             document.querySelectorAll(".like-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
@@ -62,6 +72,7 @@
                 });
             });
 
+            // よくないボタンにクリックイベントを追加
             document.querySelectorAll(".unlike-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
@@ -70,29 +81,29 @@
             });
         });
 
+        // いいねリクエストを送信する関数
         function likeUser(loginId, csrfToken, csrfHeader, button) {
             fetch('/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    [csrfHeader]: csrfToken
+                    [csrfHeader]: csrfToken,
+                    'X-Request-Source': 'monthlyRanking' // 月間ランキング画面からのリクエストを示すヘッダー
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        fetchMonthlyLikeCount(loginId).then(monthlyLikeCount => {
-                            console.log("Like request successful for user: " + loginId);
-                            updateLikeCount(loginId, monthlyLikeCount);
-                            button.textContent = "よくない";
-                            button.classList.remove("btn-primary", "like-button");
-                            button.classList.add("btn-secondary", "unlike-button");
-                            button.removeEventListener("click", function() {
-                                likeUser(loginId, csrfToken, csrfHeader, button);
-                            });
-                            button.addEventListener("click", function() {
-                                unlikeUser(loginId, csrfToken, csrfHeader, button);
-                            });
+                        console.log("Like request successful for user: " + loginId);
+                        updateLikeCount(loginId, data.likeCount);
+                        button.textContent = "よくない";
+                        button.classList.remove("btn-primary", "like-button");
+                        button.classList.add("btn-secondary", "unlike-button");
+                        button.removeEventListener("click", function() {
+                            likeUser(loginId, csrfToken, csrfHeader, button);
+                        });
+                        button.addEventListener("click", function() {
+                            unlikeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
                 } else {
@@ -103,29 +114,29 @@
             });
         }
 
+        // よくないリクエストを送信する関数
         function unlikeUser(loginId, csrfToken, csrfHeader, button) {
             fetch('/unlike', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    [csrfHeader]: csrfToken
+                    [csrfHeader]: csrfToken,
+                    'X-Request-Source': 'monthlyRanking' // 月間ランキング画面からのリクエストを示すヘッダー
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        fetchMonthlyLikeCount(loginId).then(monthlyLikeCount => {
-                            console.log("Unlike request successful for user: " + loginId);
-                            updateLikeCount(loginId, monthlyLikeCount);
-                            button.textContent = "いいね";
-                            button.classList.remove("btn-secondary", "unlike-button");
-                            button.classList.add("btn-primary", "like-button");
-                            button.removeEventListener("click", function() {
-                                unlikeUser(loginId, csrfToken, csrfHeader, button);
-                            });
-                            button.addEventListener("click", function() {
-                                likeUser(loginId, csrfToken, csrfHeader, button);
-                            });
+                        console.log("Unlike request successful for user: " + loginId);
+                        updateLikeCount(loginId, data.likeCount);
+                        button.textContent = "いいね";
+                        button.classList.remove("btn-secondary", "unlike-button");
+                        button.classList.add("btn-primary", "like-button");
+                        button.removeEventListener("click", function() {
+                            unlikeUser(loginId, csrfToken, csrfHeader, button);
+                        });
+                        button.addEventListener("click", function() {
+                            likeUser(loginId, csrfToken, csrfHeader, button);
                         });
                     });
                 } else {
@@ -136,18 +147,9 @@
             });
         }
 
+        // いいね獲得数を更新する関数
         function updateLikeCount(loginId, likeCount) {
             document.getElementById("like-count-" + loginId).textContent = likeCount;
-        }
-
-        function fetchMonthlyLikeCount(loginId) {
-            // JavaScript内でThymeleafの値を正しく使用するために、単一引用符のエスケープを行います
-            const startOfMonth = /*[[${#temporals.format(T(java.time.YearMonth).now().atDay(1).atStartOfDay(), 'yyyy-MM-dd\'\'T\'\'HH:mm:ss') }]]*/ '2024-09-01T00:00:00';
-            const endOfMonth = /*[[${#temporals.format(T(java.time.YearMonth).now().atEndOfMonth().atTime(23, 59, 59), 'yyyy-MM-dd\'\'T\'\'HH:mm:ss') }]]*/ '2024-09-30T23:59:59';
-
-            return fetch(`/monthly-like-count?loginId=${loginId}&start=${startOfMonth}&end=${endOfMonth}`)
-                .then(response => response.json())
-                .then(data => data.likeCount);
         }
         /*]]>*/
     </script>
