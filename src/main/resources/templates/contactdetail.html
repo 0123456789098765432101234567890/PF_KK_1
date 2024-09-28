@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>お問い合わせ詳細</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            margin-top: 5px;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                font-size: 0.9rem;
+                margin-top: 10px;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
@@ -27,26 +81,22 @@
             <button type="submit" class="btn btn-primary">更新</button>
         </form>
         <a th:href="@{/contactlist}" class="btn btn-secondary mt-3">一覧に戻る</a>
-            <div class="form-group">
-                <label for="contact_detail">詳細:</label>
-                <!-- 改行を <br> に変換する -->
-                <p id="contact_detail_content" th:text="${contact.contact_detail}"></p>
-            </div>
+        <div class="form-group">
+            <label for="contact_detail">詳細:</label>
+            <p id="contact_detail_content" th:text="${contact.contact_detail}"></p>
+        </div>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            // 改行を <br> に変換する関数
             function convertNewlinesToBreaks(text) {
                 return text.replace(/\n/g, '<br/>');
             }
 
-            // 詳細の内容に改行を反映
             var contactDetailContent = $('#contact_detail_content');
             contactDetailContent.html(convertNewlinesToBreaks(contactDetailContent.text()));
 
-            // フォーム送信時の処理
             $('form').submit(function(event) {
                 event.preventDefault();
                 var form = $(this);
@@ -62,4 +112,5 @@
         });
     </script>
 </body>
+
 </html>

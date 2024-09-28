@@ -3,25 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <title>お問い合わせカテゴリー編集</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            margin-top: 10px;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+
+            .btn-secondary {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>お問い合わせカテゴリー編集</h1>
-        <!-- th:object を contactCategoryForm に変更 -->
         <form th:action="@{/contactcategoryedit/update}" th:object="${contactCategoryForm}" method="post">
             <div class="form-group">
                 <label for="category_name">カテゴリー名:</label>
-                <!-- category_name のフォーム -->
                 <input type="text" id="category_name" th:field="*{category_name}" class="form-control" />
                 <div th:if="${#fields.hasErrors('category_name')}" th:errors="*{category_name}" class="text-danger"></div>
             </div>
-            <!-- category_id の hidden フィールドをしっかりフォーム内に保持 -->
             <input type="hidden" th:field="*{category_id}" />
             <button type="submit" class="btn btn-primary">更新</button>
         </form>
+        <a href="http://localhost:8080/contactcategorylist" class="btn btn-secondary mt-3">一覧へ</a>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

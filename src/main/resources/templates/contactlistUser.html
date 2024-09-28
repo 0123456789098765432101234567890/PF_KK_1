@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>お問い合わせ一覧（一般ユーザー用）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .pagination .page-item {
@@ -18,6 +19,40 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        th, td {
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .btn-info {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            th, td {
+                font-size: 0.85rem;
+            }
+
+            .btn-info {
+                font-size: 0.8rem;
+                padding: 5px 8px;
+            }
         }
     </style>
 </head>
@@ -28,26 +63,28 @@
         <div class="header-container">
             <h1>お問い合わせ一覧（一般ユーザー用）</h1>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>カテゴリー</th>
-                    <th>詳細</th>
-                    <th>ステータス</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="contact : ${contactPage.content}">
-                    <td th:text="${contact.contactCategory.category_name}"></td>
-                    <td th:text="${#strings.abbreviate(contact.contact_detail, 10)}"></td>
-                    <td th:text="${contact.status}"></td>
-                    <td>
-                        <a th:href="@{/contactlistUser/{contact_id}(contact_id=${contact.contact_id})}" class="btn btn-info">詳細</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>カテゴリー</th>
+                        <th>詳細</th>
+                        <th>ステータス</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="contact : ${contactPage.content}">
+                        <td th:text="${contact.contactCategory.category_name}"></td>
+                        <td th:text="${#strings.abbreviate(contact.contact_detail, 10)}"></td>
+                        <td th:text="${contact.status}"></td>
+                        <td>
+                            <a th:href="@{/contactlistUser/{contact_id}(contact_id=${contact.contact_id})}" class="btn btn-info">詳細</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <nav aria-label="ページナビゲーション">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${contactPage.hasPrevious() ? '' : 'disabled'}">

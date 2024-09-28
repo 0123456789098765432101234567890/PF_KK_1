@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
     <title>お問い合わせカテゴリー一覧</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .pagination .page-item {
@@ -15,21 +18,81 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 5px;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .button-group {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .btn-warning,
+        .btn-danger {
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            white-space: nowrap;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .button-group {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                width: 100%;
+                gap: 5px;
+            }
+
+            .button-group a {
+                flex: 1;
+                text-align: center;
+            }
+
+            .btn-primary {
+                width: 48%;
+                font-size: 0.9rem;
+            }
+
+            .btn-warning,
+            .btn-danger {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+                white-space: nowrap;
+                display: inline-block;
+            }
+
+            .action-buttons .btn {
+                width: auto;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 60px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
@@ -46,28 +109,30 @@
                 alert(/*[[${message}]]*/ '削除に成功しました。');
             </script>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>カテゴリーID</th>
-                    <th>カテゴリー名</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="category : ${categoryPage.content}">
-                    <td th:text="${category.category_id}"></td>
-                    <td th:text="${category.category_name}"></td>
-                    <td class="action-buttons">
-                        <a th:href="@{/contactcategoryedit/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
-                        <form th:action="@{/contactcategorylist/toggle}" method="post" style="display: inline;">
-                            <input type="hidden" name="categoryId" th:value="${category.category_id}" />
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">削除</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>カテゴリーID</th>
+                        <th>カテゴリー名</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="category : ${categoryPage.content}">
+                        <td th:text="${category.category_id}"></td>
+                        <td th:text="${category.category_name}"></td>
+                        <td class="action-buttons">
+                            <a th:href="@{/contactcategoryedit/{categoryId}(categoryId=${category.category_id})}" class="btn btn-warning">編集</a>
+                            <form th:action="@{/contactcategorylist/toggle}" method="post" style="display: inline;">
+                                <input type="hidden" name="categoryId" th:value="${category.category_id}" />
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">削除</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <nav aria-label="ページナビゲーション">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${categoryPage.hasPrevious() ? '' : 'disabled'}">
@@ -84,4 +149,5 @@
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
+
 </html>

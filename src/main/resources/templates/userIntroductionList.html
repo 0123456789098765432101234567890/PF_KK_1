@@ -3,9 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>ユーザー紹介一覧</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .table {
+            margin-bottom: 20px;
+        }
+
+        .table th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .btn {
+            margin: 5px 0;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 150px;
+            object-fit: cover;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                width: 100%;
+            }
+
+            img {
+                max-width: 80px;
+                max-height: 120px;
+            }
+
+            .table th {
+                font-size: 0.8rem; /* 文字サイズを調整して縦並びを防止 */
+                white-space: nowrap; /* 文字の折り返しを防止 */
+            }
+        }
+    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
@@ -13,25 +65,24 @@
     <div class="container">
         <h1>ユーザー紹介一覧</h1>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-12">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>プロフィール画像</th>
-                            <th>ユーザー名</th>
+                            <th>プロフ画像</th>
+                            <th>お名前</th>
                             <th>いいね獲得数</th>
-                            <th>アクション</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="user : ${users}">
                             <td>
-                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
-                                     style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
+                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像" class="img-fluid mx-auto d-block" />
                             </td>
-                            <td th:text="${user.user_name}"></td>
-                            <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}"></td>
-                            <td>
+                            <td th:text="${user.user_name}" class="text-center"></td>
+                            <td th:text="${user.likeCount}" th:id="'like-count-' + ${user.loginId}" class="text-center"></td>
+                            <td class="text-center">
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
                                 <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
@@ -73,7 +124,7 @@
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken
                 },
-                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true }) // 月間「いいね」数を要求
+                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
@@ -101,7 +152,7 @@
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken
                 },
-                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true }) // 月間「いいね」数を要求
+                body: JSON.stringify({ loginId: loginId, isMonthlyCount: true })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
