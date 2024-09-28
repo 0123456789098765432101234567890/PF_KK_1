@@ -27,25 +27,29 @@
 
         .table-responsive {
             margin-bottom: 20px;
-            overflow-x: auto; /* 横スクロール防止のための設定 */
         }
 
         .btn {
             font-size: 1rem;
             padding: 10px 20px;
             border-radius: 5px;
-            width: 150px; /* ボタンのサイズを統一 */
+            min-width: 100px;
         }
 
         .btn-spacing {
             margin-right: 10px;
         }
 
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
+        th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons .btn {
+            min-width: 100px;
+            max-width: 100px;
         }
 
         /* 小さい画面向けのスタイル */
@@ -56,26 +60,29 @@
             }
 
             h1 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
                 margin-bottom: 10px;
-            }
-
-            th {
-                font-size: 0.8rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
             }
 
             .btn {
                 font-size: 0.9rem;
                 width: 100%;
                 margin-bottom: 10px;
-                white-space: nowrap;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: flex-start;
             }
 
             .action-buttons .btn {
-                max-width: 100%;
+                flex: 1;
+            }
+
+            th {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -96,7 +103,7 @@
                         <th style="text-align: center;">プロフ画像</th>
                         <th>お名前</th>
                         <th>月間いいね数</th>
-                        <th>アクション</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
