@@ -3,68 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <title>月間ランキング</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .table-responsive {
+            margin-bottom: 20px;
+            overflow-x: auto; /* 横スクロール防止のための設定 */
+        }
+
+        .btn {
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            width: 150px; /* ボタンのサイズを統一 */
+        }
+
+        .btn-spacing {
+            margin-right: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-bottom: 10px;
+            }
+
+            th {
+                font-size: 0.8rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                width: 100%;
+                margin-bottom: 10px;
+                white-space: nowrap;
+            }
+
+            .action-buttons .btn {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container">
-        <h1>月間ランキング</h1>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;">順位</th>
-                            <th style="text-align: center;">プロフィール画像</th>
-                            <th>お名前</th>
-                            <th>総いいね獲得数</th>
-                            <th>アクション</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- ユーザーをリストで繰り返し表示する -->
-                        <tr th:each="user, iter : ${users}">
-                            <!-- 順位を表示する（インデックスは0から始まるため+1） -->
-                            <td style="text-align: center; vertical-align: middle;" th:text="${iter.index + 1}"></td>
-                            <td>
-                                <!-- 画像の最大幅と高さを設定し、アスペクト比を維持 -->
-                                <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
-                                     style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
-                            </td>
-                            <!-- ユーザー名を表示 -->
-                            <td th:text="${user.user_name}"></td>
-                            <!-- 総いいね獲得数を表示 -->
-                            <td th:id="'like-count-' + ${user.loginId}" th:text="${user.likeCount}"></td>
-                            <td>
-                                <!-- いいねボタン -->
-                                <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
-                                <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
-                                <!-- 詳細ページへのリンク -->
-                                <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- ユーザー一覧へのリンク -->
-                <a th:href="@{/userintroduction}" class="btn btn-info">ユーザー一覧はこちら</a>
-            </div>
+        <div class="header-container">
+            <h1>月間ランキング</h1>
+            <a th:href="@{/userintroduction}" class="btn btn-info">ユーザー一覧</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">順位</th>
+                        <th style="text-align: center;">プロフ画像</th>
+                        <th>お名前</th>
+                        <th>月間いいね数</th>
+                        <th>アクション</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user, iter : ${users}">
+                        <td style="text-align: center; vertical-align: middle;" th:text="${iter.index + 1}"></td>
+                        <td>
+                            <img th:src="'data:image/jpeg;base64,' + ${user.base64Image}" alt="プロフィール画像"
+                                 style="width: auto; height: 100px; max-height: 150px; display: block; margin: 0 auto;" />
+                        </td>
+                        <td th:text="${user.user_name}"></td>
+                        <td th:id="'like-count-' + ${user.loginId}" th:text="${user.likeCount}"></td>
+                        <td class="action-buttons">
+                            <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button btn-spacing">いいね</button>
+                            <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button btn-spacing">よくない</button>
+                            <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- 必要なスクリプトファイルをインクルード -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/like.js}"></script>
 
     <script th:inline="javascript">
-        /*<![CDATA[*/
         document.addEventListener("DOMContentLoaded", function() {
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
-            // いいねボタンにクリックイベントを追加
             document.querySelectorAll(".like-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
@@ -72,7 +134,6 @@
                 });
             });
 
-            // よくないボタンにクリックイベントを追加
             document.querySelectorAll(".unlike-button").forEach(function(button) {
                 button.addEventListener("click", function() {
                     var loginId = this.getAttribute("data-user-id");
@@ -81,20 +142,18 @@
             });
         });
 
-        // いいねリクエストを送信する関数
         function likeUser(loginId, csrfToken, csrfHeader, button) {
             fetch('/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken,
-                    'X-Request-Source': 'monthlyRanking' // 月間ランキング画面からのリクエストを示すヘッダー
+                    'X-Request-Source': 'monthlyRanking'
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log("Like request successful for user: " + loginId);
                         updateLikeCount(loginId, data.likeCount);
                         button.textContent = "よくない";
                         button.classList.remove("btn-primary", "like-button");
@@ -114,20 +173,18 @@
             });
         }
 
-        // よくないリクエストを送信する関数
         function unlikeUser(loginId, csrfToken, csrfHeader, button) {
             fetch('/unlike', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     [csrfHeader]: csrfToken,
-                    'X-Request-Source': 'monthlyRanking' // 月間ランキング画面からのリクエストを示すヘッダー
+                    'X-Request-Source': 'monthlyRanking'
                 },
                 body: JSON.stringify({ loginId: loginId })
             }).then(response => {
                 if (response.ok) {
                     response.json().then(data => {
-                        console.log("Unlike request successful for user: " + loginId);
                         updateLikeCount(loginId, data.likeCount);
                         button.textContent = "いいね";
                         button.classList.remove("btn-secondary", "unlike-button");
@@ -147,11 +204,9 @@
             });
         }
 
-        // いいね獲得数を更新する関数
         function updateLikeCount(loginId, likeCount) {
             document.getElementById("like-count-" + loginId).textContent = likeCount;
         }
-        /*]]>*/
     </script>
 </body>
 </html>
