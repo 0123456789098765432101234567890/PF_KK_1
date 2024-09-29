@@ -1,34 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>ユーザー情報更新</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
         .button-group {
             display: flex;
             justify-content: space-between;
-            width: 80%;
-            margin: 20px auto;
+            gap: 10px;
+            margin-top: 20px;
+			margin-bottom: 10px;
         }
 
         .button-group .btn {
             width: 48%;
         }
 
-        @media (min-width: 768px) {
-            .container {
-                max-width: 800px;
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group .btn {
+                width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
+
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
     <div class="container mt-5">
         <h1 class="text-center mb-4">ユーザー情報更新</h1>
-        <form id="userUpdateForm" th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post" enctype="multipart/form-data">
+        <form id="userUpdateForm" th:action="@{/userupdate}" th:object="${userUpdateForm}" method="post"
+            enctype="multipart/form-data">
             <input type="hidden" th:field="*{loginId}" />
             <div class="form-group">
                 <label for="userName">名前:</label>
@@ -38,14 +67,16 @@
             <div class="form-group">
                 <label for="userNameKana">名前（ふりがな）:</label>
                 <input type="text" id="userNameKana" th:field="*{userNameKana}" class="form-control" />
-                <div th:if="${#fields.hasErrors('userNameKana')}" th:errors="*{userNameKana}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('userNameKana')}" th:errors="*{userNameKana}" class="text-danger">
+                </div>
             </div>
             <!-- プロフィール画像 -->
             <div class="form-group" id="profileImageGroup">
                 <label for="prof_img">プロフィール画像:</label>
                 <div th:if="${userUpdateForm.profImgBase64}">
                     <!-- 表示する登録済みの画像 -->
-                    <img th:src="'data:image/jpeg;base64,' + ${userUpdateForm.profImgBase64}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
+                    <img th:src="'data:image/jpeg;base64,' + ${userUpdateForm.profImgBase64}" alt="プロフィール画像"
+                        style="max-width: 200px; max-height: 200px;" />
                 </div>
                 <input type="file" id="prof_img" th:field="*{prof_img}" class="form-control" />
                 <input type="hidden" th:field="*{profImgBytes}" />
@@ -81,7 +112,7 @@
     <script>
         $(document).ready(function () {
             // ファイルサイズチェック
-            document.getElementById('prof_img').addEventListener('change', function(event) {
+            document.getElementById('prof_img').addEventListener('change', function (event) {
                 const file = event.target.files[0];
                 if (file && file.size > 2 * 1024 * 1024) { // 2MBの制限
                     alert('ファイルサイズが2MBを超えています。');
@@ -91,4 +122,5 @@
         });
     </script>
 </body>
+
 </html>

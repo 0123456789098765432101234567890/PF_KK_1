@@ -4,7 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <title>お問い合わせ内容確認</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <style>
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        /* 小さい画面向けのスタイル */
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -39,7 +73,6 @@
             event.target.closest('form').submit();
         }
 
-        // 改行を表示する関数
         function convertNewlinesToBreaks(text) {
             return text.replace(/\n/g, '<br/>');
         }
