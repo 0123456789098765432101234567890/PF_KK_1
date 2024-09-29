@@ -23,12 +23,14 @@
         .btn {
             margin-top: 10px;
             width: 100%;
+            font-size: 1rem;
         }
 
-        .login-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            margin-top: 20px;
+            font-size: 1rem;
         }
 
         /* 小さい画面向けのスタイル */
@@ -43,12 +45,11 @@
             }
 
             .btn {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
-            .login-info {
-                justify-content: space-between;
-                width: 100%;
+            .btn-secondary {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -56,9 +57,7 @@
 
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
-    <div th:replace="~{common/header :: header}">
-        <!-- 共通ヘッダーが表示される部分 -->
-    </div>
+    <div th:replace="~{common/header :: header}"></div>
     <div class="container">
         <h1>カテゴリー追加</h1>
         <form th:action="@{/contactcategoryadd}" th:object="${contactCategoryForm}" method="post">
@@ -69,6 +68,7 @@
             </div>
             <button type="submit" class="btn btn-primary">追加</button>
         </form>
+        <a href="http://localhost:8080/contactcategorylist" class="btn btn-secondary mt-3">一覧へ</a>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

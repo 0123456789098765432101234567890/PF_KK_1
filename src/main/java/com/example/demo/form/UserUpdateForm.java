@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.UserInfo;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -31,6 +33,8 @@ public class UserUpdateForm {
     private String gender; // "男性", "女性", "その他"
 
     @NotNull(message = "年齢は必須項目です")
+    @Min(value = 0, message = "年齢は0以上の数値を入力してください")
+    @Max(value = 999, message = "年齢は3桁以内の数値を入力してください")
     private Integer age;
 
     @Size(max = 1500, message = "自己紹介は1500文字以内で入力してください")

@@ -77,7 +77,7 @@
             <!-- 自己紹介 -->
             <div class="form-group">
                 <label for="selfIntro">自己紹介:</label>
-                <p th:utext="${#strings.replace(userUpdateForm.selfIntro, '\\n', '<br/>')}"></p>
+                <p id="self_intro_content" th:text="${userUpdateForm.selfIntro}">自己紹介</p>
                 <input type="hidden" th:field="*{selfIntro}" />
             </div>
 
@@ -90,6 +90,15 @@
     </div>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        // 改行を正しく表示する関数
+        document.addEventListener('DOMContentLoaded', function () {
+            var selfIntroContent = document.getElementById('self_intro_content');
+            if (selfIntroContent) {
+                selfIntroContent.innerHTML = selfIntroContent.textContent.replace(/\n/g, '<br/>');
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -87,7 +87,7 @@
                 <select id="gender" th:field="*{gender}" class="form-control">
                     <option value="男性" th:selected="${userUpdateForm.gender == '男性'}">男性</option>
                     <option value="女性" th:selected="${userUpdateForm.gender == '女性'}">女性</option>
-                    <option value="その他" th:selected="${userUpdateForm.gender == 'その他'}">その他</option>
+                    <option value="未回答" th:selected="${userUpdateForm.gender == '未回答'}">未回答</option>
                 </select>
                 <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="text-danger"></div>
             </div>

@@ -19,6 +19,7 @@
         .button-group .btn {
             width: 48%; /* 合計80%に対してボタンを均等に配置 */
             white-space: nowrap; /* 文字を常に横書きに */
+            margin-bottom: 10px; /* ボタンの下に少しだけスペースを追加 */
         }
 
         /* 大きな画面対応 */
@@ -88,7 +89,7 @@
 
                 <div class="form-group">
                     <label for="self_intro">自己紹介:</label>
-                    <p id="self_intro_content" th:utext="${#strings.replace(userAddForm.self_intro, '\\n', '<br/>')}"></p>
+                    <p id="self_intro_content" th:text="${userAddForm.self_intro}">自己紹介</p>
                     <input type="hidden" th:field="*{self_intro}" />
                 </div>
 
@@ -107,6 +108,15 @@
     </div>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        // 改行を正しく表示する関数
+        document.addEventListener('DOMContentLoaded', function () {
+            var selfIntroContent = document.getElementById('self_intro_content');
+            if (selfIntroContent) {
+                selfIntroContent.innerHTML = selfIntroContent.textContent.replace(/\n/g, '<br/>');
+            }
+        });
+    </script>
 </body>
 
 </html>

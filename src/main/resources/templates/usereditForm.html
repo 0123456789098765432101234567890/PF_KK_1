@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ユーザー編集</title>
+    <title>アカウント編集</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .hidden {
@@ -37,7 +37,7 @@
     <div th:replace="~{common/header :: header}"></div>
 
     <div class="container mt-5">
-        <h1 class="text-center mb-4">ユーザー編集</h1>
+        <h1 class="text-center mb-4">アカウント編集</h1>
         <form id="userEditForm" th:action="@{/useredit/confirm}" th:object="${userEditForm}" method="post"
             enctype="multipart/form-data">
             
@@ -126,7 +126,7 @@
                     <select id="gender" th:field="*{gender}" class="form-control">
                         <option value="男性">男性</option>
                         <option value="女性">女性</option>
-                        <option value="その他">その他</option>
+                        <option value="未回答">未回答</option>
                     </select>
                     <div th:if="${#fields.hasErrors('gender')}" class="text-danger">
                         <p th:each="err : ${#fields.errors('gender')}" th:text="${err}"></p>
