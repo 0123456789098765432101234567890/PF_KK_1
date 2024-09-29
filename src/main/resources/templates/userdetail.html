@@ -1,67 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>ユーザー詳細情報</title>
+    <meta charset="UTF-8">
+    <title>アカウント詳細情報</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
     <style>
         .content-section {
             margin-bottom: 15px; /* 各セクションの間に余白を追加 */
+        }
+
+        .btn {
+            margin-top: 10px; /* ボタンの下に少しだけスペースを追加 */
+            margin-bottom: 10px; /* 常にボタンの下にスペースを追加 */
+        }
+
+        /* レスポンシブ対応 */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
         }
     </style>
 </head>
 <body>
     <div th:insert="~{common/sourceList :: sourceList}"></div>
     <div th:replace="~{common/header :: header}"></div>
-    <div class="container">
-        <h1>ユーザー詳細情報</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">アカウント詳細情報</h1>
 
         <!-- 各情報を content-section クラスで囲み、見やすいように余白を調整 -->
         <div class="content-section">
             <label>ユーザー名:</label>
             <span th:text="${user.user_name}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>メールアドレス:</label>
             <span th:text="${user.email}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>ステータス:</label>
             <span th:text="${user.status}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>ロール:</label>
             <span th:text="${user.roles}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>性別:</label>
             <span th:text="${user.gender}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>年齢:</label>
             <span th:text="${user.age}"></span>
         </div>
-        
+
         <div class="content-section">
             <label>自己紹介:</label>
             <br> <!-- ラベルと内容の間に改行を追加 -->
             <span id="selfIntro" th:text="${user.selfIntro}"></span> <!-- 改行を適切に表示 -->
         </div>
-        
+
         <div class="content-section">
             <label>プロフィール画像:</label>
-            <img th:src="'data:image/jpeg;base64,' + ${profImgBase64}" alt="プロフィール画像" />
+            <img th:src="'data:image/jpeg;base64,' + ${profImgBase64}" alt="プロフィール画像" style="max-width: 200px; max-height: 200px;" />
         </div>
-        
+
         <a th:href="@{/userlist}" class="btn btn-secondary">一覧に戻る</a>
     </div>
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
-    <!-- JavaScript for converting newline characters to <br> -->
+    <!-- 改行を正しく表示するためのJavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var selfIntroElement = document.getElementById('selfIntro');

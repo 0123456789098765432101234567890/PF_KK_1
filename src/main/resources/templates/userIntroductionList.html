@@ -85,7 +85,7 @@
                             <td class="text-center">
                                 <button th:if="${!user.liked}" th:data-user-id="${user.loginId}" class="btn btn-primary like-button">いいね</button>
                                 <button th:if="${user.liked}" th:data-user-id="${user.loginId}" class="btn btn-secondary unlike-button">よくない</button>
-                                <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細確認</a>
+                                <a th:href="@{/userdetail(loginId=${user.loginId})}" class="btn btn-info">詳細</a>
                             </td>
                         </tr>
                     </tbody>

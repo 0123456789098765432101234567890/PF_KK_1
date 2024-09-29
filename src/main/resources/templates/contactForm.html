@@ -54,6 +54,8 @@
                     <option th:each="category : ${categories}" th:value="${category.category_id}" th:text="${category.category_name}">
                     </option>
                 </select>
+                <!-- バリデーションエラーメッセージを表示 -->
+                <div th:if="${#fields.hasErrors('category_id')}" th:errors="*{category_id}" class="text-danger"></div>
             </div>
 
             <div class="form-group">
