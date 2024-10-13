@@ -16,6 +16,8 @@ import com.example.demo.service.contact.ContactListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//お問い合わせ一覧
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j

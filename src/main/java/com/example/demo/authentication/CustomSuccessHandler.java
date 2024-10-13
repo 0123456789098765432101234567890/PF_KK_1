@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+//権限でURLを切り替えるための機能
+
 @Component("customAuthenticationSuccessHandler")
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 

@@ -12,6 +12,8 @@ import com.example.demo.service.contact.ContactCategoryListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//お問い合わせカテゴリー一覧
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j

@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//お問い合わせカテゴリー追加
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j

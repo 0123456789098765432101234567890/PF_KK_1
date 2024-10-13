@@ -9,6 +9,8 @@ import com.example.demo.service.AdminLikeRankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//管理者権限用いいねランキング
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
